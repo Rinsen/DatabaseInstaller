@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rinsen.DatabaseInstaller;
 using Rinsen.DatabaseInstaller.Sql;
-using System.Linq;
-using System;
 
 namespace DatabaseInstallerSampleApp
 {

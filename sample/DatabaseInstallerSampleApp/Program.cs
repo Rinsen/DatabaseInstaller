@@ -9,7 +9,7 @@ namespace DatabaseInstallerSampleApp
     {
         public void Main(string[] args)
         {
-            var config = new ConfigurationBuilder("C:/Users/Fredrik/Source/Repos/DatabaseInstaller/sample/DatabaseInstallerSampleApp").AddJsonFile("config.json").Build();
+            var config = new ConfigurationBuilder("C:/Config").AddJsonFile("config.json").Build();
             
             var serviceCollection = new ServiceCollection();
 

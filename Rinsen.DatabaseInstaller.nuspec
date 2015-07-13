@@ -1,0 +1,30 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Rinsen.DatabaseInstaller</id>
+    <version>0.1.0-beta</version>
+    <title>Rinsen Database Installer</title>
+    <authors>Fredrik Rinsén</authors>
+    <owners>Fredrik Rinsén</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/Rinsen/DatabaseInstaller</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Database installer and version handler for dnx prjects</description>
+    <releaseNotes>
+      * Initial commit.
+    </releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>dnx database installer</tags>
+    <dependencies>
+      <dependency id="Dapper" version="1.41.0-beta5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.dll" target="lib\dnx451" />
+    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.pdb" target="lib\dnx451" />
+    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.xml" target="lib\dnx451" />
+    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnxcore50\Rinsen.DatabaseInstaller.dll" target="lib\dnxcore50" />
+    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnxcore50\Rinsen.DatabaseInstaller.pdb" target="lib\dnxcore50" />
+    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnxcore50\Rinsen.DatabaseInstaller.xml" target="lib\dnxcore50" />
+  </files>
+</package>
