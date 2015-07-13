@@ -149,5 +149,34 @@ namespace Rinsen.DatabaseInstaller
                 }
             }
         }
+
+        internal void UndoBeginInstallVersion(DatabaseVersion version)
+        {
+            // Get installation row from database
+            var installedVersion = GetInstalledVersion(version.InstallationName);
+
+            // Verify that this version installation beginning should be undone
+            if (installedVersion.StartedInstallingVersion != version.Version)
+            {
+                throw new InvalidOperationException(string.Format("Version ({0}) has not started to install for {1}", version.Version, version.InstallationName));
+            }
+
+            if (installedVersion.InstalledVersion >= version.Version)
+            {
+                throw new InvalidOperationException(string.Format("This version ({0}) is already installed for {1}", version.Version, version.InstallationName));
+            }
+
+            // Update information that this installation is undoing the begin to install, make sure that no one is in between, throw is someone is
+            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
+            {
+                var updateSql = string.Format("UPDATE {0} SET StartedInstallingVersion = @StartedInstallingVersion - 1 WHERE Id = @id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", _installerOptions.InstalledVersionsDatabaseTableName);
+                var result = connection.Execute(updateSql, installedVersion);
+
+                if (result != 1)
+                {
+                    throw new InvalidOperationException(string.Format("Undo begin install for version {0} for {1} failed with count {2}", version.Version, version.InstallationName, result));
+                }
+            }
+        }
     }
 }

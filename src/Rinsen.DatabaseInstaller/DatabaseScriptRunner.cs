@@ -41,12 +41,13 @@ namespace Rinsen.DatabaseInstaller
                     try
                     {
                         transaction.Rollback();
-                        throw exception;
                     }
                     catch (Exception ex2)
                     {
                         throw new AggregateException("Rollback failed to execute", new List<Exception> { exception, ex2 });
                     }
+
+                    throw exception;
                 }
             }
         }

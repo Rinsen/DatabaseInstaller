@@ -9,7 +9,7 @@ namespace DatabaseInstallerSampleApp
     {
         public void Main(string[] args)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("config.json").Build();
+            var config = new ConfigurationBuilder("C:/Users/Fredrik/Source/Repos/DatabaseInstaller/sample/DatabaseInstallerSampleApp").AddJsonFile("config.json").Build();
             
             var serviceCollection = new ServiceCollection();
 
@@ -20,9 +20,12 @@ namespace DatabaseInstallerSampleApp
             var installer = serviceProvider.GetRequiredService<Installer>();
 
             var versionList = new List<DatabaseVersion>();
+            versionList.Add(new FirstTableVersion());
+            versionList.Add(new SecondTableVersion());
 
             installer.Run(versionList);
 
+            
         }
     }
 }

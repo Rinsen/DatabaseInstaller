@@ -27,7 +27,7 @@ namespace Rinsen.DatabaseInstaller
 
         public string InstallationName { get; private set; }
         public int Version { get; private set; }
-        internal List<string> Commands { get; private set; }
+        internal List<string> Commands { get; private set; } = new List<string>();
         
         internal void SetTables(List<Table> tableCollection)
         {

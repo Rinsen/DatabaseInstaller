@@ -60,7 +60,16 @@ namespace Rinsen.DatabaseInstaller
                 version.SetTables(tableCollection);
 
                 version.PrepareUp();
-                _databaseScriptRunner.Run(version.Commands);
+                try
+                {
+                    _databaseScriptRunner.Run(version.Commands);
+                }
+                catch (SqlCommandFailedToExecuteException e)
+                {
+                    _versionHandler.UndoBeginInstallVersion(version);
+                    throw e;
+                }
+                
 
                 _versionHandler.SetVersionInstalled(version);
 
