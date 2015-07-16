@@ -16,7 +16,7 @@ namespace Rinsen.DatabaseInstaller.Sql
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Name is mandatory for column");
+                throw new ArgumentException("Table name is mandatory");
             }
             Columns = new List<Column>();
             NamedPrimaryKeys = new NamedPrimaryKey();
@@ -43,7 +43,7 @@ namespace Rinsen.DatabaseInstaller.Sql
             return columnBuilder;
         }
 
-        public string GetUpScript()
+        public List<string> GetUpScript()
         {
             if (!Columns.Any())
                 throw new InvalidOperationException("No colums found in table definition");
@@ -55,7 +55,7 @@ namespace Rinsen.DatabaseInstaller.Sql
             var lastColumn = Columns.Last();
             foreach (var column in Columns)
             {
-                sb.AppendFormat("{0} {1}{2}", column.Name, column.ColumnType.GetSqlServerDatabaseTypeString() ,GetConstraintString(column));
+                sb.AppendFormat("{0} {1}{2}", column.Name, column.Type.GetSqlServerDatabaseTypeString() ,GetConstraintString(column));
                 
                 if (!column.Equals(lastColumn) || NamedPrimaryKeys.Any() || NamedUniques.Any())
                 {
@@ -83,10 +83,11 @@ namespace Rinsen.DatabaseInstaller.Sql
             }
 
             sb.Append(")");
-            return sb.ToString();
+
+            return new List<string> { sb.ToString() };
         }
 
-        public string GetDownScript()
+        public List<string> GetDownScript()
         {
             throw new NotImplementedException();
         }

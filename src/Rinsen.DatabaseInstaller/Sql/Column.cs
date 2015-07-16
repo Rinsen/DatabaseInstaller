@@ -14,7 +14,7 @@
 
         public string Name { get; set; }
 
-        public IDbType ColumnType { get; set; }
+        public IDbType Type { get; set; }
 
         public bool NotNull { get; set; }
 

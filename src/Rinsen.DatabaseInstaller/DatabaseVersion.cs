@@ -47,7 +47,7 @@ namespace Rinsen.DatabaseInstaller
             Commands.Clear();
             foreach (var dbChange in _dbChangeList)
             {
-                Commands.Add(dbChange.GetUpScript());
+                Commands.AddRange(dbChange.GetUpScript());
             }
         }
 
@@ -56,7 +56,7 @@ namespace Rinsen.DatabaseInstaller
             Commands.Clear();
             foreach (var dbChange in _dbChangeList)
             {
-                Commands.Add(dbChange.GetDownScript());
+                Commands.AddRange(dbChange.GetDownScript());
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Rinsen.DatabaseInstaller.Sql
             _table = table;
             Column = new Column();
             Column.Name = name;
-            Column.ColumnType = columnType;
+            Column.Type = columnType;
             Column.NotNull = notNull;
             Column.Unique = unique;
             Column.PrimaryKey = primaryKey;
@@ -62,7 +62,7 @@ namespace Rinsen.DatabaseInstaller.Sql
         {
             if (Column.Unique || _table.NamedUniques.Any(m => m.Key == Column.Name))
             {
-                throw new InvalidOperationException("A primary keycan not be combined with a unique constraint on the same column");
+                throw new InvalidOperationException("A primary key can not be combined with a unique constraint on the same column");
             }
 
             if (_table.Columns.Any(c => c.PrimaryKey && c.Name != Column.Name))

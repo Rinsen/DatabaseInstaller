@@ -21,11 +21,13 @@ namespace DatabaseInstallerSampleApp
 
             var installer = serviceProvider.GetRequiredService<Installer>();
 
+            // Install installer and first version
             var versionList = new List<DatabaseVersion>();
             versionList.Add(new FirstTableVersion());
 
             installer.Run(versionList);
 
+            // Install failing script and se that the rollback is working
             var secondTable = new SecondTableVersion();
             var exceptionFound = false;
             try
@@ -49,7 +51,11 @@ namespace DatabaseInstallerSampleApp
                 throw new Exception("This should not happen number two");
             }
 
-            
+            // Install alteration only, clear out failing script
+            versionList.Clear();
+            versionList.Add(new CorrectSecondVersion());
+
+            installer.Run(versionList);
         }
     }
 }

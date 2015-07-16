@@ -1,10 +1,12 @@
-﻿namespace Rinsen.DatabaseInstaller
+﻿using System.Collections.Generic;
+
+namespace Rinsen.DatabaseInstaller
 {
     public interface IDbChange
     {
-        string GetUpScript();
+        List<string> GetUpScript();
 
-        string GetDownScript();
+        List<string> GetDownScript();
 
     }
 }
