@@ -5,14 +5,12 @@ using System.Text;
 
 namespace Rinsen.DatabaseInstaller.Sql
 {
-    public class Table
+    public class Table : IDbChange
     {
         public string Name { get; private set; }
         public List<Column> Columns { get; private set; }
         public NamedPrimaryKey NamedPrimaryKeys { get; private set; }
         public NamedUnique NamedUniques { get; private set; }
-
-        public string CreateScript { get { return GetUpScript(); } }
 
         public Table(string name)
         {
@@ -24,12 +22,6 @@ namespace Rinsen.DatabaseInstaller.Sql
             NamedPrimaryKeys = new NamedPrimaryKey();
             NamedUniques = new NamedUnique();
             Name = name;
-        }
-
-        public Table InsertColumn(Column column)
-        {
-            Columns.Add(column);
-            return this;
         }
 
         public ColumnBuilder AddColumn(string name, IDbType columnType)
@@ -94,7 +86,12 @@ namespace Rinsen.DatabaseInstaller.Sql
             return sb.ToString();
         }
 
-        private object FormatColumnNames(List<string> names)
+        public string GetDownScript()
+        {
+            throw new NotImplementedException();
+        }
+
+        private string FormatColumnNames(List<string> names)
         {
             var sb = new StringBuilder(names.First());
             for (int i = 1; i < names.Count; i++)

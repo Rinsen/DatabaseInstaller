@@ -154,6 +154,17 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
+      "Rinsen.DatabaseInstaller/0.1.0-beta": {
+        "dependencies": {
+          "Dapper": "1.41.0-beta5"
+        },
+        "compile": {
+          "lib/dnx451/Rinsen.DatabaseInstaller.dll": {}
+        },
+        "runtime": {
+          "lib/dnx451/Rinsen.DatabaseInstaller.dll": {}
+        }
+      },
       "System.Data.Common/4.0.0-beta-22816": {
         "dependencies": {
           "System.IO": "4.0.10-beta-22816",
@@ -475,6 +486,17 @@
         },
         "runtime": {
           "lib/portable-net45+wp80+win8+wpa81+aspnetcore50/Newtonsoft.Json.dll": {}
+        }
+      },
+      "Rinsen.DatabaseInstaller/0.1.0-beta": {
+        "dependencies": {
+          "Dapper": "1.41.0-beta5"
+        },
+        "compile": {
+          "lib/dnxcore50/Rinsen.DatabaseInstaller.dll": {}
+        },
+        "runtime": {
+          "lib/dnxcore50/Rinsen.DatabaseInstaller.dll": {}
         }
       },
       "System.Collections/4.0.10-beta-22816": {
@@ -1480,6 +1502,20 @@
         "tools/install.ps1"
       ]
     },
+    "Rinsen.DatabaseInstaller/0.1.0-beta": {
+      "sha512": "l0NPHSV+IPci4i2etNTKX5WcAKVVfm+1MA0ebOvkLuvSAu9kWvy3CyRR9jnkQjEsjR71EhEP+RgwIQ8MCE4ipA==",
+      "files": [
+        "Rinsen.DatabaseInstaller.0.1.0-beta.nupkg",
+        "Rinsen.DatabaseInstaller.0.1.0-beta.nupkg.sha512",
+        "Rinsen.DatabaseInstaller.nuspec",
+        "lib/dnx451/Rinsen.DatabaseInstaller.dll",
+        "lib/dnx451/Rinsen.DatabaseInstaller.pdb",
+        "lib/dnx451/Rinsen.DatabaseInstaller.xml",
+        "lib/dnxcore50/Rinsen.DatabaseInstaller.dll",
+        "lib/dnxcore50/Rinsen.DatabaseInstaller.pdb",
+        "lib/dnxcore50/Rinsen.DatabaseInstaller.xml"
+      ]
+    },
     "System.Collections/4.0.10-beta-22816": {
       "sha512": "tkVBx0CH/Xunk18S9LvNzPRqbXdIzsHbcGRtePrZCNZ9EUNuXK0dzzUl5q0KUgsQmeyUCDSw+7mwyG/pDGSpAA==",
       "files": [
@@ -2332,7 +2368,7 @@
   "projectFileDependencyGroups": {
     "": [
       "Microsoft.Framework.DependencyInjection >= 1.0.0-beta5",
-      "Rinsen.DatabaseInstaller >= 1.0.0-*",
+      "Rinsen.DatabaseInstaller >= 0.1.0-*",
       "Microsoft.Framework.Configuration.Json >= 1.0.0-beta5",
       "Microsoft.Framework.Configuration >= 1.0.0-beta5"
     ],

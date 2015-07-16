@@ -23,21 +23,21 @@ namespace Rinsen.DatabaseInstaller
             Version = version;
         }
 
-        private List<Table> _tables;
+        private List<IDbChange> _dbChangeList;
 
         public string InstallationName { get; private set; }
         public int Version { get; private set; }
         internal List<string> Commands { get; private set; } = new List<string>();
         
-        internal void SetTables(List<Table> tableCollection)
+        internal void SetTables(List<IDbChange> dbChangeList)
         {
-            if (_tables == null)
+            if (_dbChangeList == null)
             {
-                _tables = tableCollection;
+                _dbChangeList = dbChangeList;
             }
         }
 
-        public virtual void AddTables(List<Table> tableCollection)
+        public virtual void AddDbChanges(List<IDbChange> dbChangeList)
         {
 
         }
@@ -45,31 +45,19 @@ namespace Rinsen.DatabaseInstaller
         internal void PrepareUp()
         {
             Commands.Clear();
-            Up();
-            foreach (var table in _tables)
+            foreach (var dbChange in _dbChangeList)
             {
-                Commands.Add(table.GetUpScript());
+                Commands.Add(dbChange.GetUpScript());
             }
         }
 
         internal void PrepareDown()
         {
-
-        }
-
-        public virtual void Up()
-        {
-
-        }
-
-        public virtual void Down()
-        {
-
-        }
-
-        public void AddSql(string sql)
-        {
-            Commands.Add(sql);
+            Commands.Clear();
+            foreach (var dbChange in _dbChangeList)
+            {
+                Commands.Add(dbChange.GetDownScript());
+            }
         }
     }
 }

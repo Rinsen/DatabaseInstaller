@@ -1,4 +1,5 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
+﻿using System.Collections.Generic;
+using Rinsen.DatabaseInstaller.Sql;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -12,7 +13,7 @@ namespace Rinsen.DatabaseInstaller
             _tableName = tableName;
         }
 
-        public override void Up()
+        public override void AddDbChanges(List<IDbChange> tableCollection)
         {
             var table = new Table(_tableName);
             table.AddColumn("Id", new Int()).PrimaryKey().AutoIncrement();
@@ -20,9 +21,8 @@ namespace Rinsen.DatabaseInstaller
             table.AddColumn("PreviousVersion", new Int()).NotNull();
             table.AddColumn("StartedInstallingVersion", new Int()).NotNull();
             table.AddColumn("InstalledVersion", new Int()).NotNull();
-            var createScript = table.GetUpScript();
 
-            AddSql(createScript);
+            tableCollection.Add(table);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace DatabaseInstallerSampleApp
             : base(2)
         { }
 
-        public override void AddTables(List<Table> tableCollection)
+        public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            tableCollection.Add(GetMySecondTable());
-            tableCollection.Add(GetMyFirstTable());
+            dbChangeList.Add(GetMySecondTable());
+            dbChangeList.Add(GetMyFirstTable());
         }
 
         private Table GetMySecondTable()

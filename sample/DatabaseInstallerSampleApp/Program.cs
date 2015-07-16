@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Rinsen.DatabaseInstaller;
 using Microsoft.Framework.Configuration;
+using System;
+using System.Linq;
 
 namespace DatabaseInstallerSampleApp
 {
@@ -21,9 +23,31 @@ namespace DatabaseInstallerSampleApp
 
             var versionList = new List<DatabaseVersion>();
             versionList.Add(new FirstTableVersion());
-            versionList.Add(new SecondTableVersion());
 
             installer.Run(versionList);
+
+            var secondTable = new SecondTableVersion();
+            var exceptionFound = false;
+            try
+            {
+                versionList.Add(secondTable);
+                installer.Run(versionList);
+            }
+            catch (SqlCommandFailedToExecuteException)
+            {
+                exceptionFound = true;
+                var installedVersion = installer.GetVersionInformation().Single(m => m.InstallationName == secondTable.InstallationName);
+
+                if (installedVersion.InstalledVersion != 1 || installedVersion.InstalledVersion != installedVersion.StartedInstallingVersion)
+                {
+                    throw new Exception("This should not happen");
+                }
+            }
+
+            if (!exceptionFound)
+            {
+                throw new Exception("This should not happen number two");
+            }
 
             
         }

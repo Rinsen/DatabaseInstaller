@@ -9,7 +9,7 @@
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/Rinsen/DatabaseInstaller</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Database installer and version handler for dnx prjects</description>
+    <description>Database installer and version handler for dnx projects</description>
     <releaseNotes>
       * Initial commit.
     </releaseNotes>

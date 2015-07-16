@@ -8,7 +8,7 @@
 
   "dependencies": {
     "Microsoft.Framework.DependencyInjection": "1.0.0-beta5",
-    "Rinsen.DatabaseInstaller": "1.0.0-*",
+    "Rinsen.DatabaseInstaller": "0.1.0-*",
     "Microsoft.Framework.Configuration.Json": "1.0.0-beta5",
     "Microsoft.Framework.Configuration": "1.0.0-beta5"
   },

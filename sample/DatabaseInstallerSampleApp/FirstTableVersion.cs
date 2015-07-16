@@ -10,7 +10,7 @@ namespace DatabaseInstallerSampleApp
             : base(1)
         { }
 
-        public override void AddTables(List<Table> tableCollection)
+        public override void AddDbChanges(List<IDbChange> tableCollection)
         {
             tableCollection.Add(GetMyFirstTable());
         }

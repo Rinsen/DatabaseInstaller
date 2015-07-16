@@ -1,5 +1,4 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +41,10 @@ namespace Rinsen.DatabaseInstaller
 
         internal void InstallBaseVersion(InstallerBaseVersion installerBaseVersion)
         {
-            installerBaseVersion.Up();
+            var dbChangeList = new List<IDbChange>();
+            installerBaseVersion.AddDbChanges(dbChangeList);
+            installerBaseVersion.SetTables(dbChangeList);
+            installerBaseVersion.PrepareUp();
 
             _databaseScriptRunner.Run(installerBaseVersion.Commands);
 
@@ -55,10 +57,9 @@ namespace Rinsen.DatabaseInstaller
             {
                 _versionHandler.BeginInstallVersion(version);
 
-                var tableCollection = new List<Table>();
-                version.AddTables(tableCollection);
-                version.SetTables(tableCollection);
-
+                var dbChangeList = new List<IDbChange>();
+                version.AddDbChanges(dbChangeList);
+                version.SetTables(dbChangeList);
                 version.PrepareUp();
                 try
                 {
@@ -72,11 +73,7 @@ namespace Rinsen.DatabaseInstaller
                 
 
                 _versionHandler.SetVersionInstalled(version);
-
-                
             }
         }
-
-        
     }
 }
