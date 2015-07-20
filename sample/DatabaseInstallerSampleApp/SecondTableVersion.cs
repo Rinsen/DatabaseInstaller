@@ -12,24 +12,14 @@ namespace DatabaseInstallerSampleApp
 
         public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            dbChangeList.Add(GetMySecondTable());
-            dbChangeList.Add(GetMyFirstTable());
-        }
+            var mySecondTable = dbChangeList.AddNewTable("MySecondTable");
+            mySecondTable.AddAutoIncrementColumn("Id");
+            mySecondTable.AddNVarCharColumn("SomeInfo", 100).NotNull();
 
-        private Table GetMySecondTable()
-        {
-            var table = new Table("MySecondTable");
-            table.AddAutoIncrementColumn("Id");
-            table.AddNVarCharColumn("SomeInfo", 100).NotNull();
-            return table;
+            var myFirstTable = dbChangeList.AddNewTable("MyFirstTable");
+            myFirstTable.AddAutoIncrementColumn("Id");
+            myFirstTable.AddNVarCharColumn("SomeInfo", 100).NotNull();
         }
-
-        private Table GetMyFirstTable()
-        {
-            var table = new Table("MyFirstTable");
-            table.AddAutoIncrementColumn("Id");
-            table.AddNVarCharColumn("SomeInfo", 100).NotNull();
-            return table;
-        }
+        
     }
 }

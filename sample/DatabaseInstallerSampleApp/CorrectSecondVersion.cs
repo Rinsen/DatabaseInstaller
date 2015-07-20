@@ -12,13 +12,10 @@ namespace DatabaseInstallerSampleApp
 
         public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            var tableAlteration = new TableAlteration("MyFirstTable");
+            var tableAlteration = dbChangeList.AddNewTableAlteration("MyFirstTable");
             tableAlteration.AddBitColumn("BitColumn");
             tableAlteration.AddDateTimeOffsetColumn("Created").NotNull();
             tableAlteration.DeleteColumn("SomeInfo");
-
-            dbChangeList.Add(tableAlteration);
-
         }
     }
 }

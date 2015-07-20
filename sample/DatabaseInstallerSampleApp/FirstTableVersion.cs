@@ -10,17 +10,11 @@ namespace DatabaseInstallerSampleApp
             : base(1)
         { }
 
-        public override void AddDbChanges(List<IDbChange> tableCollection)
+        public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            tableCollection.Add(GetMyFirstTable());
-        }
-
-        private Table GetMyFirstTable()
-        {
-            var table = new Table("MyFirstTable");
-            table.AddAutoIncrementColumn("Id");
-            table.AddNVarCharColumn("SomeInfo", 100).NotNull();
-            return table;
+            var myFirstTable = dbChangeList.AddNewTable("MyFirstTable");
+            myFirstTable.AddAutoIncrementColumn("Id");
+            myFirstTable.AddNVarCharColumn("SomeInfo", 100).NotNull();
         }
     }
 }
