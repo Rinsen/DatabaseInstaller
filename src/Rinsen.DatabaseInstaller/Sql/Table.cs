@@ -92,7 +92,7 @@ namespace Rinsen.DatabaseInstaller.Sql
             throw new NotImplementedException();
         }
 
-        private string FormatColumnNames(List<string> names)
+        string FormatColumnNames(List<string> names)
         {
             var sb = new StringBuilder(names.First());
             for (int i = 1; i < names.Count; i++)
@@ -102,7 +102,7 @@ namespace Rinsen.DatabaseInstaller.Sql
             return sb.ToString();
         }
 
-        private string GetConstraintString(Column column)
+        string GetConstraintString(Column column)
         {
             var sb = new StringBuilder();
 
