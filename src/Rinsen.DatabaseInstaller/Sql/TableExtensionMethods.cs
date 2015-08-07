@@ -1,10 +1,19 @@
-﻿namespace Rinsen.DatabaseInstaller.Sql
+﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace Rinsen.DatabaseInstaller.Sql
 {
     public static class TableExtensionMethods
     {
         public static ColumnBuilder AddAutoIncrementColumn(this Table table, string name)
         {
             return table.AddColumn(name, new Int()).AutoIncrement();
+        }
+
+        public static ColumnBuilder AddAutoIncrementColumn<T>(this Table<T> table, Expression<Func<T, object>> property)
+        {
+            return table.AddColumn(property, new Int()).AutoIncrement();
         }
 
         public static ColumnBuilder AddBitColumn(this Table table, string name)
@@ -46,6 +55,5 @@
         {
             return table.AddColumn(name, new Decimal(precision, scale));
         }
-
     }
 }
