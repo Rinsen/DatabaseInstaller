@@ -2,7 +2,7 @@
 using Rinsen.DatabaseInstaller.Generic.Sql;
 using Xunit;
 
-namespace Rinsen.DatabaseInstaller.Tests.Sql
+namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 {
     public class GenericTableAlterationTests
     {

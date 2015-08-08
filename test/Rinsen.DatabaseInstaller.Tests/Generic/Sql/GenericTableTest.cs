@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Rinsen.DatabaseInstaller.Tests.Sql
+namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 {
     public class GenericTableTest
     {
