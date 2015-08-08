@@ -8,9 +8,7 @@ namespace Rinsen.DatabaseInstaller.Generic.Sql
     {
         public TableAlteration(string name)
             : base(name)
-        {
-
-        }
+        { }
 
         public ColumnToAddBuilder AddColumn(Expression<Func<T, object>> propertyExpression, IDbType columnType)
         {
