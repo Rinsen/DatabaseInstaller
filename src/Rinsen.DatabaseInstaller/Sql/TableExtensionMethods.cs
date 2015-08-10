@@ -46,6 +46,5 @@
         {
             return table.AddColumn(name, new Decimal(precision, scale));
         }
-
     }
 }
