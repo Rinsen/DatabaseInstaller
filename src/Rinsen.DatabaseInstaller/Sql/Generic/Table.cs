@@ -1,8 +1,7 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 
-namespace Rinsen.DatabaseInstaller.Generic.Sql
+namespace Rinsen.DatabaseInstaller.Sql.Generic
 {
     public class Table<T> : Table
     {

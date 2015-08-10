@@ -1,17 +1,22 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
+﻿using Rinsen.DatabaseInstaller.Sql.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Rinsen.DatabaseInstaller.Tests.Sql
+namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 {
-    public class UniqueClusteredIndexTests
+    public class GenericUniqueClusteredIndexTests
     {
+        class MyTable
+        {
+            public int MyColumn { get; set; }
+        }
+
         [Fact]
         public void GetCreateScript_CreateScriptIsCorrect()
         {
             // Arrange
-            var index = new UniqueClusteredIndex("MyIndex", "MyTable");
-            index.AddColumn("MyColumn");
+            var index = new UniqueClusteredIndex<MyTable>("MyIndex", "MyTable");
+            index.AddColumn(m => m.MyColumn);
 
             // Act
             var createScripts = index.GetUpScript();

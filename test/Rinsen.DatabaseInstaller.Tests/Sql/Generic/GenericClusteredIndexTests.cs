@@ -1,17 +1,22 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
+﻿using Rinsen.DatabaseInstaller.Sql.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Rinsen.DatabaseInstaller.Tests.Sql
+namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 {
-    public class ClusteredIndexTests
+    public class GenericClusteredIndexTests
     {
+        class MyTable
+        {
+            public int MyColumn { get; set; }
+        }
+
         [Fact]
         public void GetCreateScript_CreateScriptIsCorrect()
         {
             // Arrange
-            var index = new ClusteredIndex("MyIndex", "MyTable");
-            index.AddColumn("MyColumn");
+            var index = new ClusteredIndex<MyTable>("MyIndex", "MyTable");
+            index.AddColumn(m => m.MyColumn);
 
             // Act
             var createScripts = index.GetUpScript();
@@ -20,7 +25,5 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             Assert.Equal(1, createScripts.Count);
             Assert.Equal("CREATE CLUSTERED INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
         }
-
-
     }
 }

@@ -1,13 +1,17 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 
-namespace Rinsen.DatabaseInstaller.Generic.Sql
+namespace Rinsen.DatabaseInstaller.Sql.Generic
 {
-    public static class TableAlterationExtensionMethods
+    public static class TableExtensionMethods
     {
 
-        public static ColumnToAddBuilder AddColumn<T>(this TableAlteration<T> table, Expression<Func<T, object>> propertyExpression, int? length = null)
+        public static ColumnBuilder AddAutoIncrementColumn<T>(this Table<T> table, Expression<Func<T, object>> property)
+        {
+            return table.AddColumn(property, new Int()).AutoIncrement();
+        }
+
+        public static ColumnBuilder AddColumn<T>(this Table<T> table, Expression<Func<T, object>> propertyExpression, int? length = null)
         {
             var propertyType = propertyExpression.GetMemberType();
 

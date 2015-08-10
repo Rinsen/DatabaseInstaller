@@ -5,7 +5,7 @@ using Microsoft.AspNet.Builder;
 using Rinsen.DatabaseInstaller.Sql;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rinsen.DatabaseInstaller.Generic.Sql;
+using Rinsen.DatabaseInstaller.Sql.Generic;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -45,6 +45,20 @@ namespace Rinsen.DatabaseInstaller
             return table;
         }
 
+        public static Table<T> AddNewTable<T>(this List<IDbChange> dbChangeList) where T : class
+        {
+            var name = typeof(T).Name + "s";
+
+            return dbChangeList.AddNewTable<T>(name);
+        }
+
+        public static Table<T> AddNewTable<T>(this List<IDbChange> dbChangeList, string tableName) where T : class
+        {
+            var table = new Table<T>(tableName);
+            dbChangeList.Add(table);
+            return table;
+        }
+
         public static TableAlteration AddNewTableAlteration(this List<IDbChange> dbChangeList, string tableAlterationName)
         {
             var table = new TableAlteration(tableAlterationName);
@@ -52,15 +66,102 @@ namespace Rinsen.DatabaseInstaller
             return table;
         }
 
-        public static Table<T> AddNewTable<T>(this List<IDbChange> dbChangeList) where T : class
-        {   
+        public static TableAlteration<T> AddNewTableAlteration<T>(this List<IDbChange> dbChangeList) where T : class
+        {
             var name = typeof(T).Name + "s";
 
-            var table = new Table<T>(name);
+            return dbChangeList.AddNewTableAlteration<T>(name);
+        }
 
+        public static TableAlteration<T> AddNewTableAlteration<T>(this List<IDbChange> dbChangeList, string tableName) where T : class
+        {
+            var table = new TableAlteration<T>(tableName);
             dbChangeList.Add(table);
-
             return table;
+        }
+
+        public static Index AddNewIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        {
+            var index = new Index(name, tableName);
+            dbChangeList.Add(index);
+            return index;
+        }
+
+        public static Index<T> AddNewIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        {
+            var tableName = typeof(T).Name + "s";
+
+            return dbChangeList.AddNewIndex<T>(name, tableName);
+        }
+
+        public static Index<T> AddNewIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        {
+            var Index = new Index<T>(name, tableName);
+            dbChangeList.Add(Index);
+            return Index;
+        }
+
+        public static ClusteredIndex AddNewClusteredIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        {
+            var index = new ClusteredIndex(name, tableName);
+            dbChangeList.Add(index);
+            return index;
+        }
+
+        public static ClusteredIndex<T> AddNewClusteredIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        {
+            var tableName = typeof(T).Name + "s";
+
+            return dbChangeList.AddNewClusteredIndex<T>(name, tableName);
+        }
+
+        public static ClusteredIndex<T> AddNewClusteredIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        {
+            var Index = new ClusteredIndex<T>(name, tableName);
+            dbChangeList.Add(Index);
+            return Index;
+        }
+
+        public static UniqueIndex AddNewUniqueIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        {
+            var index = new UniqueIndex(name, tableName);
+            dbChangeList.Add(index);
+            return index;
+        }
+
+        public static UniqueIndex<T> AddNewUniqueIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        {
+            var tableName = typeof(T).Name + "s";
+
+            return dbChangeList.AddNewUniqueIndex<T>(name, tableName);
+        }
+
+        public static UniqueIndex<T> AddNewUniqueIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        {
+            var Index = new UniqueIndex<T>(name, tableName);
+            dbChangeList.Add(Index);
+            return Index;
+        }
+
+        public static UniqueClusteredIndex AddNewUniqueClusteredIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        {
+            var index = new UniqueClusteredIndex(name, tableName);
+            dbChangeList.Add(index);
+            return index;
+        }
+
+        public static UniqueClusteredIndex<T> AddNewUniqueClusteredIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        {
+            var tableName = typeof(T).Name + "s";
+
+            return dbChangeList.AddNewUniqueClusteredIndex<T>(name, tableName);
+        }
+
+        public static UniqueClusteredIndex<T> AddNewUniqueClusteredIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        {
+            var Index = new UniqueClusteredIndex<T>(name, tableName);
+            dbChangeList.Add(Index);
+            return Index;
         }
 
         public static string GetMemberName<T>(this Expression<Func<T, object>> propertyExpression)
