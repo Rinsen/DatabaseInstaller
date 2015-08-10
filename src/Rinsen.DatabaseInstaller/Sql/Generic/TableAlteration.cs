@@ -1,5 +1,4 @@
-﻿using Rinsen.DatabaseInstaller.Sql;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 
 namespace Rinsen.DatabaseInstaller.Sql.Generic

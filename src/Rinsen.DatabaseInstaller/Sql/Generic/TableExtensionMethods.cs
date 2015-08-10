@@ -27,14 +27,21 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type");
 
-                return table.AddColumn(propertyExpression, new DatabaseInstaller.Sql.DateTime());
+                return table.AddColumn(propertyExpression, new DateTime());
             }
             if (propertyType == typeof(System.DateTimeOffset))
             {
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type");
 
-                return table.AddColumn(propertyExpression, new DatabaseInstaller.Sql.DateTimeOffset());
+                return table.AddColumn(propertyExpression, new DateTimeOffset());
+            }
+            if (propertyType == typeof(System.DateTimeOffset?))
+            {
+                if (length != null)
+                    throw new ArgumentException("Length is not supported for this type");
+
+                return table.AddColumn(propertyExpression, new DateTimeOffset());
             }
             if (propertyType == typeof(int))
             {
@@ -50,6 +57,14 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
                     return table.AddColumn(propertyExpression, new NVarChar());
                 }
                 return table.AddColumn(propertyExpression, new NVarChar((int)length));
+            }
+            if (propertyType == typeof(byte[]))
+            {
+                if (length == null)
+                {
+                    return table.AddColumn(propertyExpression, new Binary());
+                }
+                return table.AddColumn(propertyExpression, new Binary((int)length));
             }
 
             throw new ArgumentException("Type is not supported");

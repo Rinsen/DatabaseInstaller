@@ -2,7 +2,7 @@
 {
     public class Binary : IDbType
     {
-        private readonly int _length;
+        readonly int _length;
 
         public Binary(int length = 0)
         {
