@@ -1,12 +1,12 @@
-﻿using System;
-using Rinsen.DatabaseInstaller.Sql;
+﻿using Rinsen.DatabaseInstaller.Sql;
+using System;
 using System.Linq.Expressions;
 
-namespace Rinsen.DatabaseInstaller.Generic.Sql
+namespace Rinsen.DatabaseInstaller.Sql.Generic
 {
-    public class Index<T> : Index
+    public class UniqueClusteredIndex<T> : UniqueClusteredIndex
     {
-        public Index(string name, string tableName)
+        public UniqueClusteredIndex(string name, string tableName)
             : base(name, tableName)
         { }
 

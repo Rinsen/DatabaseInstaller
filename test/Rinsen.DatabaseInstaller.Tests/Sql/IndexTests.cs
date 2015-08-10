@@ -67,6 +67,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             Assert.Equal("The column MyColumn is already added to index MyIndexName on table MyTable", ex.Message);
             
         }
+
+        [Fact]
+        public void TryToGetUpScriptOnIndexWithNoColumnsAdded_GetExceptionWithFaultMessage()
+        {
+            // Arrange
+            var index = new Index("Name", "MyTable");
+
+            // Act & Assert
+            var ex = Assert.Throws<InvalidOperationException>(() => index.GetUpScript());
+            Assert.Equal("No columns is added to index Name for table MyTable", ex.Message);
+
+        }
     }
 }
 

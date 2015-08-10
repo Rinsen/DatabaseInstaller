@@ -53,8 +53,12 @@ namespace DatabaseInstallerSampleApp
 
             // Install alteration only, clear out failing script
             versionList.Clear();
-            versionList.Add(new CorrectSecondVersion());
 
+            versionList.Add(new CorrectSecondVersion());
+            installer.Run(versionList);
+
+            // Run with installation list containing previous version
+            versionList.Add(new ThirdVersion());
             installer.Run(versionList);
         }
     }

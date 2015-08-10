@@ -41,6 +41,11 @@ namespace Rinsen.DatabaseInstaller.Sql
 
         protected void AddTableInformation(StringBuilder sb)
         {
+            if (!Columns.Any())
+            {
+                throw new InvalidOperationException(string.Format("No columns is added to index {0} for table {1}", Name, TableName));
+            }
+
             sb.AppendLine();
             sb.AppendFormat("ON {0}", TableName);
             sb.Append("(");

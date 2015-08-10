@@ -260,17 +260,6 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "Rinsen.DatabaseInstaller/0.1.3-beta": {
-        "dependencies": {
-          "Dapper": "1.41.0-beta5"
-        },
-        "compile": {
-          "lib/dnx451/Rinsen.DatabaseInstaller.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Rinsen.DatabaseInstaller.dll": {}
-        }
-      },
       "System.Data.Common/4.0.0-beta-22816": {
         "dependencies": {
           "System.IO": "4.0.10-beta-22816",
@@ -736,20 +725,6 @@
         "lib/portable-net45+wp80+win8+wpa81+aspnetcore50/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81+aspnetcore50/Newtonsoft.Json.xml",
         "tools/install.ps1"
-      ]
-    },
-    "Rinsen.DatabaseInstaller/0.1.3-beta": {
-      "sha512": "r4qiNK+uc9hjkRuKwTfJ4Tc1FQ1mvPzRY+1nbDh2bjVrI5ggvVOvwabUF2T2lugfuBggq0Yj+uCEMPHKBNm+YQ==",
-      "files": [
-        "Rinsen.DatabaseInstaller.0.1.3-beta.nupkg",
-        "Rinsen.DatabaseInstaller.0.1.3-beta.nupkg.sha512",
-        "Rinsen.DatabaseInstaller.nuspec",
-        "lib/dnx451/Rinsen.DatabaseInstaller.dll",
-        "lib/dnx451/Rinsen.DatabaseInstaller.pdb",
-        "lib/dnx451/Rinsen.DatabaseInstaller.xml",
-        "lib/dnxcore50/Rinsen.DatabaseInstaller.dll",
-        "lib/dnxcore50/Rinsen.DatabaseInstaller.pdb",
-        "lib/dnxcore50/Rinsen.DatabaseInstaller.xml"
       ]
     },
     "System.Data.Common/4.0.0-beta-22816": {

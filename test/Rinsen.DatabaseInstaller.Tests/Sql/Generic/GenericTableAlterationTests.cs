@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Rinsen.DatabaseInstaller.Generic.Sql;
+using Rinsen.DatabaseInstaller.Sql.Generic;
 using Xunit;
 
 namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql

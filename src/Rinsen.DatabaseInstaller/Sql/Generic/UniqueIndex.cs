@@ -2,7 +2,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Rinsen.DatabaseInstaller.Generic.Sql
+namespace Rinsen.DatabaseInstaller.Sql.Generic
 {
     public class UniqueIndex<T> : UniqueIndex
     {
