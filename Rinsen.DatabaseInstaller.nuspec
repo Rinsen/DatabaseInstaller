@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Rinsen.DatabaseInstaller</id>
-    <version>0.1.6-beta</version>
+    <version>0.1.8-beta</version>
     <title>Rinsen Database Installer</title>
     <authors>Fredrik Rinsén</authors>
     <owners>Fredrik Rinsén</owners>
@@ -11,6 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database installer and version handler for dnx projects</description>
     <releaseNotes>
+      0.1.8 Corrected version handling error
+      0.1.7 Upgrading dependecies to beta6
       0.1.6 Added more generic extensions
       0.1.4 Added create index support with generic and non-generic support and also added generic table creation
       0.1.3 Added table alternations and some fixes and changes to how scripts is added to database versions

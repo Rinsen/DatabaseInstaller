@@ -6,9 +6,9 @@ namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseVersionInstaller
     {
-        private readonly InstallerOptions _installerOptions;
-        private readonly VersionHandler _versionHandler;
-        private readonly DatabaseScriptRunner _databaseScriptRunner;
+        readonly InstallerOptions _installerOptions;
+        readonly VersionHandler _versionHandler;
+        readonly DatabaseScriptRunner _databaseScriptRunner;
 
         public DatabaseVersionInstaller(InstallerOptions installerOptions, VersionHandler versionHandler, DatabaseScriptRunner databaseScriptRunner)
         {
@@ -30,12 +30,10 @@ namespace Rinsen.DatabaseInstaller
 
                 var installedVersion = _versionHandler.GetInstalledVersion(installationName);
 
-                if (!versions.Where(m => m.Version > installedVersion.InstalledVersion).Any())
+                if (versions.Where(m => m.Version > installedVersion.InstalledVersion).Any())
                 {
-                    return;
+                    InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version));
                 }
-
-                InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version));
             }
         }
 
@@ -51,7 +49,7 @@ namespace Rinsen.DatabaseInstaller
             _versionHandler.InstallBaseVersion(installerBaseVersion);
         }
 
-        private void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName)
+        void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName)
         {
             foreach (var version in orderedVersionsForInstallationName)
             {
@@ -70,7 +68,7 @@ namespace Rinsen.DatabaseInstaller
                     _versionHandler.UndoBeginInstallVersion(version);
                     throw e;
                 }
-                
+
 
                 _versionHandler.SetVersionInstalled(version);
             }
