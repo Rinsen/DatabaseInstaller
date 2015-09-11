@@ -31,6 +31,7 @@ namespace Rinsen.DatabaseInstaller
             services.AddTransient<DatabaseVersionInstaller, DatabaseVersionInstaller>();
             services.AddTransient<DatabaseScriptRunner, DatabaseScriptRunner>();
             services.AddTransient<VersionHandler, VersionHandler>();
+            services.AddTransient<IVersionStorage, AdoNetVersionStorage>();
         }
 
         public static void RunDatabaseInstaller(this IApplicationBuilder app, IEnumerable<DatabaseVersion> databaseVersions)

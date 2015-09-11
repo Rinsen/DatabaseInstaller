@@ -21,6 +21,8 @@ namespace DatabaseInstallerSampleApp
 
             var installer = serviceProvider.GetRequiredService<Installer>();
 
+            var info = installer.GetVersionInformation();
+
             // Install installer and first version
             var versionList = new List<DatabaseVersion>();
             versionList.Add(new FirstTableVersion());

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.8-beta",
+  "version": "0.1.91-beta",
   "description": "Simple database installer and version handler for dnx projects",
   "authors": [ "Fredrik Rinsén" ],
   "tags": [ "database installer dnx" ],
@@ -7,11 +7,10 @@
   "licenseUrl": "http://opensource.org/licenses/MIT",
 
   "dependencies": {
-    "Dapper": "1.41.0-beta5",
-    "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta6",
-    "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta6",
+    "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta7",
+    "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta7",
     "System.Data.SqlClient": "4.0.0-beta-22816",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6"
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7"
   },
 
   "frameworks": {
