@@ -7,10 +7,10 @@
   "licenseUrl": "",
 
   "dependencies": {
-    "Microsoft.Framework.DependencyInjection": "1.0.0-beta6",
+    "Microsoft.Framework.DependencyInjection": "1.0.0-beta8",
     "Rinsen.DatabaseInstaller": "",
-    "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
-    "Microsoft.Framework.Configuration": "1.0.0-beta6"
+    "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
+    "Microsoft.Framework.Configuration": "1.0.0-beta8"
   },
 
   "commands": {

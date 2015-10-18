@@ -7,10 +7,10 @@
   "licenseUrl": "http://opensource.org/licenses/MIT",
 
   "dependencies": {
-    "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta7",
-    "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta7",
-    "System.Data.SqlClient": "4.0.0-beta-22816",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7"
+    "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta8",
+    "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta8",
+    "System.Data.SqlClient": "4.0.0-*",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8"
   },
 
   "frameworks": {
