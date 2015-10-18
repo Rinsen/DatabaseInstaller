@@ -1,5 +1,5 @@
 {
-  "version": "0.1.91-beta",
+  "version": "0.1.92-beta",
   "description": "Simple database installer and version handler for dnx projects",
   "authors": [ "Fredrik Rinsén" ],
   "tags": [ "database installer dnx" ],

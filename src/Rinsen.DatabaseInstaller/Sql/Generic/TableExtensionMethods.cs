@@ -11,7 +11,7 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
             return table.AddColumn(property, new Int()).AutoIncrement();
         }
 
-        public static ColumnBuilder AddColumn<T>(this Table<T> table, Expression<Func<T, object>> propertyExpression, int? length = null)
+        public static ColumnBuilder AddColumn<T>(this Table<T> table, Expression<Func<T, object>> propertyExpression, int? length = null, int? precision = null)
         {
             var propertyType = propertyExpression.GetMemberType();
 
@@ -66,6 +66,19 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
                 }
                 return table.AddColumn(propertyExpression, new Binary((int)length));
             }
+            if (propertyType == typeof(decimal))
+            {
+                if (length == null && precision == null)
+                {
+                    return table.AddColumn(propertyExpression, new Decimal(5, 2));
+                }
+                if (length == null || precision == null)
+                {
+                    throw new ArgumentException("Length and precision is mandatory for this type if one is provided");
+                }
+                return table.AddColumn(propertyExpression, new Decimal((int)length, (int)precision));
+            }
+
 
             throw new ArgumentException("Type is not supported");
         }

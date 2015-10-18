@@ -34,20 +34,21 @@ namespace Rinsen.DatabaseInstaller
 
         public InstallationNameAndVersion Get(string name)
         {
+            var result = default(InstallationNameAndVersion);
+
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
                 using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", _installerOptions.InstalledVersionsDatabaseTableName), connection))
                 {
                     command.Parameters.Add(new SqlParameter("@InstallationName", name));
                     connection.Open();
-
                     var reader = command.ExecuteReader();
 
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            return new InstallationNameAndVersion
+                            result =  new InstallationNameAndVersion
                             {
                                 Id = (int)reader["Id"],
                                 InstallationName = (string)reader["InstallationName"],
@@ -58,9 +59,9 @@ namespace Rinsen.DatabaseInstaller
                         }
                     }
                 }
-
-                return default(InstallationNameAndVersion);
             }
+
+            return result;
         }
 
         public IEnumerable<InstallationNameAndVersion> GetAll()
