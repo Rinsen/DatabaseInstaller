@@ -11,7 +11,7 @@ namespace DatabaseInstallerSampleApp
     {
         public void Main(string[] args)
         {
-            var config = new ConfigurationBuilder("C:/Config").AddJsonFile("config.json").Build();
+            var config = new ConfigurationBuilder().SetBasePath("C:/Config").AddJsonFile("config.json").Build();
             
             var serviceCollection = new ServiceCollection();
 
