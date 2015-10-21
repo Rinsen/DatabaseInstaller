@@ -1,5 +1,5 @@
 {
-  "version": "0.1.92-beta",
+  "version": "0.1.94-beta",
   "description": "Simple database installer and version handler for dnx projects",
   "authors": [ "Fredrik Rinsén" ],
   "tags": [ "database installer dnx" ],
@@ -9,12 +9,19 @@
   "dependencies": {
     "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta8",
     "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta8",
-    "System.Data.SqlClient": "4.0.0-*",
     "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8"
   },
 
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": { }
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+        "System.Data.SqlClient": "4.0.0-*"
+      }
+    }
   }
 }
