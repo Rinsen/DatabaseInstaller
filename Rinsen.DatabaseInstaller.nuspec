@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Rinsen.DatabaseInstaller</id>
-    <version>0.1.92-beta</version>
+    <version>0.1.94-beta</version>
     <title>Rinsen Database Installer</title>
     <authors>Fredrik Rinsén</authors>
     <owners>Fredrik Rinsén</owners>
@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database installer and version handler for dnx projects</description>
     <releaseNotes>
+      0.1.94 beta8 support
       0.1.92 Added support for decimal in generics
       0.1.91 Removed Dapper dependency
       0.1.9 Upgrading dependecies to beta7
