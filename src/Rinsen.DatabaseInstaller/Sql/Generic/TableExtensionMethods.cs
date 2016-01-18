@@ -50,6 +50,13 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
 
                 return table.AddColumn(propertyExpression, new Int());
             }
+            if (propertyType == typeof(int?))
+            {
+                if (length != null)
+                    throw new ArgumentException("Length is not supported for this type");
+
+                return table.AddColumn(propertyExpression, new Int());
+            }
             if (propertyType == typeof(string))
             {
                 if (length == null)

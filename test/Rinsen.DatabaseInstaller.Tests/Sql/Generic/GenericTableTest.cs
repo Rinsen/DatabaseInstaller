@@ -30,6 +30,11 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             public int Col3 { get; set; }
         }
 
+        public class NullableIntTestTable
+        {
+            public int? MyNullableInt { get; set; }
+        }
+
         [Fact]
         public void WhenCreateTable_GetCorrespondingTableScript()
         {
@@ -116,6 +121,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var createScript = table.GetUpScript().Single();
 
             Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyColumn int NOT NULL\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenNullableInt_GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<NullableIntTestTable>();
+
+            table.AddColumn(m => m.MyNullableInt);
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE NullableIntTestTables\r\n(\r\nMyNullableInt int\r\n)", createScript);
         }
 
     }

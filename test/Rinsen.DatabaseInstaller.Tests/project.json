@@ -9,8 +9,8 @@
   "dependencies": {
     "Rinsen.DatabaseInstaller": "",
     "Moq": "4.2.1502.911",
-    "xunit": "2.1.0-beta3-*",
-    "xunit.runner.dnx": "2.1.0-beta3-*"
+    "xunit": "2.1.0",
+    "xunit.runner.dnx": "2.1.0-rc1-build204"
   },
 
   "commands": {

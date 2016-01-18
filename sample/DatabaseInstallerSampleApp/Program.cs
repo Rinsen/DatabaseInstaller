@@ -1,9 +1,9 @@
-﻿using Microsoft.Framework.DependencyInjection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Rinsen.DatabaseInstaller;
-using Microsoft.Framework.Configuration;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DatabaseInstallerSampleApp
 {

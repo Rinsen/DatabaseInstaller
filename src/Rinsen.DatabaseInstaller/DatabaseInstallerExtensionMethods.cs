@@ -1,11 +1,11 @@
-﻿using Microsoft.Framework.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.Builder;
 using Rinsen.DatabaseInstaller.Sql;
 using System.Linq.Expressions;
 using System.Reflection;
 using Rinsen.DatabaseInstaller.Sql.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Rinsen.DatabaseInstaller
 {
