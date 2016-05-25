@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FCEF23A-1646-4C4C-A66C-EF55FF573FFB}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,15 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Rinsen.DatabaseInstaller.nuspec = Rinsen.DatabaseInstaller.nuspec
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DatabaseInstallerSampleApp", "sample\DatabaseInstallerSampleApp\DatabaseInstallerSampleApp.xproj", "{F116AB07-EC4D-4A17-A49A-87EFDB215AFF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2C550C2B-2F63-4496-8E4F-1FBE468A98B4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9105A91F-E92D-476A-AD09-242AFBD59872}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstaller", "src\Rinsen.DatabaseInstaller\Rinsen.DatabaseInstaller.xproj", "{2FDFA487-E1B3-42BB-B936-860CA55C3304}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{85B2137B-348B-44D7-AB81-C5CD716B2BB7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstaller.Tests", "test\Rinsen.DatabaseInstaller.Tests\Rinsen.DatabaseInstaller.Tests.xproj", "{06E5E5C5-6DD1-4713-8456-F9F16A4EE574}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DatabaseInstallerSampleApp", "sample\DatabaseInstallerSampleApp\DatabaseInstallerSampleApp.xproj", "{AC711DED-CB48-4441-93E3-DEB272E5B50C}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstaller", "src\Rinsen.DatabaseInstaller\Rinsen.DatabaseInstaller.xproj", "{E0E4BD27-D48E-470F-A7D5-56158943A7FD}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstaller.Tests", "test\Rinsen.DatabaseInstaller.Tests\Rinsen.DatabaseInstaller.Tests.xproj", "{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,24 +27,25 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F116AB07-EC4D-4A17-A49A-87EFDB215AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F116AB07-EC4D-4A17-A49A-87EFDB215AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F116AB07-EC4D-4A17-A49A-87EFDB215AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F116AB07-EC4D-4A17-A49A-87EFDB215AFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FDFA487-E1B3-42BB-B936-860CA55C3304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FDFA487-E1B3-42BB-B936-860CA55C3304}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FDFA487-E1B3-42BB-B936-860CA55C3304}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FDFA487-E1B3-42BB-B936-860CA55C3304}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06E5E5C5-6DD1-4713-8456-F9F16A4EE574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06E5E5C5-6DD1-4713-8456-F9F16A4EE574}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06E5E5C5-6DD1-4713-8456-F9F16A4EE574}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06E5E5C5-6DD1-4713-8456-F9F16A4EE574}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC711DED-CB48-4441-93E3-DEB272E5B50C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC711DED-CB48-4441-93E3-DEB272E5B50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC711DED-CB48-4441-93E3-DEB272E5B50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC711DED-CB48-4441-93E3-DEB272E5B50C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0E4BD27-D48E-470F-A7D5-56158943A7FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0E4BD27-D48E-470F-A7D5-56158943A7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0E4BD27-D48E-470F-A7D5-56158943A7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0E4BD27-D48E-470F-A7D5-56158943A7FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2FDFA487-E1B3-42BB-B936-860CA55C3304} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
-		{06E5E5C5-6DD1-4713-8456-F9F16A4EE574} = {9105A91F-E92D-476A-AD09-242AFBD59872}
+		{AC711DED-CB48-4441-93E3-DEB272E5B50C} = {85B2137B-348B-44D7-AB81-C5CD716B2BB7}
+		{E0E4BD27-D48E-470F-A7D5-56158943A7FD} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
+		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F} = {9105A91F-E92D-476A-AD09-242AFBD59872}
 	EndGlobalSection
 EndGlobal

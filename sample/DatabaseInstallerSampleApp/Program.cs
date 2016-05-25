@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Rinsen.DatabaseInstaller;
+﻿using Rinsen.DatabaseInstaller;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,9 +9,12 @@ namespace DatabaseInstallerSampleApp
 {
     public class Program
     {
-        public void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder().SetBasePath("C:/Config").AddJsonFile("config.json").Build();
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddUserSecrets("aspnet-DatabaseInstallerSampleApp-20160525082933");
+
+            var config = configBuilder.Build();
             
             var serviceCollection = new ServiceCollection();
 
@@ -37,7 +40,7 @@ namespace DatabaseInstallerSampleApp
                 versionList.Add(secondTable);
                 installer.Run(versionList);
             }
-            catch (SqlCommandFailedToExecuteException)
+            catch (CommandFailedToExecuteException)
             {
                 exceptionFound = true;
                 var installedVersion = installer.GetVersionInformation().Single(m => m.InstallationName == secondTable.InstallationName);

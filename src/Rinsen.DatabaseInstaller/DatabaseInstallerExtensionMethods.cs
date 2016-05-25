@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNet.Builder;
+using Microsoft.AspNetCore.Builder;
 using Rinsen.DatabaseInstaller.Sql;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -25,7 +25,7 @@ namespace Rinsen.DatabaseInstaller
                 throw new ArgumentException("No connection string is provided");
             }
 
-            services.AddInstance(installerOptions);
+            services.AddSingleton(installerOptions);
 
             services.AddTransient<Installer, Installer>();
             services.AddTransient<DatabaseVersionInstaller, DatabaseVersionInstaller>();

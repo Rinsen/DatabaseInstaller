@@ -6,48 +6,21 @@ namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseScriptRunner
     {
-        private readonly InstallerOptions _installerOptions;
-
-        public DatabaseScriptRunner(InstallerOptions installerOptions)
+        internal void Run(List<string> commands, SqlConnection connection, SqlTransaction transaction)
         {
-            _installerOptions = installerOptions;
-        }
-
-        internal void Run(List<string> commands)
-        {
-            var currentCommand = string.Empty;
-            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
+            foreach (var command in commands)
             {
-                connection.Open();
-
-                var sqlCommand = connection.CreateCommand();
-                var transaction = connection.BeginTransaction();
-
-                sqlCommand.Transaction = transaction;
-
-                try
+                using (var sqlCommand = new SqlCommand(command, connection, transaction))
                 {
-                    foreach (var command in commands)
-                    {
-                        currentCommand = command;
-                        sqlCommand.CommandText = currentCommand;
-                        sqlCommand.ExecuteNonQuery();
-                    }
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    var exception = new SqlCommandFailedToExecuteException(string.Format("Installation error for command {0}", currentCommand), ex);
                     try
                     {
-                        transaction.Rollback();
+                        sqlCommand.ExecuteNonQuery();
                     }
-                    catch (Exception ex2)
+                    catch (Exception ex)
                     {
-                        throw new AggregateException("Rollback failed to execute", new List<Exception> { exception, ex2 });
+                        var exception = new CommandFailedToExecuteException(string.Format("Installation error for command {0}", command), ex);
+                        throw exception;
                     }
-
-                    throw exception;
                 }
             }
         }

@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseVersionInstaller
     {
-        readonly InstallerOptions _installerOptions;
         readonly VersionHandler _versionHandler;
         readonly DatabaseScriptRunner _databaseScriptRunner;
 
-        public DatabaseVersionInstaller(InstallerOptions installerOptions, VersionHandler versionHandler, DatabaseScriptRunner databaseScriptRunner)
+        public DatabaseVersionInstaller(VersionHandler versionHandler, DatabaseScriptRunner databaseScriptRunner)
         {
-            _installerOptions = installerOptions;
             _versionHandler = versionHandler;
             _databaseScriptRunner = databaseScriptRunner;
         }
 
-        internal void Install(List<DatabaseVersion> databaseVersions)
+        internal void Install(List<DatabaseVersion> databaseVersions, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var installationName in databaseVersions.Select(v => v.InstallationName).Distinct())
             {
@@ -28,49 +27,43 @@ namespace Rinsen.DatabaseInstaller
                     throw new ArgumentException(string.Format("There can only be one unique version {0} for installation name {1}", databaseVersions.GroupBy(m => m.Version).Where(c => c.Count() > 1).First(), installationName));
                 }
 
-                var installedVersion = _versionHandler.GetInstalledVersion(installationName);
+                var installedVersion = _versionHandler.GetInstalledVersion(installationName, connection, transaction);
 
                 if (versions.Where(m => m.Version > installedVersion.InstalledVersion).Any())
                 {
-                    InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version));
+                    InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version), connection, transaction);
                 }
+                 
             }
         }
 
-        internal void InstallBaseVersion(InstallerBaseVersion installerBaseVersion)
+        internal void InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
             var dbChangeList = new List<IDbChange>();
             installerBaseVersion.AddDbChanges(dbChangeList);
             installerBaseVersion.SetTables(dbChangeList);
             installerBaseVersion.PrepareUp();
 
-            _databaseScriptRunner.Run(installerBaseVersion.Commands);
+            _databaseScriptRunner.Run(installerBaseVersion.Commands, connection, transaction);
 
-            _versionHandler.InstallBaseVersion(installerBaseVersion);
+            _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
         }
 
-        void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName)
+        void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var version in orderedVersionsForInstallationName)
             {
-                _versionHandler.BeginInstallVersion(version);
+                _versionHandler.BeginInstallVersion(version, connection, transaction);
 
                 var dbChangeList = new List<IDbChange>();
                 version.AddDbChanges(dbChangeList);
                 version.SetTables(dbChangeList);
                 version.PrepareUp();
-                try
-                {
-                    _databaseScriptRunner.Run(version.Commands);
-                }
-                catch (SqlCommandFailedToExecuteException e)
-                {
-                    _versionHandler.UndoBeginInstallVersion(version);
-                    throw e;
-                }
 
+                _databaseScriptRunner.Run(version.Commands, connection, transaction);
 
-                _versionHandler.SetVersionInstalled(version);
+                _versionHandler.SetVersionInstalled(version, connection, transaction);
+                transaction.Commit();
             }
         }
     }

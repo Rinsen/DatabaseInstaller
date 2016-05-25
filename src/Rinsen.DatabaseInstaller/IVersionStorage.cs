@@ -7,16 +7,15 @@ namespace Rinsen.DatabaseInstaller
     {
         bool IsInstalled();
 
-        InstallationNameAndVersion Get(string name);
+        InstallationNameAndVersion Get(string name, SqlConnection connection);
 
-        IEnumerable<InstallationNameAndVersion> GetAll();
+        IEnumerable<InstallationNameAndVersion> GetAll(SqlConnection connection);
 
-        void Create(InstallationNameAndVersion installedNameAndVersion);
+        void Create(InstallationNameAndVersion installedNameAndVersion, SqlConnection connection, SqlTransaction transaction);
 
-        int StartInstallation(InstallationNameAndVersion installedVersion);
+        int StartInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction);
 
-        int EndInstallation(InstallationNameAndVersion installedVersion);
-
-        int UndoInstallation(InstallationNameAndVersion installedVersion);
+        int EndInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction);
+        
     }
 }

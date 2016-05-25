@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Rinsen.DatabaseInstaller
@@ -21,14 +22,23 @@ namespace Rinsen.DatabaseInstaller
         
         public void Run(IEnumerable<DatabaseVersion> databaseVersions)
         {
-            //_log.LogCritical("DatabaseInstaller started");
-            if (!_versionHandler.IsInstalled())
+            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
-                _databaseVersionInstaller.InstallBaseVersion(new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName));
-            }
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
 
-            _databaseVersionInstaller.Install(databaseVersions.ToList());
-            //_log.LogCritical("DatabaseInstaller finished");
+                    //_log.LogCritical("DatabaseInstaller started");
+                    if (!_versionHandler.IsInstalled())
+                    {
+                        var installerBaseVersion = new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName);
+                        _databaseVersionInstaller.InstallBaseVersion( installerBaseVersion, connection, transaction);
+                    }
+
+                    _databaseVersionInstaller.Install(databaseVersions.ToList(), connection, transaction);
+                    //_log.LogCritical("DatabaseInstaller finished");
+                }
+            }
         }
 
         public void RollbackVersions(string name, int toVersion)
@@ -38,7 +48,10 @@ namespace Rinsen.DatabaseInstaller
 
         public IEnumerable<InstallationNameAndVersion> GetVersionInformation()
         {
-            return _versionHandler.GetInstalledVersionsInformation();
+            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
+            {
+                return _versionHandler.GetInstalledVersionsInformation(connection);
+            }
         } 
     }
 }
