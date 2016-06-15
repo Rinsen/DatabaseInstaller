@@ -12,11 +12,13 @@ namespace Rinsen.DatabaseInstaller
         private readonly VersionHandler _versionHandler;
         private readonly InstallerOptions _installerOptions;
         private readonly ILogger<Installer> _log;
-        
-        public Installer(DatabaseVersionInstaller changeInstaller, VersionHandler versionHandler, InstallerOptions installerOptions, ILogger<Installer> log)
+        private readonly IVersionStorage _versionStorage;
+
+        public Installer(DatabaseVersionInstaller changeInstaller, VersionHandler versionHandler, IVersionStorage versionStorage, InstallerOptions installerOptions, ILogger<Installer> log)
         {
             _databaseVersionInstaller = changeInstaller;
             _versionHandler = versionHandler;
+            _versionStorage = versionStorage;
             _installerOptions = installerOptions;
             _log = log;
         }
@@ -30,7 +32,7 @@ namespace Rinsen.DatabaseInstaller
                 {
 
                     _log.LogDebug("DatabaseInstaller started");
-                    if (!_versionHandler.IsInstalled())
+                    if (!_versionStorage.IsInstalled(connection, transaction))
                     {
                         _log.LogDebug("First installation, installing base version");
                         var installerBaseVersion = new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName);
@@ -54,7 +56,11 @@ namespace Rinsen.DatabaseInstaller
         {
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
-                return _versionHandler.GetInstalledVersionsInformation(connection);
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    return _versionHandler.GetInstalledVersionsInformation(connection, transaction);
+                }
             }
         } 
     }

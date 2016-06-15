@@ -5,11 +5,11 @@ namespace Rinsen.DatabaseInstaller
 {
     public interface IVersionStorage
     {
-        bool IsInstalled();
+        bool IsInstalled(SqlConnection connection, SqlTransaction transaction);
 
-        InstallationNameAndVersion Get(string name, SqlConnection connection);
+        InstallationNameAndVersion Get(string name, SqlConnection connection, SqlTransaction transaction);
 
-        IEnumerable<InstallationNameAndVersion> GetAll(SqlConnection connection);
+        IEnumerable<InstallationNameAndVersion> GetAll(SqlConnection connection, SqlTransaction transaction);
 
         void Create(InstallationNameAndVersion installedNameAndVersion, SqlConnection connection, SqlTransaction transaction);
 

@@ -8,6 +8,7 @@
 *.sln.docstates
 config.json
 project.lock.json
+*.exe
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

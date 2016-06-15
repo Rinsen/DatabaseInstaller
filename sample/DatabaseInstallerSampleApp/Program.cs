@@ -12,16 +12,31 @@ namespace DatabaseInstallerSampleApp
     {
         public static void Main(string[] args)
         {
+            try
+            {
+                RunDatabaseInstaller();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
+        }
+
+        private static void RunDatabaseInstaller()
+        {
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddUserSecrets("aspnet-DatabaseInstallerSampleApp-20160525082933");
 
             var config = configBuilder.Build();
-            
+
             var serviceCollection = new ServiceCollection();
-            
+
             serviceCollection.AddDatabaseInstaller(config["Data:DefaultConnection:ConnectionString"]);
+            serviceCollection.AddLogging();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
+
 
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             loggerFactory.AddConsole();

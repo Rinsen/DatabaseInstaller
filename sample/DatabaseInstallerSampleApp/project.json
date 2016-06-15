@@ -14,7 +14,8 @@
     },
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
     "Rinsen.DatabaseInstaller": "0.2.2-beta",
-    "Microsoft.Extensions.Logging.Filter": "1.0.0-rc2-final"
+    "Microsoft.Extensions.Logging.Filter": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Logging": "1.0.0-rc2-final"
   },
 
   "frameworks": {

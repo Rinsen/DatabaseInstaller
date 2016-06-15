@@ -27,27 +27,28 @@ namespace Rinsen.DatabaseInstaller
             }
         }
 
-        public InstallationNameAndVersion Get(string name, SqlConnection connection)
+        public InstallationNameAndVersion Get(string name, SqlConnection connection, SqlTransaction transaction)
         {
             var result = default(InstallationNameAndVersion);
 
-            using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", _installerOptions.InstalledVersionsDatabaseTableName), connection))
+            using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", _installerOptions.InstalledVersionsDatabaseTableName), connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@InstallationName", name));
-                var reader = command.ExecuteReader();
-
-                if (reader.HasRows)
+                using (var reader = command.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (reader.HasRows)
                     {
-                        result =  new InstallationNameAndVersion
+                        while (reader.Read())
                         {
-                            Id = (int)reader["Id"],
-                            InstallationName = (string)reader["InstallationName"],
-                            InstalledVersion = (int)reader["InstalledVersion"],
-                            PreviousVersion = (int)reader["PreviousVersion"],
-                            StartedInstallingVersion = (int)reader["StartedInstallingVersion"]
-                        };
+                            result = new InstallationNameAndVersion
+                            {
+                                Id = (int)reader["Id"],
+                                InstallationName = (string)reader["InstallationName"],
+                                InstalledVersion = (int)reader["InstalledVersion"],
+                                PreviousVersion = (int)reader["PreviousVersion"],
+                                StartedInstallingVersion = (int)reader["StartedInstallingVersion"]
+                            };
+                        }
                     }
                 }
             }
@@ -55,25 +56,27 @@ namespace Rinsen.DatabaseInstaller
             return result;
         }
 
-        public IEnumerable<InstallationNameAndVersion> GetAll(SqlConnection connection)
+        public IEnumerable<InstallationNameAndVersion> GetAll(SqlConnection connection, SqlTransaction transaction)
         {
             var results = new List<InstallationNameAndVersion>();
 
-            using (var command = new SqlCommand(string.Format("SELECT * FROM {0}", _installerOptions.InstalledVersionsDatabaseTableName), connection))
+            using (var command = new SqlCommand(string.Format("SELECT * FROM {0}", _installerOptions.InstalledVersionsDatabaseTableName), connection, transaction))
             {
-                var reader = command.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
+                using (var reader = command.ExecuteReader())
+                { 
+                    if (reader.HasRows)
                     {
-                        results.Add(new InstallationNameAndVersion
+                        while (reader.Read())
                         {
-                            Id = (int)reader["Id"],
-                            InstallationName = (string)reader["InstallationName"],
-                            InstalledVersion = (int)reader["InstalledVersion"],
-                            PreviousVersion = (int)reader["PreviousVersion"],
-                            StartedInstallingVersion = (int)reader["StartedInstallingVersion"]
-                        });
+                            results.Add(new InstallationNameAndVersion
+                            {
+                                Id = (int)reader["Id"],
+                                InstallationName = (string)reader["InstallationName"],
+                                InstalledVersion = (int)reader["InstalledVersion"],
+                                PreviousVersion = (int)reader["PreviousVersion"],
+                                StartedInstallingVersion = (int)reader["StartedInstallingVersion"]
+                            });
+                        }
                     }
                 }
             }
@@ -81,24 +84,21 @@ namespace Rinsen.DatabaseInstaller
             return results;
         }
 
-        public bool IsInstalled()
+        public bool IsInstalled(SqlConnection connection, SqlTransaction transaction)
         {
             bool result = false;
 
-            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
+            using (var command = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @tableName", connection, transaction))
             {
-                using (var command = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @tableName", connection))
+                command.Parameters.Add(new SqlParameter("@tableName", _installerOptions.InstalledVersionsDatabaseTableName));
+
+                using (var reader = command.ExecuteReader())
                 {
-                    command.Parameters.Add(new SqlParameter("@tableName", _installerOptions.InstalledVersionsDatabaseTableName));
-                    connection.Open();
-
-                    var reader = command.ExecuteReader();
-
                     if (reader.HasRows)
                     {
                         int count = 0;
                         while (reader.Read())
-                        {
+                       {
                             count++;
                         }
 
@@ -122,7 +122,6 @@ namespace Rinsen.DatabaseInstaller
                 command.Parameters.Add(new SqlParameter("@PreviousVersion", installedVersion.PreviousVersion));
                 command.Parameters.Add(new SqlParameter("@StartedInstallingVersion", installedVersion.StartedInstallingVersion));
                 command.Parameters.Add(new SqlParameter("@InstalledVersion", installedVersion.InstalledVersion));
-                connection.Open();
 
                 return command.ExecuteNonQuery();
             }
@@ -137,7 +136,6 @@ namespace Rinsen.DatabaseInstaller
                 command.Parameters.Add(new SqlParameter("@PreviousVersion", installedVersion.PreviousVersion));
                 command.Parameters.Add(new SqlParameter("@StartedInstallingVersion", installedVersion.StartedInstallingVersion));
                 command.Parameters.Add(new SqlParameter("@InstalledVersion", installedVersion.InstalledVersion));
-                connection.Open();
 
                 return command.ExecuteNonQuery();
             }

@@ -16,12 +16,12 @@ namespace Rinsen.DatabaseInstaller
 
         internal virtual InstallationNameAndVersion GetInstalledVersion(string name, SqlConnection connection, SqlTransaction transaction)
         {
-            if (!IsInstalled())
+            if (!_versionStorage.IsInstalled(connection, transaction))
             {
                 throw new InvalidOperationException("Installer is not installed");
             }
             
-            InstallationNameAndVersion installedNameAndVersion = _versionStorage.Get(name, connection);
+            InstallationNameAndVersion installedNameAndVersion = _versionStorage.Get(name, connection, transaction);
 
             if (installedNameAndVersion == default(InstallationNameAndVersion))
             {
@@ -39,11 +39,11 @@ namespace Rinsen.DatabaseInstaller
             return installedNameAndVersion;
         }
 
-        internal virtual IEnumerable<InstallationNameAndVersion> GetInstalledVersionsInformation(SqlConnection connection)
+        internal virtual IEnumerable<InstallationNameAndVersion> GetInstalledVersionsInformation(SqlConnection connection, SqlTransaction transaction)
         {
-            if (IsInstalled())
+            if (_versionStorage.IsInstalled(connection, transaction))
             {
-                return _versionStorage.GetAll(connection);
+                return _versionStorage.GetAll(connection, transaction);
             }
             else
             {
@@ -62,11 +62,6 @@ namespace Rinsen.DatabaseInstaller
             };
 
             _versionStorage.Create(installedNameAndVersion, connection, transaction);
-        }
-
-        internal bool IsInstalled()
-        {
-            return _versionStorage.IsInstalled();
         }
 
         internal void BeginInstallVersion(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)

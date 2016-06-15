@@ -29,13 +29,19 @@
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>aspnetcore database installer</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="1.0.0-rc2-final" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="1.0.0-rc2-final" />
+        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="1.0.0-rc2-final" />
+        <dependency id="NETStandard.Library" version="1.5.0-rc2-24027" />
+        <dependency id="System.Data.SqlClient" version="4.1.0-rc2-24027" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
-    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.dll" target="lib\dnx451" />
-    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.pdb" target="lib\dnx451" />
-    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.xml" target="lib\dnx451" />
-    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnxcore50\Rinsen.DatabaseInstaller.dll" target="lib\dnxcore50" />
-    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnxcore50\Rinsen.DatabaseInstaller.pdb" target="lib\dnxcore50" />
-    <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnxcore50\Rinsen.DatabaseInstaller.xml" target="lib\dnxcore50" />
+    <file src="\src\Rinsen.DatabaseInstaller\bin\Release\netstandard1.0\Rinsen.DatabaseInstaller.dll" target="lib\netstandard1.0" />
+    <file src="\src\Rinsen.DatabaseInstaller\bin\Release\netstandard1.0\Rinsen.DatabaseInstaller.pdb" target="lib\netstandard1.0" />
+    <file src="\\src\Rinsen.DatabaseInstaller\bin\Release\netstandard1.0\Rinsen.DatabaseInstaller.deps.json" target="lib\netstandard1.0" />
   </files>
 </package>
