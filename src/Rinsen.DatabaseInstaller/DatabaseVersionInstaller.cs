@@ -63,7 +63,6 @@ namespace Rinsen.DatabaseInstaller
                 _databaseScriptRunner.Run(version.Commands, connection, transaction);
 
                 _versionHandler.SetVersionInstalled(version, connection, transaction);
-                transaction.Commit();
             }
         }
     }

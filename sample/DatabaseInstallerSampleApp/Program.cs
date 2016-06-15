@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DatabaseInstallerSampleApp
 {
@@ -17,10 +18,17 @@ namespace DatabaseInstallerSampleApp
             var config = configBuilder.Build();
             
             var serviceCollection = new ServiceCollection();
-
+            
             serviceCollection.AddDatabaseInstaller(config["Data:DefaultConnection:ConnectionString"]);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            loggerFactory.AddConsole();
+            loggerFactory.WithFilter(new FilterLoggerSettings
+            {
+                { "Rinsen", LogLevel.Debug }
+            });
 
             var installer = serviceProvider.GetRequiredService<Installer>();
 

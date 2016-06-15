@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -10,14 +11,14 @@ namespace Rinsen.DatabaseInstaller
         private readonly DatabaseVersionInstaller _databaseVersionInstaller;
         private readonly VersionHandler _versionHandler;
         private readonly InstallerOptions _installerOptions;
-        //private readonly ILogger _log;
+        private readonly ILogger<Installer> _log;
         
-        public Installer(DatabaseVersionInstaller changeInstaller, VersionHandler versionHandler, InstallerOptions installerOptions)//, ILoggerFactory loggerFactory)
+        public Installer(DatabaseVersionInstaller changeInstaller, VersionHandler versionHandler, InstallerOptions installerOptions, ILogger<Installer> log)
         {
             _databaseVersionInstaller = changeInstaller;
             _versionHandler = versionHandler;
             _installerOptions = installerOptions;
-          //  _log = loggerFactory.CreateLogger<Installer>();
+            _log = log;
         }
         
         public void Run(IEnumerable<DatabaseVersion> databaseVersions)
@@ -28,15 +29,18 @@ namespace Rinsen.DatabaseInstaller
                 using (var transaction = connection.BeginTransaction())
                 {
 
-                    //_log.LogCritical("DatabaseInstaller started");
+                    _log.LogDebug("DatabaseInstaller started");
                     if (!_versionHandler.IsInstalled())
                     {
+                        _log.LogDebug("First installation, installing base version");
                         var installerBaseVersion = new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName);
                         _databaseVersionInstaller.InstallBaseVersion( installerBaseVersion, connection, transaction);
                     }
 
                     _databaseVersionInstaller.Install(databaseVersions.ToList(), connection, transaction);
-                    //_log.LogCritical("DatabaseInstaller finished");
+                    _log.LogDebug("DatabaseInstaller finished, commit changes");
+                    transaction.Commit();
+                    _log.LogDebug("Commit completed");
                 }
             }
         }

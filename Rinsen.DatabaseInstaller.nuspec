@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Rinsen.DatabaseInstaller</id>
-    <version>0.2.1-beta</version>
+    <version>0.2.2-beta</version>
     <title>Rinsen Database Installer</title>
     <authors>Fredrik Rinsén</authors>
     <owners>Fredrik Rinsén</owners>
@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database installer and version handler for dnx projects</description>
     <releaseNotes>
+      0.2.2-beta Added RC2 support
       0.2.1 Added support for int?
       0.2.0 rc1 support
       0.1.94 beta8 support
@@ -26,8 +27,8 @@
       0.1.3 Added table alternations and some fixes and changes to how scripts is added to database versions
       0.1.0 Initial commit.
     </releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags>dnx database installer</tags>
+    <copyright>Copyright 2016</copyright>
+    <tags>aspnetcore database installer</tags>
   </metadata>
   <files>
     <file src="\artifacts\bin\Rinsen.DatabaseInstaller\Debug\dnx451\Rinsen.DatabaseInstaller.dll" target="lib\dnx451" />
