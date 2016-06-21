@@ -21,6 +21,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstaller", 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstaller.Tests", "test\Rinsen.DatabaseInstaller.Tests\Rinsen.DatabaseInstaller.Tests.xproj", "{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Rinsen.DatabaseInstallerWeb", "src\Rinsen.DatabaseInstallerWeb\Rinsen.DatabaseInstallerWeb.xproj", "{A8F938DD-D908-4CFD-A221-59E4E4EE47CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F938DD-D908-4CFD-A221-59E4E4EE47CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F938DD-D908-4CFD-A221-59E4E4EE47CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F938DD-D908-4CFD-A221-59E4E4EE47CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F938DD-D908-4CFD-A221-59E4E4EE47CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,5 +53,6 @@ Global
 		{AC711DED-CB48-4441-93E3-DEB272E5B50C} = {85B2137B-348B-44D7-AB81-C5CD716B2BB7}
 		{E0E4BD27-D48E-470F-A7D5-56158943A7FD} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
 		{F14EBA9C-E07B-4AA6-9BDC-7E13EC1BB75F} = {9105A91F-E92D-476A-AD09-242AFBD59872}
+		{A8F938DD-D908-4CFD-A221-59E4E4EE47CB} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
 	EndGlobalSection
 EndGlobal
