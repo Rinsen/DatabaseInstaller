@@ -67,10 +67,11 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
             }
             if (propertyType == typeof(byte[]))
             {
-                if (length == null)
+                if (length == null || length < 1)
                 {
-                    return table.AddColumn(propertyExpression, new Binary());
+                    throw new ArgumentException("Positive length is mandatory for this type");
                 }
+                
                 return table.AddColumn(propertyExpression, new Binary((int)length));
             }
             if (propertyType == typeof(decimal))
@@ -85,7 +86,13 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
                 }
                 return table.AddColumn(propertyExpression, new Decimal((int)length, (int)precision));
             }
+            if (propertyType == typeof(System.Guid))
+            {
+                if (length != null)
+                    throw new ArgumentException("Length is not supported for this type");
 
+                return table.AddColumn(propertyExpression, new Guid());
+            }
 
             throw new ArgumentException("Type is not supported");
         }

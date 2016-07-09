@@ -56,10 +56,11 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
             }
             if (propertyType == typeof(byte[]))
             {
-                if (length == null)
+                if (length == null || length < 1)
                 {
-                    return table.AddColumn(propertyExpression, new Binary());
+                    throw new ArgumentException("Positive length is mandatory for this type");
                 }
+
                 return table.AddColumn(propertyExpression, new Binary((int)length));
             }
 

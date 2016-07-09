@@ -1,4 +1,5 @@
 ﻿using Rinsen.DatabaseInstaller.Sql.Generic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -33,6 +34,11 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
         public class NullableIntTestTable
         {
             public int? MyNullableInt { get; set; }
+        }
+
+        public class GuidTestTable
+        {
+            public Guid MyUniqueIdentifier { get; set; }
         }
 
         [Fact]
@@ -133,6 +139,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var createScript = table.GetUpScript().Single();
 
             Assert.Equal("CREATE TABLE NullableIntTestTables\r\n(\r\nMyNullableInt int\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenGuid_GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<GuidTestTable>();
+
+            table.AddColumn(m => m.MyUniqueIdentifier);
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE GuidTestTables\r\n(\r\nMyUniqueIdentifier uniqueidentifier\r\n)", createScript);
         }
 
     }

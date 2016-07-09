@@ -90,6 +90,28 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyColumn int NOT NULL\r\n)", createScript);
         }
 
+        [Fact]
+        public void WhenGuidColumn_GetCorrespondingTableScript()
+        {
+            var table = new Table("TestTables");
+            table.AddColumn("MyColumn", new Guid()).NotNull();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyColumn uniqueidentifier NOT NULL\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenCreateTableWithAutoIncrementAsNoPrimaryKey_GetCorrespondingTableScript()
+        {
+            var table = new Table("TestTables");
+            table.AddColumn("MyIdColumn", new Int()).AutoIncrement(primaryKey: false);
+            table.AddColumn("MyValue", new NVarChar(100));
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyIdColumn int IDENTITY(1,1),\r\nMyValue nvarchar(100)\r\n)", createScript);
+        }
 
 
     }

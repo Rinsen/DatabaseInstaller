@@ -2,22 +2,22 @@
   "version": "1.0.0-*",
   "testRunner": "xunit",
   "dependencies": {
-    "xunit": "2.1.0",
-    "Rinsen.DatabaseInstaller": "0.2.2-beta",
-    "dotnet-test-xunit": "1.0.0-rc2-build10025"
+    "Rinsen.DatabaseInstaller": "0.3.2-beta",
+    "xunit": "2.2.0-*",
+    "dotnet-test-xunit": "2.2.0-*"
   },
   "frameworks": {
     "netcoreapp1.0": {
+      "imports": "dotnet5.4",
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.0-rc2-3002702"
-        }
-      },
-      "imports": [
-        "dnxcore50",
-        "portable-net45+win8"
-      ]
-    }
+          "version": "1.0.0-*",
+          "type": "platform"
+        },
+        "System.Diagnostics.TraceSource": "4.0.0-*",
+        "System.Xml.XmlDocument": "4.0.1-*"
+      }
+    },
+    "net451": {}
   }
 }

@@ -129,9 +129,12 @@ namespace Rinsen.DatabaseInstaller.Sql
             return this;
         }
 
-        public ColumnBuilder AutoIncrement(int startValue = 1, int increment = 1)
+        public ColumnBuilder AutoIncrement(int startValue = 1, int increment = 1, bool primaryKey = true)
         {
-            PrimaryKey();
+            if (primaryKey)
+            {
+                PrimaryKey();
+            }
             Column.AutoIncrement = new AutoIncrement(startValue, increment);
             return this;
         }
