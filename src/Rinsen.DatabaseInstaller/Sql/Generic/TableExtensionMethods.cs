@@ -6,9 +6,9 @@ namespace Rinsen.DatabaseInstaller.Sql.Generic
     public static class TableExtensionMethods
     {
 
-        public static ColumnBuilder AddAutoIncrementColumn<T>(this Table<T> table, Expression<Func<T, object>> property)
+        public static ColumnBuilder AddAutoIncrementColumn<T>(this Table<T> table, Expression<Func<T, object>> property, int startValue = 1, int increment = 1, bool primaryKey = true)
         {
-            return table.AddColumn(property, new Int()).AutoIncrement();
+            return table.AddColumn(property, new Int()).AutoIncrement(startValue: startValue, increment: increment, primaryKey: primaryKey);
         }
 
         public static ColumnBuilder AddColumn<T>(this Table<T> table, Expression<Func<T, object>> propertyExpression, int? length = null, int? precision = null)

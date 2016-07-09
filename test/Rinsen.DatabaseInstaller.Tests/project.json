@@ -2,7 +2,7 @@
   "version": "1.0.0-*",
   "testRunner": "xunit",
   "dependencies": {
-    "Rinsen.DatabaseInstaller": "0.3.2-beta",
+    "Rinsen.DatabaseInstaller": "0.3.3-beta",
     "xunit": "2.2.0-*",
     "dotnet-test-xunit": "2.2.0-*"
   },
