@@ -1,4 +1,6 @@
-﻿namespace Rinsen.DatabaseInstaller.Sql
+﻿using System;
+
+namespace Rinsen.DatabaseInstaller.Sql
 {
     public class Binary : IDbType
     {
@@ -6,6 +8,10 @@
 
         public Binary(int length)
         {
+            if (length < 1 || length > 8000)
+            {
+                throw new ArgumentException("Positive length or less then 8000 is mandatory for this type", nameof(length));
+            }
             _length = length;
         }
 
