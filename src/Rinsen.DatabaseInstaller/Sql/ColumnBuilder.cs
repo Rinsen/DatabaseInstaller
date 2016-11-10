@@ -36,6 +36,12 @@ namespace Rinsen.DatabaseInstaller.Sql
             return this;
         }
 
+        public ColumnBuilder Null()
+        {
+            Column.NotNull = false;
+            return this;
+        }
+
         public ColumnBuilder Unique()
         {
             if (Column.PrimaryKey)

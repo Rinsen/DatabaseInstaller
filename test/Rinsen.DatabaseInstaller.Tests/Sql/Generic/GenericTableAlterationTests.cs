@@ -25,6 +25,21 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript().Single();
 
             // Assert
+            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NOT NULL\r\n", script);
+
+        }
+
+        [Fact]
+        public void AddOneColumnWithAllowNullToTable_GetCorrectUpScript()
+        {
+            // Arrange
+
+            // Act
+            var tableAlteration = new TableAlteration<MyData>("MyTable");
+            tableAlteration.AddColumn(m => m.MyNewColumn, 100).Null();
+            var script = tableAlteration.GetUpScript().Single();
+
+            // Assert
             Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100)\r\n", script);
             
         }
@@ -41,7 +56,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript().Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100),\r\nMyOtherNewColumn int\r\n", script);
+            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NOT NULL,\r\nMyOtherNewColumn int NOT NULL\r\n", script);
 
         }
     }

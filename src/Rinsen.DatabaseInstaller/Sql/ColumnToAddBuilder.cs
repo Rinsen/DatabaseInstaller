@@ -17,6 +17,12 @@
             return this;
         }
 
+        public ColumnToAddBuilder Null()
+        {
+            ColumnToAdd.NotNull = false;
+            return this;
+        }
+
         public ColumnToAddBuilder Unique()
         {
             ColumnToAdd.Unique = true;
