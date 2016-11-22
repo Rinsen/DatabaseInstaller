@@ -15,7 +15,6 @@ namespace Rinsen.DatabaseInstaller
         {
             var identityOptions = new InstallerOptions { ConnectionString = connectionString };
             services.AddDatabaseInstaller(identityOptions);
-
         }
 
         public static void AddDatabaseInstaller(this IServiceCollection services, InstallerOptions installerOptions)

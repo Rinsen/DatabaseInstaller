@@ -14,9 +14,9 @@ namespace Rinsen.DatabaseInstaller
         private readonly ILogger<Installer> _log;
         private readonly IVersionStorage _versionStorage;
 
-        public Installer(DatabaseVersionInstaller changeInstaller, VersionHandler versionHandler, IVersionStorage versionStorage, InstallerOptions installerOptions, ILogger<Installer> log)
+        public Installer(DatabaseVersionInstaller databaseVersionInstaller, VersionHandler versionHandler, IVersionStorage versionStorage, InstallerOptions installerOptions, ILogger<Installer> log)
         {
-            _databaseVersionInstaller = changeInstaller;
+            _databaseVersionInstaller = databaseVersionInstaller;
             _versionHandler = versionHandler;
             _versionStorage = versionStorage;
             _installerOptions = installerOptions;

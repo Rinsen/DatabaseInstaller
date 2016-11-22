@@ -44,6 +44,11 @@ namespace Rinsen.DatabaseInstallerWeb
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            app.UseDatabaseInstaller(options =>
+            {
+                options.DatabaseVersions.Add(new MyVersion());
+            });
+
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
@@ -52,6 +57,15 @@ namespace Rinsen.DatabaseInstallerWeb
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
             });
+        }
+    }
+
+    public class MyVersion : DatabaseVersion
+    {
+        public MyVersion() 
+            : base(1)
+        {
+
         }
     }
 }

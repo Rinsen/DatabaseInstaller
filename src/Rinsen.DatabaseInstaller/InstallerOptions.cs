@@ -1,4 +1,7 @@
-﻿namespace Rinsen.DatabaseInstaller
+﻿using System;
+using Microsoft.Extensions.Options;
+
+namespace Rinsen.DatabaseInstaller
 {
     public class InstallerOptions
     {
