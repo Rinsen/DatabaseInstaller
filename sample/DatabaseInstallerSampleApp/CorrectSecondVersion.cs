@@ -1,5 +1,5 @@
 ﻿using Rinsen.DatabaseInstaller;
-using Rinsen.DatabaseInstaller.Sql;
+using Rinsen.DatabaseInstaller.SqlTypes;
 using System.Collections.Generic;
 
 namespace DatabaseInstallerSampleApp

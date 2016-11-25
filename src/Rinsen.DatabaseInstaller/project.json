@@ -1,5 +1,5 @@
 {
-  "version": "0.3.5-beta",
+  "version": "0.3.6-beta",
 
   "dependencies": {
     "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",

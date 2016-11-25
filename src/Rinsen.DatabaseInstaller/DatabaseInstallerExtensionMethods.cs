@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
-using Rinsen.DatabaseInstaller.Sql;
+using Rinsen.DatabaseInstaller.SqlTypes;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rinsen.DatabaseInstaller.Sql.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Rinsen.DatabaseInstaller

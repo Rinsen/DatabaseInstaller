@@ -1,4 +1,4 @@
-﻿using Rinsen.DatabaseInstaller.Sql.Generic;
+﻿using Rinsen.DatabaseInstaller.SqlTypes;
 using System.Linq;
 using Xunit;
 

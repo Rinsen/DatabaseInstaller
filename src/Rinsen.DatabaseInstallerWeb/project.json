@@ -10,7 +10,7 @@
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
-    "Rinsen.DatabaseInstaller": "0.3.5-beta"
+    "Rinsen.DatabaseInstaller": "0.3.6-beta"
   },
 
   "tools": {
