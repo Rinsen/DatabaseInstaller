@@ -8,6 +8,7 @@
     <PackageId>Rinsen.DatabaseInstallerWeb</PackageId>
     <RuntimeFrameworkVersion>1.0.3</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);netcoreapp1.1</PackageTargetFallback>
+    <UserSecretsId>FreddeSecrets</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

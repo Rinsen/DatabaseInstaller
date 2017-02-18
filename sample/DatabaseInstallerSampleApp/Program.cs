@@ -26,7 +26,7 @@ namespace DatabaseInstallerSampleApp
         private static void RunDatabaseInstaller()
         {
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddUserSecrets("aspnet-DatabaseInstallerSampleApp-20160525082933");
+            configBuilder.AddUserSecrets();
 
             var config = configBuilder.Build();
 
