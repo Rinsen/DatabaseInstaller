@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Rinsen.DatabaseInstaller;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Rinsen.DatabaseInstallerWeb
 {
@@ -17,19 +16,9 @@ namespace Rinsen.DatabaseInstallerWeb
         public IHostingEnvironment Environment { get; set; }
         public IConfiguration Configuration { get; set; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                // This reads the configuration keys from the secret store.
-                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets<Startup>();
-            }
-
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

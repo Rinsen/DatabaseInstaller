@@ -33,17 +33,12 @@ namespace DatabaseInstallerSampleApp
             var serviceCollection = new ServiceCollection();
 
             serviceCollection.AddDatabaseInstaller(config["Data:DefaultConnection:ConnectionString"]);
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogging(builder => {
+                builder.AddFilter("Rinsen", LogLevel.Debug);
+                builder.AddConsole();
+            });
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
-
-
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            loggerFactory.AddConsole();
-            loggerFactory.WithFilter(new FilterLoggerSettings
-            {
-                { "Rinsen", LogLevel.Debug }
-            });
 
             var installer = serviceProvider.GetRequiredService<Installer>();
 
