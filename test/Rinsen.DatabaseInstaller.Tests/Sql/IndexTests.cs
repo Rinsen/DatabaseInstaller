@@ -19,7 +19,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             // Assert
             Assert.Equal("MyIndexName", index.Name);
             Assert.Equal("MyTable", index.TableName);
-            Assert.Equal(1, index.Columns.Count);
+            Assert.Single(index.Columns);
             Assert.Equal("MyColumn", index.Columns.First());
         }
 
@@ -33,7 +33,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             index.AddColumn("MyColumn");
 
             // Assert
-            Assert.Equal(1, index.GetUpScript().Count);
+            Assert.Single(index.GetUpScript());
             Assert.Equal("CREATE INDEX MyIndexName \r\nON MyTable(MyColumn)\r\n", index.GetUpScript().First());
         }
 
@@ -48,7 +48,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             index.AddColumn("MyOtherColumn");
 
             // Assert
-            Assert.Equal(1, index.GetUpScript().Count);
+            Assert.Single(index.GetUpScript());
             Assert.Equal(2, index.Columns.Count);
             Assert.Equal("CREATE INDEX MyIndexName \r\nON MyTable(MyColumn, MyOtherColumn)\r\n", index.GetUpScript().First());
         }

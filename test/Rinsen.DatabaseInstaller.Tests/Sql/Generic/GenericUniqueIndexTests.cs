@@ -22,7 +22,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var createScripts = index.GetUpScript();
 
             // Assert
-            Assert.Equal(1, createScripts.Count);
+            Assert.Single(createScripts);
             Assert.Equal("CREATE UNIQUE INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
         }
     }

@@ -17,7 +17,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var createScripts = index.GetUpScript();
 
             // Assert
-            Assert.Equal(1, createScripts.Count);
+            Assert.Single(createScripts);
             Assert.Equal("CREATE UNIQUE CLUSTERED INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
         }
     }
