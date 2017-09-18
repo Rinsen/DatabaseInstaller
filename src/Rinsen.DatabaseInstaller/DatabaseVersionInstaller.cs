@@ -39,10 +39,7 @@ namespace Rinsen.DatabaseInstaller
 
         internal void InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            var dbChangeList = new List<IDbChange>();
-            installerBaseVersion.AddDbChanges(dbChangeList);
-            installerBaseVersion.SetTables(dbChangeList);
-            installerBaseVersion.PrepareUp();
+            installerBaseVersion.InitializeUp();
 
             _databaseScriptRunner.Run(installerBaseVersion.Commands, connection, transaction);
 
@@ -55,10 +52,7 @@ namespace Rinsen.DatabaseInstaller
             {
                 _versionHandler.BeginInstallVersion(version, connection, transaction);
 
-                var dbChangeList = new List<IDbChange>();
-                version.AddDbChanges(dbChangeList);
-                version.SetTables(dbChangeList);
-                version.PrepareUp();
+                version.InitializeUp();
 
                 _databaseScriptRunner.Run(version.Commands, connection, transaction);
 

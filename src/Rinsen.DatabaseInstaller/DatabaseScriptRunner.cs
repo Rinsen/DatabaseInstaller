@@ -6,7 +6,7 @@ namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseScriptRunner
     {
-        internal void Run(List<string> commands, SqlConnection connection, SqlTransaction transaction)
+        internal void Run(IEnumerable<string> commands, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var command in commands)
             {
