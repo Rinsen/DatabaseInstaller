@@ -33,30 +33,24 @@ namespace Rinsen.DatabaseInstaller
                 {
                     InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version), connection, transaction);
                 }
-                 
             }
         }
 
         internal void InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            installerBaseVersion.InitializeUp();
-
-            _databaseScriptRunner.Run(installerBaseVersion.Commands, connection, transaction);
+            _databaseScriptRunner.Run(installerBaseVersion.UpCommands, connection, transaction);
 
             _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
         }
 
-        void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
+        private void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var version in orderedVersionsForInstallationName)
             {
-                _versionHandler.BeginInstallVersion(version, connection, transaction);
-
-                version.InitializeUp();
-
-                _databaseScriptRunner.Run(version.Commands, connection, transaction);
-
-                _versionHandler.SetVersionInstalled(version, connection, transaction);
+                using (var scope = _versionHandler.BeginInstallVersionScope(version, connection, transaction))
+                {
+                    _databaseScriptRunner.Run(version.UpCommands, connection, transaction);
+                }
             }
         }
     }

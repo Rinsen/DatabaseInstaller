@@ -20,30 +20,30 @@ namespace Database
                 Console.ReadKey();
             }
 
-            var installer = Initialize();
+            var installer = CreateInstaller();
 
             switch (args[0].ToLower())
             {
                 case "install":
                     Console.WriteLine("Installing...");
                     Install(installer);
-
                     break;
                 case "preview":
-                    PreviewDbChanges();
+                    PreviewDbChanges(installer);
+                    break;
+                case "complete":
+                    AllDbChanges();
                     break;
                 case "current":
                     ShowCurrentInstallationState(installer);
                     break;
-
-
                 default:
                     Console.WriteLine("Some arguments is needed");
                     Console.ReadKey();
                     break;
             }
 
-            Console.WriteLine("Done");
+            Console.WriteLine($"Done with {args[0]}");
             Console.ReadKey();
         }
 
@@ -57,41 +57,87 @@ namespace Database
             }
         }
 
-        private static void PreviewDbChanges()
+        private static void PreviewDbChanges(Installer installer)
         {
-            var dbChanges = GetDbChangesToInstall();
+            var dbChanges = GetAllDbChanges();
+
+            var installationNamesAndVersion = installer.GetVersionInformation();
+            //var installationNamesAndVersion = new List<InstallationNameAndVersion>();
+
+            foreach (var installationName in dbChanges.Select(m => m.InstallationName).Distinct())
+            {
+                Console.WriteLine($"Installations for {installationName}");
+                Console.WriteLine();
+
+                var installationNameAndVersion = installationNamesAndVersion.SingleOrDefault(vi => vi.InstallationName == installationName);
+                var installationNameDbChanges = dbChanges.Where(dbc => dbc.InstallationName == installationName);
+
+                if (installationNameAndVersion != default(InstallationNameAndVersion))
+                {
+                    Console.WriteLine($"Version {installationNameAndVersion.InstalledVersion} of {installationNameDbChanges.Max(m => m.Version)} installed");
+
+                    foreach (var dbChange in installationNameDbChanges.Where(dbc => dbc.Version > installationNameAndVersion.InstalledVersion)
+                    .OrderBy(m => m.Version))
+                    {
+                        PrintDbChange(dbChange);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"No previous version installed");
+
+                    foreach (var dbChange in installationNameDbChanges.OrderBy(m => m.Version))
+                    {
+                        PrintDbChange(dbChange);
+                    }
+                }
+                Console.WriteLine("----------------------------------------------------------");
+                Console.WriteLine();
+            }
+        }
+
+        private static void PrintDbChange(DatabaseVersion dbChange)
+        {
+            Console.WriteLine($"Database change {dbChange.GetType().Name} version {dbChange.Version} ");
+            foreach (var command in dbChange.UpCommands)
+            {
+                Console.WriteLine(command);
+            }
+            Console.WriteLine();
+        }
+
+        private static void AllDbChanges()
+        {
+            var dbChanges = GetAllDbChanges();
 
             foreach (var installationName in dbChanges.Select(m => m.InstallationName).Distinct())
             {
                 Console.WriteLine($"Installations for {installationName}");
                 foreach (var dbChange in dbChanges.Where(dbc => dbc.InstallationName == installationName).OrderBy(m => m.Version))
                 {
-                    dbChange.InitializeUp();
                     Console.WriteLine($"Version {dbChange.Version}");
-                    foreach (var command in dbChange.Commands)
+                    foreach (var command in dbChange.UpCommands)
                     {
                         Console.WriteLine(command);
                     }
                     Console.WriteLine();
                 }
-            } 
+            }
         }
 
         private static void Install(Installer installer)
         {
-            var dbChangesToInstall = GetDbChangesToInstall();
+            var dbChangesToInstall = GetAllDbChanges();
 
             installer.Run(dbChangesToInstall);
         }
 
-
-
-        private static Installer Initialize()
+        private static Installer CreateInstaller()
         {
             var configBuilder = new ConfigurationBuilder();
 
             configBuilder.AddUserSecrets<Program>();
-            //http://bleedingnedge.com/2015/10/15/configuration-providers/ Maybe add more?!
+            //http://bleedingnedge.com/2015/10/15/configuration-providers/ Maybe add more or less?! Only args support? How to find assembly?
 
             var config = configBuilder.Build();
 
@@ -105,20 +151,18 @@ namespace Database
             return serviceProvider.GetRequiredService<Installer>();
         }
 
-        private static List<DatabaseVersion> GetDbChangesToInstall()
+        private static List<DatabaseVersion> GetAllDbChanges()
         {
-            var assembly = Assembly.LoadFile("C:\\Users\\fredr\\Source\\Repos\\DatabaseInstaller\\sample\\DatabaseInstallerSampleApp\\bin\\Debug\\netcoreapp2.0\\DatabaseInstallerSampleApp.dll");
+            var assembly = Assembly.LoadFile("C:\\Users\\fredr\\Source\\Repos\\DatabaseInstaller\\sample\\DatabaseInstallerSampleApp\\bin\\Debug\\netcoreapp2.0\\DatabaseInstallerSampleApp.dll"); // This is...
 
             var dbChanges = new List<DatabaseVersion>();
 
             foreach (var dbChange in assembly.ExportedTypes.Where(t => t.IsSubclassOf(typeof(DatabaseVersion))))
             {
                 dbChanges.Add((DatabaseVersion)Activator.CreateInstance(dbChange));
-                
             }
 
             return dbChanges;
-
         }
     }
 

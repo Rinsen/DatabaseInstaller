@@ -56,5 +56,10 @@ namespace Rinsen.DatabaseInstallerWeb
         {
 
         }
+
+        public override void AddDbChanges(List<IDbChange> dbChangeList)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

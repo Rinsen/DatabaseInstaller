@@ -2,7 +2,7 @@
   "profiles": {
     "Database": {
       "commandName": "Project",
-      "commandLineArgs": "current"
+      "commandLineArgs": "preview"
     }
   }
 }

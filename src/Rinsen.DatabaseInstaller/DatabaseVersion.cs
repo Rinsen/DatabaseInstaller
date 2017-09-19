@@ -1,4 +1,4 @@
-﻿using Rinsen.DatabaseInstaller.SqlTypes;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Rinsen.DatabaseInstaller
@@ -23,41 +23,50 @@ namespace Rinsen.DatabaseInstaller
             Version = version;
         }
 
-        private List<IDbChange> _dbChangeList = new List<IDbChange>();
-
         public string InstallationName { get; }
+
         public int Version { get; }
-        public IEnumerable<string> Commands { get { return _commands; } }
-        private List<string> _commands = new List<string>();
 
-
-        public void InitializeUp()
+        public IEnumerable<string> UpCommands
         {
-            AddDbChanges(_dbChangeList);
-            PrepareUp();
-        }
-        
-        public virtual void AddDbChanges(List<IDbChange> dbChangeList)
-        {
-
-        }
-
-        private void PrepareUp()
-        {
-            _commands.Clear();
-            foreach (var dbChange in _dbChangeList)
+            get
             {
-                _commands.AddRange(dbChange.GetUpScript());
+                var dbChangeList = new List<IDbChange>();
+
+                AddDbChanges(dbChangeList);
+
+                var commands = new List<string>();
+
+                foreach (var dbChange in dbChangeList)
+                {
+                    commands.AddRange(dbChange.GetUpScript());
+                }
+
+                return commands;
             }
         }
 
-        private void PrepareDown()
+        public IEnumerable<string> DownCommands
         {
-            _commands.Clear();
-            foreach (var dbChange in _dbChangeList)
+            get
             {
-                _commands.AddRange(dbChange.GetDownScript());
+                throw new NotImplementedException();
+
+                //var dbChangeList = new List<IDbChange>();
+
+                //AddDbChanges(dbChangeList);
+
+                //var commands = new List<string>();
+
+                //foreach (var dbChange in dbChangeList)
+                //{
+                //    commands.AddRange(dbChange.GetDownScript());
+                //}
+
+                //return commands;
             }
         }
+
+        public abstract void AddDbChanges(List<IDbChange> dbChangeList);
     }
 }
