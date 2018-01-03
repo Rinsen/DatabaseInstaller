@@ -25,6 +25,13 @@ namespace Rinsen.DatabaseInstaller
             return AddColumn(property, new Int()).AutoIncrement(startValue: startValue, increment: increment, primaryKey: primaryKey);
         }
 
+        public new Table<T> SetPrimaryKeyNonClustered()
+        {
+            PrimaryKeyNonClustered = true;
+
+            return this;
+        }
+
         public ColumnBuilder AddColumn(Expression<Func<T, object>> propertyExpression, int? length = null, int? precision = null)
         {
             var propertyType = propertyExpression.GetMemberType();
@@ -161,6 +168,7 @@ namespace Rinsen.DatabaseInstaller
         public List<Column> Columns { get; private set; }
         public NamedPrimaryKey NamedPrimaryKeys { get; private set; }
         public NamedUnique NamedUniques { get; private set; }
+        public bool PrimaryKeyNonClustered { get; protected set; }
 
         public Table(string name)
         {
@@ -227,7 +235,15 @@ namespace Rinsen.DatabaseInstaller
             {
                 foreach (var namedPrimaryKey in NamedPrimaryKeys)
                 {
-                    sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
+                    if (PrimaryKeyNonClustered)
+                    {
+                        sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY NONCLUSTERED ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
+                    }
+                    else
+                    {
+                        sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
+                    }
+                    
                     sb.AppendLine();
                 }
             }
@@ -271,6 +287,11 @@ namespace Rinsen.DatabaseInstaller
             if (column.PrimaryKey)
             {
                 sb.Append(" PRIMARY KEY");
+
+                if (PrimaryKeyNonClustered)
+                {
+                    sb.Append(" NONCLUSTERED");
+                }
             }
             if (column.Check != null)
             {
@@ -291,6 +312,13 @@ namespace Rinsen.DatabaseInstaller
         public string GetPrimaryKeyConstraintStandardName()
         {
             return string.Format("PK_{0}", Name);
+        }
+
+        public Table SetPrimaryKeyNonClustered()
+        {
+            PrimaryKeyNonClustered = true;
+
+            return this;
         }
 
         public ColumnBuilder AddAutoIncrementColumn(string name)

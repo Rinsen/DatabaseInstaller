@@ -40,6 +40,24 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             public Guid MyUniqueIdentifier { get; set; }
         }
 
+        public class NonClusteredPrimaryKey
+        {
+            public int Id { get; set; }
+
+            public Guid KeyId { get; set; }
+
+        }
+
+        public class ComplexNonClusteredPrimaryKey
+        {
+            public int ClusteredId { get; set; }
+
+            public Guid Id { get; set; }
+
+            public Guid OtherId { get; set; }
+
+        }
+
         [Fact]
         public void WhenCreateTable_GetCorrespondingTableScript()
         {
@@ -150,6 +168,33 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var createScript = table.GetUpScript().Single();
 
             Assert.Equal("CREATE TABLE GuidTestTables\r\n(\r\nMyUniqueIdentifier uniqueidentifier NOT NULL\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenTwoUniqueIds_OneAutoIncrementClusteredColumnAndOneGuidPrimaryKey_GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<NonClusteredPrimaryKey>().SetPrimaryKeyNonClustered();
+
+            table.AddAutoIncrementColumn(m => m.Id, primaryKey: false).Unique();
+            table.AddColumn(m => m.KeyId).PrimaryKey();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE NonClusteredPrimaryKeys\r\n(\r\nId int UNIQUE IDENTITY(1,1),\r\nKeyId uniqueidentifier NOT NULL PRIMARY KEY NONCLUSTERED\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WithAComplexPrimaryKeyWithTwoGuids_OneAutoIncrementClusteredIndexColumn_GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<ComplexNonClusteredPrimaryKey>().SetPrimaryKeyNonClustered();
+
+            table.AddAutoIncrementColumn(m => m.ClusteredId, primaryKey: false).Unique();
+            table.AddColumn(m => m.Id).PrimaryKey();
+            table.AddColumn(m => m.OtherId).PrimaryKey();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE ComplexNonClusteredPrimaryKeys\r\n(\r\nClusteredId int UNIQUE IDENTITY(1,1),\r\nId uniqueidentifier NOT NULL,\r\nOtherId uniqueidentifier NOT NULL,\r\nCONSTRAINT PK_ComplexNonClusteredPrimaryKeys PRIMARY KEY NONCLUSTERED (OtherId,Id)\r\n)", createScript);
         }
 
     }
