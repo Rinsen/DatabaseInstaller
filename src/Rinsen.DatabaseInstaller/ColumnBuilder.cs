@@ -63,6 +63,17 @@ namespace Rinsen.DatabaseInstaller
             return this;
         }
 
+        public ColumnBuilder Clustered()
+        {
+            if (!_table.PrimaryKeyNonClustered)
+            {
+                throw new InvalidOperationException("A clustered column can only be added if theprimary key is non clustered");
+            }
+
+            Column.Clustered = true;
+            return this;
+        }
+
         public ColumnBuilder Unique(string name)
         {
             if (Column.PrimaryKey || _table.NamedPrimaryKeys.Any(m => m.Key == Column.Name))

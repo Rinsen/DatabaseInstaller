@@ -197,5 +197,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             Assert.Equal("CREATE TABLE ComplexNonClusteredPrimaryKeys\r\n(\r\nClusteredId int UNIQUE IDENTITY(1,1),\r\nId uniqueidentifier NOT NULL,\r\nOtherId uniqueidentifier NOT NULL,\r\nCONSTRAINT PK_ComplexNonClusteredPrimaryKeys PRIMARY KEY NONCLUSTERED (OtherId,Id)\r\n)", createScript);
         }
 
+        [Fact]
+        public void WhenClusteredColumn_IsOtherThanPrimaryKey__GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<NonClusteredPrimaryKey>().SetPrimaryKeyNonClustered();
+
+            table.AddAutoIncrementColumn(m => m.Id, primaryKey: false).Unique().Clustered();
+            table.AddColumn(m => m.KeyId).PrimaryKey();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE NonClusteredPrimaryKeys\r\n(\r\nId int UNIQUE CLUSTERED IDENTITY(1,1),\r\nKeyId uniqueidentifier NOT NULL PRIMARY KEY NONCLUSTERED\r\n)", createScript);
+        }
+
     }
 }

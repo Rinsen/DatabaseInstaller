@@ -280,6 +280,10 @@ namespace Rinsen.DatabaseInstaller
             {
                 sb.Append(" UNIQUE");
             }
+            if (column.Clustered)
+            {
+                sb.Append(" CLUSTERED");
+            }
             if (column.AutoIncrement != null)
             {
                 sb.AppendFormat(" IDENTITY({0},{1})", column.AutoIncrement.StartValue, column.AutoIncrement.Increment);

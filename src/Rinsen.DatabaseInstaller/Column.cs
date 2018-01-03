@@ -31,5 +31,7 @@ namespace Rinsen.DatabaseInstaller
         public DefaultValue DefaultValue { get; set; }
 
         public AutoIncrement AutoIncrement { get; set; }
+
+        public bool Clustered { get; set; }
     }
 }
