@@ -7,6 +7,12 @@ namespace Rinsen.DatabaseInstaller.SqlTypes
         private readonly int _precision;
         private readonly int _scale;
 
+        public Decimal()
+        {
+            _precision = 18;
+            _scale = 2;
+        }
+
         /// <summary>
         /// For more details see https://msdn.microsoft.com/en-us/library/ms187746.aspx
         /// </summary>

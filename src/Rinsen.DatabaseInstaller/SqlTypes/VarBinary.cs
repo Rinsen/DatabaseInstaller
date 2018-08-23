@@ -33,7 +33,7 @@ namespace Rinsen.DatabaseInstaller.SqlTypes
                 return "varbinary(max)";
             }
 
-            return string.Format("varbinary({0})", _length);
+            return $"varbinary({_length})";
         }
     }
 }

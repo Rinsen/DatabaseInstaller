@@ -14,7 +14,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyColumn int\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] int\r\n)", createScript);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyIdColumn int IDENTITY(1,1) PRIMARY KEY,\r\nMyValue nvarchar(100)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1) PRIMARY KEY,\r\n[MyValue] nvarchar(100)\r\n)", createScript);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyIdColumn int NOT NULL PRIMARY KEY,\r\nMyValue nvarchar(100)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int NOT NULL PRIMARY KEY,\r\n[MyValue] nvarchar(100)\r\n)", createScript);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyIdColumn1 int NOT NULL,\r\nMyIdColumn2 int NOT NULL,\r\nMyValue nvarchar(100),\r\nCONSTRAINT PK_TestTables PRIMARY KEY (MyIdColumn2,MyIdColumn1)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn1] int NOT NULL,\r\n[MyIdColumn2] int NOT NULL,\r\n[MyValue] nvarchar(100),\r\nCONSTRAINT PK_TestTables PRIMARY KEY (MyIdColumn2,MyIdColumn1)\r\n)", createScript);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nKey1 int NOT NULL,\r\nKey2 int NOT NULL,\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Key1] int NOT NULL,\r\n[Key2] int NOT NULL,\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nCol1 int,\r\nCol2 int,\r\nCol3 int UNIQUE,\r\nCONSTRAINT PrimaryKeyForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int,\r\n[Col2] int,\r\n[Col3] int UNIQUE,\r\nCONSTRAINT PrimaryKeyForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyColumn int NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] int NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyColumn uniqueidentifier NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] uniqueidentifier NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE TestTables\r\n(\r\nMyIdColumn int IDENTITY(1,1),\r\nMyValue nvarchar(100)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1),\r\n[MyValue] nvarchar(100)\r\n)", createScript);
         }
 
 

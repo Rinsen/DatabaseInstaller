@@ -1,10 +1,10 @@
 ﻿namespace Rinsen.DatabaseInstaller.SqlTypes
 {
-    public class Int : IDbType
+    public class BigInt : IDbType
     {
         public string GetSqlServerDatabaseTypeString()
         {
-            return "int";
+            return "bigint";
         }
     }
 }
