@@ -14,7 +14,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] int\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] int NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1) PRIMARY KEY,\r\n[MyValue] nvarchar(100)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1) PRIMARY KEY,\r\n[MyValue] nvarchar(100) NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int NOT NULL PRIMARY KEY,\r\n[MyValue] nvarchar(100)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int NOT NULL PRIMARY KEY,\r\n[MyValue] nvarchar(100) NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn1] int NOT NULL,\r\n[MyIdColumn2] int NOT NULL,\r\n[MyValue] nvarchar(100),\r\nCONSTRAINT PK_TestTables PRIMARY KEY (MyIdColumn2,MyIdColumn1)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn1] int NOT NULL,\r\n[MyIdColumn2] int NOT NULL,\r\n[MyValue] nvarchar(100) NULL,\r\nCONSTRAINT PK_TestTables PRIMARY KEY (MyIdColumn2,MyIdColumn1)\r\n)", createScript);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int,\r\n[Col2] int,\r\n[Col3] int UNIQUE,\r\nCONSTRAINT PrimaryKeyForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int NULL,\r\n[Col2] int NULL,\r\n[Col3] int NULL UNIQUE,\r\nCONSTRAINT PrimaryKeyForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1),\r\n[MyValue] nvarchar(100)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1),\r\n[MyValue] nvarchar(100) NULL\r\n)", createScript);
         }
 
 

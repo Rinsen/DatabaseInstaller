@@ -357,6 +357,10 @@ namespace Rinsen.DatabaseInstaller
             {
                 sb.Append(" NOT NULL");
             }
+            if (!column.NotNull && column.AutoIncrement == null)
+            {
+                sb.Append(" NULL");
+            }
             if (column.Unique)
             {
                 sb.Append(" UNIQUE");

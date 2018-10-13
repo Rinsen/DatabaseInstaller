@@ -48,6 +48,35 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
         }
 
+        public class NullableData
+        {
+            public int Id { get; set; }
+
+            public Guid? NullableGuid { get; set; }
+
+            public DateTime? NullableDateTime { get; set; }
+
+            public DateTimeOffset? NullableDateTimeOffset { get; set; }
+
+            public double? NullableDouble { get; set; }
+
+            public decimal? NullableDecimal { get; set; }
+
+            public byte? NullableByte { get; set; }
+
+            public byte?[] NullableByteArray { get; set; }
+
+            public long? NullableLong { get; set; }
+
+            public short? NullableShort { get; set; }
+
+            public int? NullableInt { get; set; }
+
+            public bool? NullableBool { get; set; }
+
+            public bool NotNullableBool { get; set; }
+        }
+
         public class ComplexNonClusteredPrimaryKey
         {
             public int ClusteredId { get; set; }
@@ -155,7 +184,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [NullableIntTestTables]\r\n(\r\n[MyNullableInt] int\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [NullableIntTestTables]\r\n(\r\n[MyNullableInt] int NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -208,6 +237,30 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var createScript = table.GetUpScript().Single();
 
             Assert.Equal("CREATE TABLE [NonClusteredPrimaryKeys]\r\n(\r\n[Id] int UNIQUE CLUSTERED IDENTITY(1,1),\r\n[KeyId] uniqueidentifier NOT NULL PRIMARY KEY NONCLUSTERED\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenNullableTypes_IsMapped_GetNullableColumnsTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<NullableData>().SetPrimaryKeyNonClustered();
+
+            table.AddAutoIncrementColumn(m => m.Id);
+            table.AddColumn(m => m.NotNullableBool);
+            table.AddColumn(m => m.NullableBool);
+            table.AddColumn(m => m.NullableByte);
+            table.AddColumn(m => m.NullableByteArray);
+            table.AddColumn(m => m.NullableDateTime);
+            table.AddColumn(m => m.NullableDateTimeOffset);
+            table.AddColumn(m => m.NullableDecimal);
+            table.AddColumn(m => m.NullableDouble);
+            table.AddColumn(m => m.NullableGuid);
+            table.AddColumn(m => m.NullableInt);
+            table.AddColumn(m => m.NullableLong);
+            table.AddColumn(m => m.NullableShort);
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE [NullableDatas]\r\n(\r\n[Id] int IDENTITY(1,1) PRIMARY KEY NONCLUSTERED,\r\n[NotNullableBool] bit NOT NULL,\r\n[NullableBool] bit NULL,\r\n[NullableByte] tinyint NULL,\r\n[NullableByteArray] varbinary(max) NULL,\r\n[NullableDateTime] datetime2 NULL,\r\n[NullableDateTimeOffset] datetimeoffset NULL,\r\n[NullableDecimal] decimal(18,2) NULL,\r\n[NullableDouble] float(53) NULL,\r\n[NullableGuid] uniqueidentifier NULL,\r\n[NullableInt] int NULL,\r\n[NullableLong] bigint NULL,\r\n[NullableShort] smallint NULL\r\n)", createScript);
         }
 
     }
