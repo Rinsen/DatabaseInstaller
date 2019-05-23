@@ -87,6 +87,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
         }
 
+        public class EnumTestTable
+        {
+            public Setting MySetting { get; set; }
+
+        }
+
+        public enum Setting
+        {
+            First,
+            Second
+        }
+
         [Fact]
         public void WhenCreateTable_GetCorrespondingTableScript()
         {
@@ -261,6 +273,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var createScript = table.GetUpScript().Single();
 
             Assert.Equal("CREATE TABLE [NullableDatas]\r\n(\r\n[Id] int IDENTITY(1,1) PRIMARY KEY NONCLUSTERED,\r\n[NotNullableBool] bit NOT NULL,\r\n[NullableBool] bit NULL,\r\n[NullableByte] tinyint NULL,\r\n[NullableByteArray] varbinary(max) NULL,\r\n[NullableDateTime] datetime2 NULL,\r\n[NullableDateTimeOffset] datetimeoffset NULL,\r\n[NullableDecimal] decimal(18,2) NULL,\r\n[NullableDouble] float(53) NULL,\r\n[NullableGuid] uniqueidentifier NULL,\r\n[NullableInt] int NULL,\r\n[NullableLong] bigint NULL,\r\n[NullableShort] smallint NULL\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenEnumType_GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<EnumTestTable>();
+
+            table.AddColumn(m => m.MySetting);
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE [EnumTestTables]\r\n(\r\n[MySetting] tinyint NOT NULL\r\n)", createScript);
         }
 
     }

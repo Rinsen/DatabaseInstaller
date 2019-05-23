@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -7,13 +8,15 @@ namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseVersionInstaller
     {
-        readonly VersionHandler _versionHandler;
-        readonly DatabaseScriptRunner _databaseScriptRunner;
+        private readonly VersionHandler _versionHandler;
+        private readonly DatabaseScriptRunner _databaseScriptRunner;
+        private readonly ILogger<DatabaseVersionInstaller> _logger;
 
-        public DatabaseVersionInstaller(VersionHandler versionHandler, DatabaseScriptRunner databaseScriptRunner)
+        public DatabaseVersionInstaller(VersionHandler versionHandler, DatabaseScriptRunner databaseScriptRunner, ILogger<DatabaseVersionInstaller> logger)
         {
             _versionHandler = versionHandler;
             _databaseScriptRunner = databaseScriptRunner;
+            _logger = logger;
         }
 
         internal void Install(List<DatabaseVersion> databaseVersions, SqlConnection connection, SqlTransaction transaction)
@@ -49,7 +52,14 @@ namespace Rinsen.DatabaseInstaller
             {
                 using (var scope = _versionHandler.BeginInstallVersionScope(version, connection, transaction))
                 {
-                    _databaseScriptRunner.Run(version.UpCommands, connection, transaction);
+                    try
+                    {
+                        _databaseScriptRunner.Run(version.UpCommands, connection, transaction);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Failed to run script in {installationName} for version {version}", version.InstallationName, version.Version);
+                    }
                 }
             }
         }

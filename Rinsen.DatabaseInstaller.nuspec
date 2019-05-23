@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Rinsen.DatabaseInstaller</id>
-    <version>0.4.3</version>
+    <version>0.4.5</version>
     <title>Rinsen Database Installer</title>
     <authors>Fredrik Rinsén</authors>
     <owners>Fredrik Rinsén</owners>
@@ -11,6 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database installer and version handler for dotnet core projects</description>
     <releaseNotes>
+      0.4.4 Better logging of script run errors
+      0.4.4 Support for Enum data type and updated dotnet versions
       0.4.3 Lots of new data types and updated dotnet versions
       0.4.2 Added clustered column support
       0.4.1 Added nonclustered primary key support
@@ -24,7 +26,7 @@
       0.3.1-beta Support for Guid
       0.3.0-beta Support for ASPNETCore 1.0
     </releaseNotes>
-    <copyright>Copyright 2018</copyright>
+    <copyright>Copyright 2019</copyright>
     <tags>aspnetcore database installer</tags>
     <dependencies>
       <group targetFramework=".NETStandard2.0">

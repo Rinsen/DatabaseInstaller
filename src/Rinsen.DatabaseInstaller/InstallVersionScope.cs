@@ -22,6 +22,9 @@ namespace Rinsen.DatabaseInstaller
         {
             var installedVersion = GetCurrentInstalledVersionAndValidatePostInstallationState();
 
+            if (installedVersion == null)
+                return;
+
             // Update information that this installation is ended now, make sure that no one is in between, throw is someone is
             int result = _versionStorage.EndInstallation(installedVersion, _connection, _transaction);
 
@@ -35,6 +38,9 @@ namespace Rinsen.DatabaseInstaller
         {
             // Get installation row from database
             var installedVersion = _versionStorage.Get(_databaseVersion.InstallationName, _connection, _transaction);
+
+            if (installedVersion == null)
+                return null;
 
             // Verify that this version really should have been installed now
             if (installedVersion.InstalledVersion >= _databaseVersion.Version)

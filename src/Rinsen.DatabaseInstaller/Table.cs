@@ -239,6 +239,14 @@ namespace Rinsen.DatabaseInstaller
                 return AddColumn(propertyExpression, new SqlTypes.Guid());
             }
 
+            if (propertyType.IsEnum)
+            {
+                if (length != null)
+                    throw new ArgumentException("Length is not supported for this type", nameof(length));
+
+                return AddColumn(propertyExpression, new SqlTypes.TinyInt()).NotNull();
+            }
+
             throw new ArgumentException($"Property Type '{propertyType}' is not supported");
         }
     }
