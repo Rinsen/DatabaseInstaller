@@ -70,13 +70,41 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
         public void WhenCreateTableWithNamedUniquesAndOneUniqueColumn_GetCorrespondingTableScript()
         {
             var table = new Table("TestTables");
-            table.AddColumn("Col1", new Int()).Unique("PrimaryKeyForTestTables");
-            table.AddColumn("Col2", new Int()).Unique("PrimaryKeyForTestTables");
+            table.AddColumn("Col1", new Int()).Unique("UniqueForTestTables");
+            table.AddColumn("Col2", new Int()).Unique("UniqueForTestTables");
             table.AddColumn("Col3", new Int()).Unique();
 
             var createScript = table.GetUpScript().Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int NULL,\r\n[Col2] int NULL,\r\n[Col3] int NULL UNIQUE,\r\nCONSTRAINT PrimaryKeyForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int NULL,\r\n[Col2] int NULL,\r\n[Col3] int NULL UNIQUE,\r\nCONSTRAINT UniqueForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenCreateTableWithTwoNamedUniquesOnTwoUniqueColumns_GetCorrespondingTableScript()
+        {
+            var table = new Table("TestTables");
+            table.AddColumn("Col1", new Int()).Unique("UX_TestTables_Col1");
+            table.AddColumn("Col2", new Int()).Unique("UX_TestTables_Col2");
+            table.AddColumn("Col3", new Int()).Unique();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int NULL,\r\n[Col2] int NULL,\r\n[Col3] int NULL UNIQUE,\r\nCONSTRAINT UX_TestTables_Col1 UNIQUE (Col1),\r\nCONSTRAINT UX_TestTables_Col2 UNIQUE (Col2)\r\n)", createScript);
+        }
+
+        [Fact]
+        public void WhenCreateTableWithNamedPrimaryKeyAndNamedUniques_GetCorrespondingTableScript()
+        {
+            var table = new Table("TestTables");
+            table.AddColumn("Key1", new Int()).PrimaryKey("PrimaryKeyForTestTables");
+            table.AddColumn("Key2", new Int()).PrimaryKey("PrimaryKeyForTestTables");
+            table.AddColumn("Col1", new Int()).Unique("UniqueForTestTables");
+            table.AddColumn("Col2", new Int()).Unique("UniqueForTestTables");
+            table.AddColumn("Col3", new Int()).Unique();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Key1] int NOT NULL,\r\n[Key2] int NOT NULL,\r\n[Col1] int NULL,\r\n[Col2] int NULL,\r\n[Col3] int NULL UNIQUE,\r\nCONSTRAINT UniqueForTestTables UNIQUE (Col1,Col2),\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
         }
 
         [Fact]

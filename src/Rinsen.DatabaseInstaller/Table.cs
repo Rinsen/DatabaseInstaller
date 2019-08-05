@@ -313,15 +313,26 @@ namespace Rinsen.DatabaseInstaller
 
             if (NamedUniques.Any())
             {
+                var lastNamedUnique = NamedUniques.Last();
+
                 foreach (var namedUnique in NamedUniques)
                 {
                     sb.AppendFormat("CONSTRAINT {0} UNIQUE ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
+
+                    if (!lastNamedUnique.Equals(namedUnique) || NamedPrimaryKeys.Any())
+                    {
+                        sb.Append(",");
+                    }
+
                     sb.AppendLine();
                 }
             }
 
+            
             if (NamedPrimaryKeys.Any())
             {
+                var lastNamedPrimaryKeys = NamedPrimaryKeys.Last();
+
                 foreach (var namedPrimaryKey in NamedPrimaryKeys)
                 {
                     if (PrimaryKeyNonClustered)
@@ -332,7 +343,12 @@ namespace Rinsen.DatabaseInstaller
                     {
                         sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
                     }
-                    
+
+                    if (!lastNamedPrimaryKeys.Equals(namedPrimaryKey))
+                    {
+                        sb.Append(",");
+                    }
+
                     sb.AppendLine();
                 }
             }
