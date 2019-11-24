@@ -9,6 +9,12 @@ namespace Rinsen.DatabaseInstaller
 {
     public class Table<T> : Table
     {
+        protected Table(string name, bool alternation)
+            : this(name)
+        {
+            _alternation = alternation;
+        }
+
         public Table(string name)
             : base(name)
         { }
@@ -253,11 +259,20 @@ namespace Rinsen.DatabaseInstaller
 
     public class Table : IDbChange
     {
-        public string Name { get; private set; }
-        public List<Column> Columns { get; private set; }
-        public NamedPrimaryKey NamedPrimaryKeys { get; private set; }
-        public NamedUnique NamedUniques { get; private set; }
+        protected bool _alternation = false;
+
+        public string Name { get; }
+        public List<Column> Columns { get; } = new List<Column>();
+        public List<string> ColumnsToDelete { get; } = new List<string>();
+        public NamedPrimaryKey NamedPrimaryKeys { get; } = new NamedPrimaryKey();
+        public NamedUnique NamedUniques { get; } = new NamedUnique();
         public bool PrimaryKeyNonClustered { get; protected set; }
+
+        protected Table(string name, bool alternation)
+            :this(name)
+        {
+            _alternation = alternation;
+        }
 
         public Table(string name)
         {
@@ -265,9 +280,7 @@ namespace Rinsen.DatabaseInstaller
             {
                 throw new ArgumentException("Table name is mandatory");
             }
-            Columns = new List<Column>();
-            NamedPrimaryKeys = new NamedPrimaryKey();
-            NamedUniques = new NamedUnique();
+
             Name = name;
         }
 
@@ -292,18 +305,23 @@ namespace Rinsen.DatabaseInstaller
 
         public List<string> GetUpScript()
         {
+            if (_alternation)
+            {
+                return GetAlterationScripts();
+            }
+
             if (!Columns.Any())
                 throw new InvalidOperationException("No colums found in table definition");
 
             var sb = new StringBuilder("CREATE TABLE ");
-            sb.AppendFormat("[{0}]",Name);
+            sb.AppendFormat("[{0}]", Name);
             sb.AppendLine();
             sb.AppendLine("(");
             var lastColumn = Columns.Last();
             foreach (var column in Columns)
             {
-                sb.AppendFormat("[{0}] {1}{2}", column.Name, column.Type.GetSqlServerDatabaseTypeString() ,GetConstraintString(column));
-                
+                sb.AppendFormat("[{0}] {1}{2}", column.Name, column.Type.GetSqlServerDatabaseTypeString(), GetConstraintString(column));
+
                 if (!column.Equals(lastColumn) || NamedPrimaryKeys.Any() || NamedUniques.Any())
                 {
                     sb.Append(",");
@@ -311,24 +329,16 @@ namespace Rinsen.DatabaseInstaller
                 sb.AppendLine();
             }
 
-            if (NamedUniques.Any())
-            {
-                var lastNamedUnique = NamedUniques.Last();
+            AddNamedUniques(sb);
+            AddNamedPrimaryKeys(sb);
 
-                foreach (var namedUnique in NamedUniques)
-                {
-                    sb.AppendFormat("CONSTRAINT {0} UNIQUE ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
+            sb.Append(")");
 
-                    if (!lastNamedUnique.Equals(namedUnique) || NamedPrimaryKeys.Any())
-                    {
-                        sb.Append(",");
-                    }
+            return new List<string> { sb.ToString() };
+        }
 
-                    sb.AppendLine();
-                }
-            }
-
-            
+        private void AddNamedPrimaryKeys(StringBuilder sb)
+        {
             if (NamedPrimaryKeys.Any())
             {
                 var lastNamedPrimaryKeys = NamedPrimaryKeys.Last();
@@ -352,10 +362,76 @@ namespace Rinsen.DatabaseInstaller
                     sb.AppendLine();
                 }
             }
+        }
 
-            sb.Append(")");
+        private void AddNamedUniques(StringBuilder sb)
+        {
+            if (NamedUniques.Any())
+            {
+                var lastNamedUnique = NamedUniques.Last();
 
-            return new List<string> { sb.ToString() };
+                foreach (var namedUnique in NamedUniques)
+                {
+                    sb.AppendFormat("CONSTRAINT {0} UNIQUE ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
+
+                    if (!lastNamedUnique.Equals(namedUnique) || NamedPrimaryKeys.Any())
+                    {
+                        sb.Append(",");
+                    }
+
+                    sb.AppendLine();
+                }
+            }
+        }
+
+        private List<string> GetAlterationScripts()
+        {
+            var scripts = new List<string>();
+
+            if (!Columns.Any() && !Columns.Any())
+                throw new InvalidOperationException("No colums found in alter table definition");
+
+            if (ColumnsToDelete.Any())
+            {
+                var sb = new StringBuilder(string.Format("ALTER TABLE [{0}]", Name));
+                sb.AppendLine();
+
+                foreach (var columnToDelete in ColumnsToDelete)
+                {
+                    if (ColumnsToDelete.IndexOf(columnToDelete) == ColumnsToDelete.Count - 1)
+                    {
+                        sb.AppendLine(string.Format("DROP COLUMN {0}", columnToDelete));
+                    }
+                    else
+                    {
+                        sb.AppendLine(string.Format("DROP COLUMN {0},", columnToDelete));
+                    }
+                }
+
+                scripts.Add(sb.ToString());
+            }
+
+            if (Columns.Any())
+            {
+                var sb = new StringBuilder(string.Format("ALTER TABLE {0} ADD", Name));
+                sb.AppendLine();
+
+                foreach (var columnToAdd in Columns)
+                {
+                    if (Columns.IndexOf(columnToAdd) == Columns.Count - 1)
+                    {
+                        sb.AppendLine(string.Format("{0} {1}{2}", columnToAdd.Name, columnToAdd.Type.GetSqlServerDatabaseTypeString(), GetConstraintString(columnToAdd)));
+                    }
+                    else
+                    {
+                        sb.AppendLine(string.Format("{0} {1}{2},", columnToAdd.Name, columnToAdd.Type.GetSqlServerDatabaseTypeString(), GetConstraintString(columnToAdd)));
+                    }
+                }
+
+                scripts.Add(sb.ToString());
+            }
+
+            return scripts;
         }
 
         public List<string> GetDownScript()

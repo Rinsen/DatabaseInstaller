@@ -40,7 +40,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript().Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100)\r\n", script);
+            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NULL\r\n", script);
             
         }
 

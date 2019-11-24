@@ -18,7 +18,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript().Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100)\r\n", script);
+            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NULL\r\n", script);
             
         }
 
@@ -34,7 +34,22 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript().Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100),\r\nMyOtherNewColumn int\r\n", script);
+            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NULL,\r\nMyOtherNewColumn int NULL\r\n", script);
+
+        }
+
+        [Fact]
+        public void AddUniqueNamedColumnsToTable_GetCorrectUpScript()
+        {
+            // Arrange
+
+            // Act
+            var tableAlteration = new TableAlteration("MyTable");
+            tableAlteration.AddNVarCharColumn("MyNewColumn", 100).Unique("UX_MyTable_MyNewColumn");
+            var script = tableAlteration.GetUpScript();
+
+            // Assert
+            Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NULL\r\n", script.Single());
 
         }
     }
