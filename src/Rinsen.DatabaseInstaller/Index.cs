@@ -39,7 +39,7 @@ namespace Rinsen.DatabaseInstaller
         {
             if (Columns.Contains(name))
             {
-                throw new ArgumentException(string.Format("The column {0} is already added to index {1} on table {2}", name, Name, TableName));
+                throw new ArgumentException($"The column {name} is already added to index {Name} on table {TableName}");
             }
 
             Columns.Add(name);
@@ -58,7 +58,7 @@ namespace Rinsen.DatabaseInstaller
         {
             if (!Columns.Any())
             {
-                throw new InvalidOperationException(string.Format("No columns is added to index {0} for table {1}", Name, TableName));
+                throw new InvalidOperationException($"No columns is added to index {Name} for table {TableName}");
             }
 
             sb.AppendLine();

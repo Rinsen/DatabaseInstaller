@@ -15,7 +15,7 @@ namespace DatabaseInstallerSampleApp
             var tableAlteration = dbChangeList.AddNewTableAlteration("MyFirstTable");
             tableAlteration.AddBitColumn("BitColumn");
             tableAlteration.AddDateTimeOffsetColumn("Created", 7).NotNull();
-            tableAlteration.DeleteColumn("SomeInfo");
+            tableAlteration.DropColumn("SomeInfo");
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FCEF23A-1646-4C4C-A66C-EF55FF573FFB}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		README.md = README.md
 		Rinsen.DatabaseInstaller.nuspec = Rinsen.DatabaseInstaller.nuspec
 	EndProjectSection
 EndProject
@@ -23,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rinsen.DatabaseInstallerWeb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rinsen.DatabaseInstaller.Tests", "test\Rinsen.DatabaseInstaller.Tests\Rinsen.DatabaseInstaller.Tests.csproj", "{90931FDE-A798-4F0D-96E2-0A821C65BF43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "src\Database\Database.csproj", "{25E57C36-883B-4353-B2BA-1CD97989493D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "src\Database\Database.csproj", "{25E57C36-883B-4353-B2BA-1CD97989493D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

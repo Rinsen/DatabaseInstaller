@@ -17,7 +17,7 @@ namespace Rinsen.DatabaseInstaller
             Column = new Column();
         }
 
-        public ColumnBuilder(Table table, string name, IDbType columnType, bool notNull = false, bool unique = false, bool primaryKey = false, ForeignKey foreignKey = null, Check check = null, DefaultValue defaultValue = null, AutoIncrement autoIncrement = null)
+        public ColumnBuilder(Table table, string name, IDbType columnType, bool notNull = true, bool unique = false, bool primaryKey = false, ForeignKey foreignKey = null, Check check = null, DefaultValue defaultValue = null, AutoIncrement autoIncrement = null)
         {
             _table = table;
             Column = new Column();

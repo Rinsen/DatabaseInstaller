@@ -15,19 +15,21 @@ namespace Rinsen.DatabaseInstaller
             
         }
 
-        public void DeleteColumn(string name)
+        public void DropColumn(Expression<Func<T, object>> propertyExpression)
         {
+            var name = propertyExpression.GetMemberName();
+
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("Name is mandatory for column");
             }
 
-            if (ColumnsToDelete.Any(col => col == name))
+            if (ColumnsToDrop.Any(col => col == name))
             {
                 throw new ArgumentException(string.Format("A column with the name {0} already exist in table alteration {1}", name, Name));
             }
 
-            ColumnsToDelete.Add(name);
+            ColumnsToDrop.Add(name);
         }
 
     }
@@ -40,19 +42,19 @@ namespace Rinsen.DatabaseInstaller
         {
         }
 
-        public void DeleteColumn(string name)
+        public void DropColumn(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("Name is mandatory for column");
             }
 
-            if (ColumnsToDelete.Any(col => col == name))
+            if (ColumnsToDrop.Any(col => col == name))
             {
                 throw new ArgumentException(string.Format("A column with the name {0} already exist in table alteration {1}", name, Name));
             }
 
-            ColumnsToDelete.Add(name);
+            ColumnsToDrop.Add(name);
         }
     }
 }
