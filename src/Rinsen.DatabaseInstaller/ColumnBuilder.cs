@@ -7,29 +7,19 @@ namespace Rinsen.DatabaseInstaller
 {
     public class ColumnBuilder
     {
-        public Column Column { get; private set; }
+        public Column Column { get; }
 
-        private Table _table;
+        private readonly Table _table;
 
         public ColumnBuilder(Table table)
         {
             _table = table;
-            Column = new Column();
         }
 
-        public ColumnBuilder(Table table, string name, IDbType columnType, bool notNull = true, bool unique = false, bool primaryKey = false, ForeignKey foreignKey = null, Check check = null, DefaultValue defaultValue = null, AutoIncrement autoIncrement = null)
+        public ColumnBuilder(Table table, string name, IDbType columnType)
         {
             _table = table;
-            Column = new Column();
-            Column.Name = name;
-            Column.Type = columnType;
-            Column.NotNull = notNull;
-            Column.Unique = unique;
-            Column.PrimaryKey = primaryKey;
-            Column.ForeignKey = foreignKey;
-            Column.Check = check;
-            Column.DefaultValue = defaultValue;
-            Column.AutoIncrement = autoIncrement;
+            Column = new Column(name, columnType);
         }
 
         public ColumnBuilder ForeignKey<T>(Expression<Func<T, object>> propertyExpression)
@@ -42,13 +32,13 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder NotNull()
         {
-            Column.NotNull = true;
+            Column.Null = false;
             return this;
         }
 
         public ColumnBuilder Null()
         {
-            Column.NotNull = false;
+            Column.Null = true;
             return this;
         }
 
@@ -65,9 +55,9 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder Clustered()
         {
-            if (!_table.PrimaryKeyNonClustered)
+            if (_table.PrimaryKeyClustered)
             {
-                throw new InvalidOperationException("A clustered column can only be added if theprimary key is non clustered");
+                throw new InvalidOperationException("A clustered column can only be added if the primary key is not clustered");
             }
 
             Column.Clustered = true;
@@ -104,7 +94,7 @@ namespace Rinsen.DatabaseInstaller
             {
                 Column.PrimaryKey = true;
             }
-            Column.NotNull = true;
+            Column.Null = false;
             return this;
         }
 
@@ -129,7 +119,7 @@ namespace Rinsen.DatabaseInstaller
 
             AddAnyExistingPrimaryKeysToNamedPrimaryKeys(name);
 
-            Column.NotNull = true;
+            Column.Null = false;
             return this;
         }
 

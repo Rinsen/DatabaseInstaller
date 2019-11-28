@@ -99,65 +99,64 @@ namespace Rinsen.DatabaseInstaller
             return Index;
         }
 
-        public static ClusteredIndex AddNewClusteredIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        public static Index AddNewClusteredIndex(this List<IDbChange> dbChangeList, string name, string tableName)
         {
-            var index = new ClusteredIndex(name, tableName);
+            var index = new Index(name, tableName).Clustered();
             dbChangeList.Add(index);
             return index;
         }
 
-        public static ClusteredIndex<T> AddNewClusteredIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        public static Index<T> AddNewClusteredIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
         {
             var tableName = typeof(T).Name + "s";
-
             return dbChangeList.AddNewClusteredIndex<T>(name, tableName);
         }
 
-        public static ClusteredIndex<T> AddNewClusteredIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        public static Index<T> AddNewClusteredIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
         {
-            var Index = new ClusteredIndex<T>(name, tableName);
-            dbChangeList.Add(Index);
-            return Index;
-        }
-
-        public static UniqueIndex AddNewUniqueIndex(this List<IDbChange> dbChangeList, string name, string tableName)
-        {
-            var index = new UniqueIndex(name, tableName);
+            var index = new Index<T>(name, tableName).Clustered();
             dbChangeList.Add(index);
             return index;
         }
 
-        public static UniqueIndex<T> AddNewUniqueIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        public static Index AddNewUniqueIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        {
+            var index = new Index(name, tableName).Unique();
+            dbChangeList.Add(index);
+            return index;
+        }
+
+        public static Index<T> AddNewUniqueIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
         {
             var tableName = typeof(T).Name + "s";
 
             return dbChangeList.AddNewUniqueIndex<T>(name, tableName);
         }
 
-        public static UniqueIndex<T> AddNewUniqueIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        public static Index<T> AddNewUniqueIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
         {
-            var Index = new UniqueIndex<T>(name, tableName);
+            var Index = new Index<T>(name, tableName).Unique();
             dbChangeList.Add(Index);
             return Index;
         }
 
-        public static UniqueClusteredIndex AddNewUniqueClusteredIndex(this List<IDbChange> dbChangeList, string name, string tableName)
+        public static Index AddNewUniqueClusteredIndex(this List<IDbChange> dbChangeList, string name, string tableName)
         {
-            var index = new UniqueClusteredIndex(name, tableName);
+            var index = new Index(name, tableName).Unique().Clustered();
             dbChangeList.Add(index);
             return index;
         }
 
-        public static UniqueClusteredIndex<T> AddNewUniqueClusteredIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
+        public static Index<T> AddNewUniqueClusteredIndex<T>(this List<IDbChange> dbChangeList, string name) where T : class
         {
             var tableName = typeof(T).Name + "s";
 
             return dbChangeList.AddNewUniqueClusteredIndex<T>(name, tableName);
         }
 
-        public static UniqueClusteredIndex<T> AddNewUniqueClusteredIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
+        public static Index<T> AddNewUniqueClusteredIndex<T>(this List<IDbChange> dbChangeList, string name, string tableName) where T : class
         {
-            var Index = new UniqueClusteredIndex<T>(name, tableName);
+            var Index = new Index<T>(name, tableName).Unique().Clustered();
             dbChangeList.Add(Index);
             return Index;
         }

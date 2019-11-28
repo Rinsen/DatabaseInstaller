@@ -17,7 +17,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             index.AddColumn("MyColumn");
 
             // Assert
-            Assert.Equal("MyIndexName", index.Name);
+            Assert.Equal("MyIndexName", index.IndexName);
             Assert.Equal("MyTable", index.TableName);
             Assert.Single(index.Columns);
             Assert.Equal("MyColumn", index.Columns.First());
@@ -78,6 +78,51 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var ex = Assert.Throws<InvalidOperationException>(() => index.GetUpScript());
             Assert.Equal("No columns is added to index Name for table MyTable", ex.Message);
 
+        }
+
+        [Fact]
+        public void GetClusteredCreateScript_CreateScriptIsCorrect()
+        {
+            // Arrange
+            var index = new Index("MyIndex", "MyTable").Clustered();
+            index.AddColumn("MyColumn");
+
+            // Act
+            var createScripts = index.GetUpScript();
+
+            // Assert
+            Assert.Single(createScripts);
+            Assert.Equal("CREATE CLUSTERED INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
+        }
+
+        [Fact]
+        public void GetUniqueClusteredCreateScript_CreateScriptIsCorrect()
+        {
+            // Arrange
+            var index = new Index("MyIndex", "MyTable").Unique().Clustered();
+            index.AddColumn("MyColumn");
+
+            // Act
+            var createScripts = index.GetUpScript();
+
+            // Assert
+            Assert.Single(createScripts);
+            Assert.Equal("CREATE UNIQUE CLUSTERED INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
+        }
+
+        [Fact]
+        public void GetUniqueCreateScript_CreateScriptIsCorrect()
+        {
+            // Arrange
+            var index = new Index("MyIndex", "MyTable").Unique();
+            index.AddColumn("MyColumn");
+
+            // Act
+            var createScripts = index.GetUpScript();
+
+            // Assert
+            Assert.Single(createScripts);
+            Assert.Equal("CREATE UNIQUE INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Rinsen.DatabaseInstaller
 
         public new Table<T> SetPrimaryKeyNonClustered()
         {
-            PrimaryKeyNonClustered = true;
+            PrimaryKeyClustered = false;
 
             return this;
         }
@@ -270,7 +270,7 @@ namespace Rinsen.DatabaseInstaller
         public List<string> ColumnsToDrop { get; } = new List<string>();
         public NamedPrimaryKey NamedPrimaryKeys { get; } = new NamedPrimaryKey();
         public NamedUnique NamedUniques { get; } = new NamedUnique();
-        public bool PrimaryKeyNonClustered { get; protected set; }
+        public bool PrimaryKeyClustered { get; protected set; } = true;
 
         protected Table(string name, bool alternation)
             :this(name)
@@ -324,7 +324,7 @@ namespace Rinsen.DatabaseInstaller
             var lastColumn = Columns.Last();
             foreach (var column in Columns)
             {
-                sb.AppendFormat("[{0}] {1}{2}", column.Name, column.Type.GetSqlServerDatabaseTypeString(), GetConstraintString(column));
+                sb.AppendFormat("[{0}] {1}{2}", column.Name, column.DbType.GetSqlServerDatabaseTypeString(), GetConstraintString(column));
 
                 if (!column.Equals(lastColumn) || NamedPrimaryKeys.Any() || NamedUniques.Any())
                 {
@@ -349,13 +349,13 @@ namespace Rinsen.DatabaseInstaller
 
                 foreach (var namedPrimaryKey in NamedPrimaryKeys)
                 {
-                    if (PrimaryKeyNonClustered)
+                    if (PrimaryKeyClustered)
                     {
-                        sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY NONCLUSTERED ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
+                        sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
                     }
                     else
                     {
-                        sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
+                        sb.AppendFormat("CONSTRAINT {0} PRIMARY KEY NONCLUSTERED ({1})", namedPrimaryKey.Key, FormatColumnNames(namedPrimaryKey.Value));
                     }
 
                     if (!lastNamedPrimaryKeys.Equals(namedPrimaryKey))
@@ -424,11 +424,11 @@ namespace Rinsen.DatabaseInstaller
                 {
                     if (Columns.IndexOf(columnToAdd) == Columns.Count - 1)
                     {
-                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.Type.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
+                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
                     }
                     else
                     {
-                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.Type.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
+                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
                     }
                 }
 
@@ -460,11 +460,11 @@ namespace Rinsen.DatabaseInstaller
         {
             var sb = new StringBuilder();
 
-            if (column.NotNull && column.AutoIncrement == null)
+            if (!column.Null && column.AutoIncrement == null)
             {
                 sb.Append(" NOT NULL");
             }
-            if (!column.NotNull && column.AutoIncrement == null)
+            if (column.Null && column.AutoIncrement == null)
             {
                 sb.Append(" NULL");
             }
@@ -484,7 +484,7 @@ namespace Rinsen.DatabaseInstaller
             {
                 sb.Append(" PRIMARY KEY");
 
-                if (PrimaryKeyNonClustered)
+                if (!PrimaryKeyClustered)
                 {
                     sb.Append(" NONCLUSTERED");
                 }
@@ -512,7 +512,7 @@ namespace Rinsen.DatabaseInstaller
 
         public Table SetPrimaryKeyNonClustered()
         {
-            PrimaryKeyNonClustered = true;
+            PrimaryKeyClustered = false;
 
             return this;
         }

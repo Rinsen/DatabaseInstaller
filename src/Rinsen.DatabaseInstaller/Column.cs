@@ -4,34 +4,30 @@ namespace Rinsen.DatabaseInstaller
 {
     public class Column
     {
-        public Column()
+        public Column(string name, IDbType dbType)
         {
-            NotNull = false;
-            Unique = false;
-            PrimaryKey = false;
-            ForeignKey = null;
-            Check = null;
-            DefaultValue = null;
+            Name = name;
+            DbType = dbType;
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public IDbType Type { get; set; }
+        public IDbType DbType { get; }
 
-        public bool NotNull { get; set; }
+        public bool Null { get; set; } = false;
 
-        public bool Unique { get; set; }
+        public bool Unique { get; set; } = false;
 
-        public bool PrimaryKey { get; set; }
+        public bool Clustered { get; set; } = false;
 
-        public ForeignKey ForeignKey { get; set; }
+        public bool PrimaryKey { get; set; } = false;
 
-        public Check Check { get; set; }
+        public ForeignKey ForeignKey { get; set; } = null;
 
-        public DefaultValue DefaultValue { get; set; }
+        public Check Check { get; set; } = null;
 
-        public AutoIncrement AutoIncrement { get; set; }
+        public DefaultValue DefaultValue { get; set; } = null;
 
-        public bool Clustered { get; set; }
+        public AutoIncrement AutoIncrement { get; set; } = null;
     }
 }

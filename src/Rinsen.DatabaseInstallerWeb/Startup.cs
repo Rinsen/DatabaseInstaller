@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Rinsen.DatabaseInstaller;
@@ -13,7 +9,6 @@ namespace Rinsen.DatabaseInstallerWeb
 {
     public class Startup
     {
-        public IHostingEnvironment Environment { get; set; }
         public IConfiguration Configuration { get; set; }
 
         public Startup(IConfiguration configuration)
@@ -38,13 +33,12 @@ namespace Rinsen.DatabaseInstallerWeb
                 options.DatabaseVersions.Add(new MyVersion());
             });
 
+            app.UseRouting();
+
             // Add MVC to the request pipeline.
-            app.UseMvc(routes =>
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
+                routes.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

@@ -18,47 +18,97 @@ namespace Rinsen.DatabaseInstaller
 
             AddColumn(name);
         }
+
+        public new Index<T> Clustered()
+        {
+            IsClustered = true;
+
+            return this;
+        }
+
+        public new Index<T> Unique()
+        {
+            IsUnique = true;
+
+            return this;
+        }
     }
 
     public class Index : IDbChange
     {
-        public string Name { get; private set; }
+        public string IndexName { get; private set; }
 
         public string TableName { get; private set; }
 
-        public List<string> Columns { get; private set; }
+        public List<string> Columns { get; private set; } = new List<string>();
 
-        public Index(string name, string tableName)
+        public bool IsClustered { get; protected set; }
+
+        public bool IsUnique { get; protected set; }
+
+        public Index(string indexName, string tableName)
         {
-            Name = name;
+            IndexName = indexName;
             TableName = tableName;
-            Columns = new List<string>();
         }
 
-        public void AddColumn(string name)
+        public Index AddColumn(string name)
         {
             if (Columns.Contains(name))
             {
-                throw new ArgumentException($"The column {name} is already added to index {Name} on table {TableName}");
+                throw new ArgumentException($"The column {name} is already added to index {IndexName} on table {TableName}");
             }
 
             Columns.Add(name);
+
+            return this;
         }
 
-        public virtual List<string> GetUpScript()
+        public Index Clustered()
+        {
+            IsClustered = true;
+
+            return this;
+        }
+
+        public Index Unique()
+        {
+            IsUnique = true;
+
+            return this;
+        }
+
+        public List<string> GetUpScript()
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("CREATE INDEX {0} ", Name);
+
+            if (IsClustered && IsUnique)
+            {
+                sb.AppendFormat("CREATE UNIQUE CLUSTERED INDEX {0} ", IndexName);
+            }
+            else if (IsClustered) 
+            {
+                sb.AppendFormat("CREATE CLUSTERED INDEX {0} ", IndexName);
+            }
+            else if (IsUnique)
+            {
+                sb.AppendFormat("CREATE UNIQUE INDEX {0} ", IndexName);
+            }
+            else
+            {
+                sb.AppendFormat("CREATE INDEX {0} ", IndexName);
+            }
+            
             AddTableInformation(sb);
 
             return new List<string> { sb.ToString() };
         }
 
-        protected void AddTableInformation(StringBuilder sb)
+        private void AddTableInformation(StringBuilder sb)
         {
             if (!Columns.Any())
             {
-                throw new InvalidOperationException($"No columns is added to index {Name} for table {TableName}");
+                throw new InvalidOperationException($"No columns is added to index {IndexName} for table {TableName}");
             }
 
             sb.AppendLine();
@@ -78,7 +128,7 @@ namespace Rinsen.DatabaseInstaller
             sb.AppendLine(")");
         }
 
-        public virtual List<string> GetDownScript()
+        public List<string> GetDownScript()
         {
             throw new NotImplementedException();
         }
