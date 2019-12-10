@@ -161,6 +161,14 @@ namespace Rinsen.DatabaseInstaller
             return Index;
         }
 
+        public static AddValue AddColumnValue(this List<IDbChange> dbChangeList, string tableName)
+        {
+            var addValue = new AddValue(tableName);
+            dbChangeList.Add(addValue);
+
+            return addValue;
+        }
+
         public static string GetMemberName<T>(this Expression<Func<T, object>> propertyExpression)
         {
             if (propertyExpression.Body is UnaryExpression)

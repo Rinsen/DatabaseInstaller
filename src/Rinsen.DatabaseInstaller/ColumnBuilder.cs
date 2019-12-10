@@ -82,7 +82,7 @@ namespace Rinsen.DatabaseInstaller
                 throw new InvalidOperationException("A primary key can not be combined with a unique constraint on the same column");
             }
 
-            if (_table.Columns.Any(c => c.PrimaryKey && c.Name != Column.Name))
+            if (_table.ColumnsToAdd.Any(c => c.PrimaryKey && c.Name != Column.Name))
             {
                 var constraintName = _table.GetPrimaryKeyConstraintStandardName();
 
@@ -100,7 +100,7 @@ namespace Rinsen.DatabaseInstaller
 
         private void AddAnyExistingPrimaryKeysToNamedPrimaryKeys(string constraintName)
         {
-            foreach (var column in _table.Columns.Where(c => c.PrimaryKey))
+            foreach (var column in _table.ColumnsToAdd.Where(c => c.PrimaryKey))
             {
                 column.PrimaryKey = false;
                 _table.NamedPrimaryKeys.Add(constraintName, column.Name);

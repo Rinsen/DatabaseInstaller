@@ -41,13 +41,26 @@ namespace Rinsen.DatabaseInstaller
         public ColumnBuilder AddColumn(Expression<Func<T, object>> propertyExpression, int? length = null, int? precision = null)
         {
             var propertyType = propertyExpression.GetMemberType();
+            var columnTypeResult = GetColumnTypeResult(propertyType, length, precision);
 
+            var columnBuilder = AddColumn(propertyExpression, columnTypeResult.DbType);
+
+            if (columnTypeResult.Null)
+            {
+                columnBuilder.Null();
+            }
+
+            return columnBuilder;
+        }
+
+        protected ColumnTypeResult GetColumnTypeResult(Type propertyType, int? length, int? precision)
+        {
             if (propertyType == typeof(bool))
             {
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new Bit());
+                return new ColumnTypeResult(new Bit());
             }
 
             if (propertyType == typeof(bool?))
@@ -55,39 +68,39 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new Bit()).Null();
+                return new ColumnTypeResult(new Bit(), true);
             }
 
             if (propertyType == typeof(System.DateTime))
             {
                 if (length != null)
-                    return AddColumn(propertyExpression, new SqlTypes.DateTime((int)length)).NotNull();
+                    return new ColumnTypeResult(new SqlTypes.DateTime((int)length));
 
-                return AddColumn(propertyExpression, new SqlTypes.DateTime());
+                return new ColumnTypeResult(new SqlTypes.DateTime());
             }
 
             if (propertyType == typeof(System.DateTime?))
             {
                 if (length != null)
-                    return AddColumn(propertyExpression, new SqlTypes.DateTime((int)length));
+                    return new ColumnTypeResult(new SqlTypes.DateTime((int)length));
 
-                return AddColumn(propertyExpression, new SqlTypes.DateTime()).Null();
+                return new ColumnTypeResult(new SqlTypes.DateTime(), true);
             }
 
             if (propertyType == typeof(System.DateTimeOffset))
             {
                 if (length != null)
-                    return AddColumn(propertyExpression, new SqlTypes.DateTimeOffset((int)length)).NotNull();
+                    return new ColumnTypeResult(new SqlTypes.DateTimeOffset((int)length));
 
-                return AddColumn(propertyExpression, new SqlTypes.DateTimeOffset());
+                return new ColumnTypeResult(new SqlTypes.DateTimeOffset());
             }
 
             if (propertyType == typeof(System.DateTimeOffset?))
             {
                 if (length != null)
-                    return AddColumn(propertyExpression, new SqlTypes.DateTimeOffset((int)length));
+                    return new ColumnTypeResult(new SqlTypes.DateTimeOffset((int)length));
 
-                return AddColumn(propertyExpression, new SqlTypes.DateTimeOffset()).Null();
+                return new ColumnTypeResult(new SqlTypes.DateTimeOffset(), true);
             }
 
             if (propertyType == typeof(int))
@@ -95,7 +108,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new Int());
+                return new ColumnTypeResult(new Int());
             }
 
             if (propertyType == typeof(int?))
@@ -103,7 +116,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new Int()).Null();
+                return new ColumnTypeResult(new Int(), true);
             }
 
             if (propertyType == typeof(byte))
@@ -111,7 +124,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new TinyInt());
+                return new ColumnTypeResult(new TinyInt());
             }
 
             if (propertyType == typeof(byte?))
@@ -119,7 +132,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new TinyInt()).Null();
+                return new ColumnTypeResult(new TinyInt(), true);
             }
 
             if (propertyType == typeof(short))
@@ -127,7 +140,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new SmallInt());
+                return new ColumnTypeResult(new SmallInt());
             }
 
             if (propertyType == typeof(short?))
@@ -135,7 +148,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new SmallInt()).Null();
+                return new ColumnTypeResult(new SmallInt(), true);
             }
 
             if (propertyType == typeof(long))
@@ -143,7 +156,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new BigInt());
+                return new ColumnTypeResult(new BigInt());
             }
 
             if (propertyType == typeof(long?))
@@ -151,86 +164,86 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new BigInt()).Null();
+                return new ColumnTypeResult(new BigInt(), true);
             }
 
             if (propertyType == typeof(string))
             {
                 if (length == null)
                 {
-                    return AddColumn(propertyExpression, new NVarChar(1));
+                    return new ColumnTypeResult(new NVarChar(1));
                 }
                 if (length == int.MaxValue)
                 {
-                    return AddColumn(propertyExpression, new NVarChar());
+                    return new ColumnTypeResult(new NVarChar());
                 }
-                return AddColumn(propertyExpression, new NVarChar((int)length));
+                return new ColumnTypeResult(new NVarChar((int)length));
             }
 
             if (propertyType == typeof(byte[]))
             {
                 if (length == null)
                 {
-                    return AddColumn(propertyExpression, new VarBinary());
+                    return new ColumnTypeResult(new VarBinary());
                 }
 
-                return AddColumn(propertyExpression, new VarBinary((int)length));
+                return new ColumnTypeResult(new VarBinary((int)length));
             }
 
             if (propertyType == typeof(byte?[]))
             {
                 if (length == null)
                 {
-                    return AddColumn(propertyExpression, new VarBinary()).Null();
+                    return new ColumnTypeResult(new VarBinary(), true);
                 }
 
-                return AddColumn(propertyExpression, new VarBinary((int)length)).Null();
+                return new ColumnTypeResult(new VarBinary((int)length), true);
             }
 
             if (propertyType == typeof(decimal))
             {
                 if (length == null && precision == null)
                 {
-                    return AddColumn(propertyExpression, new SqlTypes.Decimal());
+                    return new ColumnTypeResult(new SqlTypes.Decimal());
                 }
                 if (length == null || precision == null)
                 {
                     throw new ArgumentException("Length and precision is mandatory for this type if one is provided");
                 }
-                return AddColumn(propertyExpression, new SqlTypes.Decimal((int)length, (int)precision));
+                return new ColumnTypeResult(new SqlTypes.Decimal((int)length, (int)precision));
             }
 
             if (propertyType == typeof(decimal?))
             {
                 if (length == null && precision == null)
                 {
-                    return AddColumn(propertyExpression, new SqlTypes.Decimal()).Null();
+                    return new ColumnTypeResult(new SqlTypes.Decimal(), true);
                 }
                 if (length == null || precision == null)
                 {
                     throw new ArgumentException("Length and precision is mandatory for this type if one is provided");
                 }
-                return AddColumn(propertyExpression, new SqlTypes.Decimal((int)length, (int)precision)).Null();
+                return new ColumnTypeResult(new SqlTypes.Decimal((int)length, (int)precision), true);
             }
 
             if (propertyType == typeof(double))
             {
                 if (length == null)
                 {
-                    return AddColumn(propertyExpression, new Float());
+                    return new ColumnTypeResult(new Float());
                 }
 
-                return AddColumn(propertyExpression, new Float((int)length));
+                return new ColumnTypeResult(new Float((int)length));
             }
 
             if (propertyType == typeof(double?))
             {
                 if (length == null)
                 {
-                    return AddColumn(propertyExpression, new Float()).Null();
+                    return new ColumnTypeResult(new Float(), true);
                 }
 
-                return AddColumn(propertyExpression, new Float((int)length)).Null();
+                return new ColumnTypeResult(new Float((int)length), true);
             }
 
             if (propertyType == typeof(System.Guid))
@@ -238,7 +251,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new SqlTypes.Guid());
+                return new ColumnTypeResult(new SqlTypes.Guid());
             }
 
             if (propertyType == typeof(System.Guid?))
@@ -246,7 +259,7 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new SqlTypes.Guid()).Null();
+                return new ColumnTypeResult(new SqlTypes.Guid(), true);
             }
 
             if (propertyType.IsEnum)
@@ -254,10 +267,23 @@ namespace Rinsen.DatabaseInstaller
                 if (length != null)
                     throw new ArgumentException("Length is not supported for this type", nameof(length));
 
-                return AddColumn(propertyExpression, new SqlTypes.TinyInt());
+                return new ColumnTypeResult(new TinyInt());
             }
 
             throw new ArgumentException($"Property Type '{propertyType}' is not supported");
+        }
+
+        protected class ColumnTypeResult
+        {
+            public ColumnTypeResult(IDbType dbType, bool nullable = false)
+            {
+                DbType = dbType;
+                Null = nullable;
+            }
+
+            public IDbType DbType { get; }
+
+            public bool Null { get;  }
         }
     }
 
@@ -266,7 +292,8 @@ namespace Rinsen.DatabaseInstaller
         protected bool _alternation = false;
 
         public string Name { get; }
-        public List<Column> Columns { get; } = new List<Column>();
+        public List<Column> ColumnsToAdd { get; } = new List<Column>();
+        public List<Column> ColumnsToAlter { get; } = new List<Column>();
         public List<string> ColumnsToDrop { get; } = new List<string>();
         public NamedPrimaryKey NamedPrimaryKeys { get; } = new NamedPrimaryKey();
         public NamedUnique NamedUniques { get; } = new NamedUnique();
@@ -295,14 +322,14 @@ namespace Rinsen.DatabaseInstaller
                 throw new ArgumentException("Name is mandatory for column");
             }
 
-            if (Columns.Any(col => col.Name == name))
+            if (ColumnsToAdd.Any(col => col.Name == name))
             {
                 throw new ArgumentException(string.Format("A column with the name {0} already exist in table {1}", name, Name));
             }
 
             var columnBuilder = new ColumnBuilder(this, name, columnType);
 
-            Columns.Add(columnBuilder.Column);
+            ColumnsToAdd.Add(columnBuilder.Column);
 
             return columnBuilder;
         }
@@ -314,15 +341,15 @@ namespace Rinsen.DatabaseInstaller
                 return GetAlterationScripts();
             }
 
-            if (!Columns.Any())
+            if (!ColumnsToAdd.Any())
                 throw new InvalidOperationException("No colums found in table definition");
 
             var sb = new StringBuilder("CREATE TABLE ");
             sb.AppendFormat("[{0}]", Name);
             sb.AppendLine();
             sb.AppendLine("(");
-            var lastColumn = Columns.Last();
-            foreach (var column in Columns)
+            var lastColumn = ColumnsToAdd.Last();
+            foreach (var column in ColumnsToAdd)
             {
                 sb.AppendFormat("[{0}] {1}{2}", column.Name, column.DbType.GetSqlServerDatabaseTypeString(), GetConstraintString(column));
 
@@ -392,7 +419,7 @@ namespace Rinsen.DatabaseInstaller
         {
             var scripts = new List<string>();
 
-            if (!Columns.Any() && !Columns.Any())
+            if (!ColumnsToAdd.Any() && !ColumnsToAdd.Any() && !ColumnsToAlter.Any())
                 throw new InvalidOperationException("No colums found in alter table definition");
 
             if (ColumnsToDrop.Any())
@@ -415,14 +442,14 @@ namespace Rinsen.DatabaseInstaller
                 scripts.Add(sb.ToString());
             }
 
-            if (Columns.Any())
+            if (ColumnsToAdd.Any())
             {
                 var sb = new StringBuilder($"ALTER TABLE {Name} ADD");
                 sb.AppendLine();
 
-                foreach (var columnToAdd in Columns)
+                foreach (var columnToAdd in ColumnsToAdd)
                 {
-                    if (Columns.IndexOf(columnToAdd) == Columns.Count - 1)
+                    if (ColumnsToAdd.IndexOf(columnToAdd) == ColumnsToAdd.Count - 1)
                     {
                         sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
                     }
@@ -436,6 +463,30 @@ namespace Rinsen.DatabaseInstaller
                 AddNamedPrimaryKeys(sb);
 
                 scripts.Add(sb.ToString());
+            }
+
+            if (ColumnsToAlter.Any())
+            {
+                var sb = new StringBuilder($"ALTER TABLE {Name} ALTER");
+                sb.AppendLine();
+                
+                foreach (var columnToAdd in ColumnsToAlter)
+                {
+                    if (ColumnsToAlter.IndexOf(columnToAdd) == ColumnsToAlter.Count - 1)
+                    {
+                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
+                    }
+                }
+
+                AddNamedUniques(sb);
+                AddNamedPrimaryKeys(sb);
+
+                scripts.Add(sb.ToString());
+
             }
 
             return scripts;

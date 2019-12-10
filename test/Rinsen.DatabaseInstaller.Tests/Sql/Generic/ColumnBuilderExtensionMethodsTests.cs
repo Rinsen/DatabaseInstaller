@@ -29,9 +29,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic
             table.AddColumn(m => m.ClubId).ForeignKey<Club>(m => m.ClubId);
 
             // Assert
-            Assert.Single(table.Columns.Where(m => m.ForeignKey != null));
-            Assert.Equal("ClubId", table.Columns.First(m => m.ForeignKey != null).ForeignKey.ColumnName);
-            Assert.Equal("Clubs", table.Columns.First(m => m.ForeignKey != null).ForeignKey.TableName);
+            Assert.Single(table.ColumnsToAdd.Where(m => m.ForeignKey != null));
+            Assert.Equal("ClubId", table.ColumnsToAdd.First(m => m.ForeignKey != null).ForeignKey.ColumnName);
+            Assert.Equal("Clubs", table.ColumnsToAdd.First(m => m.ForeignKey != null).ForeignKey.TableName);
         }
 
     }

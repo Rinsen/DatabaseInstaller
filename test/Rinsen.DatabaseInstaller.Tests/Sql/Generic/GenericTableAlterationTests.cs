@@ -59,5 +59,20 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             Assert.Equal("ALTER TABLE MyTable ADD\r\nMyNewColumn nvarchar(100) NOT NULL,\r\nMyOtherNewColumn int NOT NULL\r\n", script);
 
         }
+
+        [Fact]
+        public void ChangeColumnFromNullToNotNull_GetCorrectUpScript()
+        {
+            // Arrange
+
+            // Act
+            var tableAlteration = new TableAlteration<MyData>("MyTable");
+            tableAlteration.AlterColumn(m => m.MyNewColumn, 100);
+            var script = tableAlteration.GetUpScript().Single();
+
+            // Assert
+            Assert.Equal("ALTER TABLE MyTable ALTER\r\nMyNewColumn nvarchar(100) NOT NULL\r\n", script);
+
+        }
     }
 }
