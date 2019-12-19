@@ -399,6 +399,8 @@ namespace Rinsen.DatabaseInstaller
         {
             if (NamedUniques.Any())
             {
+                sb.AppendLine($"ALTER TABLE {Name} ADD");
+
                 var lastNamedUnique = NamedUniques.Last();
 
                 foreach (var namedUnique in NamedUniques)
@@ -474,11 +476,11 @@ namespace Rinsen.DatabaseInstaller
                 {
                     if (ColumnsToAlter.IndexOf(columnToAdd) == ColumnsToAlter.Count - 1)
                     {
-                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
+                        sb.AppendLine($"COLUMN [{columnToAdd.Name}] {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
                     }
                     else
                     {
-                        sb.AppendLine($"{columnToAdd.Name} {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
+                        sb.AppendLine($"COLUMN [{columnToAdd.Name}] {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
                     }
                 }
 

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Rinsen.DatabaseInstaller;
 using Xunit;
 
@@ -12,6 +13,12 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             public string MyNewColumn { get; set; }
 
             public int MyOtherNewColumn { get; set; }
+        }
+
+        class Item
+        {
+            public Guid Id { get; set; }
+
         }
 
         [Fact]
@@ -74,5 +81,18 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             Assert.Equal("ALTER TABLE MyTable ALTER\r\nMyNewColumn nvarchar(100) NOT NULL\r\n", script);
 
         }
+
+
+        [Fact]
+        public void AlterColumnAndAddUniqueConstraint_GetCorrectUpScript()
+        {
+            var columnAlteration = new TableAlteration<Item>("Items");
+            columnAlteration.AlterColumn(m => m.Id).NotNull().Unique("UX_Items_Id");
+
+            var script = columnAlteration.GetUpScript().Single();
+
+            Assert.Equal("ALTER TABLE Items ALTER\r\nCOLUMN [Id] uniqueidentifier NOT NULL\r\nALTER TABLE Items ADD\r\nCONSTRAINT UX_Items_Id UNIQUE (Id)\r\n", script);
+        }
+        // 
     }
 }
