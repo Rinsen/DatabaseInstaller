@@ -5,16 +5,17 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace DatabaseInstallerSampleApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
-                RunDatabaseInstaller();
+                await RunDatabaseInstaller();
             }
             catch (Exception e)
             {
@@ -23,7 +24,7 @@ namespace DatabaseInstallerSampleApp
             
         }
 
-        private static void RunDatabaseInstaller()
+        private static async Task RunDatabaseInstaller()
         {
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddUserSecrets<Program>();
@@ -45,10 +46,12 @@ namespace DatabaseInstallerSampleApp
             var info = installer.GetVersionInformation();
 
             // Install installer and first version
-            var versionList = new List<DatabaseVersion>();
-            versionList.Add(new FirstTableVersion());
+            var versionList = new List<DatabaseVersion>
+            {
+                new FirstTableVersion()
+            };
 
-            installer.Run(versionList);
+            await installer.RunAsync(versionList);
 
             // Install failing script and se that the rollback is working
             var secondTable = new SecondTableVersion();
@@ -56,12 +59,12 @@ namespace DatabaseInstallerSampleApp
             try
             {
                 versionList.Add(secondTable);
-                installer.Run(versionList);
+                await installer.RunAsync(versionList);
             }
             catch (CommandFailedToExecuteException)
             {
                 exceptionFound = true;
-                var installedVersion = installer.GetVersionInformation().Single(m => m.InstallationName == secondTable.InstallationName);
+                var installedVersion = (await installer.GetVersionInformation()).Single(m => m.InstallationName == secondTable.InstallationName);
 
                 if (installedVersion.InstalledVersion != 1 || installedVersion.InstalledVersion != installedVersion.StartedInstallingVersion)
                 {
@@ -78,11 +81,11 @@ namespace DatabaseInstallerSampleApp
             versionList.Clear();
 
             versionList.Add(new CorrectSecondVersion());
-            installer.Run(versionList);
+            await installer.RunAsync(versionList);
 
             // Run with installation list containing previous version
             versionList.Add(new ThirdVersion());
-            installer.Run(versionList);
+            await installer.RunAsync(versionList);
         }
     }
 }

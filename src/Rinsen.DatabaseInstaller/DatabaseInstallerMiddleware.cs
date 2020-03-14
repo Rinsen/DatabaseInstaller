@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
+    /// <summary>
+    /// This should only be used when debugging!!!
+    /// </summary>
     public class DatabaseInstallerMiddleware
     {
-        private static readonly object _lock = new object();
+        private static readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1);
         private static bool _installed = false;
 
         private readonly RequestDelegate _next;
@@ -22,17 +26,22 @@ namespace Rinsen.DatabaseInstaller
 
         public async Task Invoke(HttpContext context)
         {
-            lock (_lock)
+            await _semaphoreSlim.WaitAsync();
+
+            try
             {
                 if (!_installed)
                 {
-                    _installer.Run(_options.Value.DatabaseVersions);
+                    await _installer.RunAsync(_options.Value.DatabaseVersions);
                     _installed = true;
+
+                    await _next.Invoke(context);
                 }
             }
-
-            await _next.Invoke(context);
-
+            finally
+            {
+                _semaphoreSlim.Release();
+            }
         }
     }
 }

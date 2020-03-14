@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace Rinsen.DatabaseInstaller
@@ -23,23 +24,24 @@ namespace Rinsen.DatabaseInstaller
             _log = log;
         }
         
-        public void Run(IEnumerable<DatabaseVersion> databaseVersions)
+        public async Task RunAsync(IEnumerable<DatabaseVersion> databaseVersions)
         {
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
-                connection.Open();
-                using (var transaction = connection.BeginTransaction())
+                _log.LogDebug("DatabaseInstaller started");
+                await connection.OpenAsync();
+                if (!await _versionStorage.IsInstalled(connection))
                 {
-
-                    _log.LogDebug("DatabaseInstaller started");
-                    if (!_versionStorage.IsInstalled(connection, transaction))
+                    using (var transaction = connection.BeginTransaction())
                     {
                         _log.LogDebug("First installation, installing base version");
                         var installerBaseVersion = new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName);
-                        _databaseVersionInstaller.InstallBaseVersion( installerBaseVersion, connection, transaction);
+                        await _databaseVersionInstaller.InstallBaseVersion(installerBaseVersion, connection, transaction);
                     }
-
-                    _databaseVersionInstaller.Install(databaseVersions.ToList(), connection, transaction);
+                }
+                using (var transaction = connection.BeginTransaction())
+                {
+                    await _databaseVersionInstaller.Install(databaseVersions.ToList(), connection, transaction);
                     _log.LogDebug("DatabaseInstaller finished, commit changes");
                     transaction.Commit();
                     _log.LogDebug("Commit completed");
@@ -52,14 +54,14 @@ namespace Rinsen.DatabaseInstaller
             throw new NotImplementedException();
         }
 
-        public IEnumerable<InstallationNameAndVersion> GetVersionInformation()
+        public async Task<IEnumerable<InstallationNameAndVersion>> GetVersionInformation()
         {
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 using (var transaction = connection.BeginTransaction())
                 {
-                    return _versionHandler.GetInstalledVersionsInformation(connection, transaction);
+                    return await _versionHandler.GetInstalledVersionsInformation(connection, transaction);
                 }
             }
         } 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -19,7 +20,7 @@ namespace Rinsen.DatabaseInstaller
             _logger = logger;
         }
 
-        internal void Install(List<DatabaseVersion> databaseVersions, SqlConnection connection, SqlTransaction transaction)
+        internal async Task Install(List<DatabaseVersion> databaseVersions, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var installationName in databaseVersions.Select(v => v.InstallationName).Distinct())
             {
@@ -30,7 +31,7 @@ namespace Rinsen.DatabaseInstaller
                     throw new ArgumentException(string.Format("There can only be one unique version {0} for installation name {1}", databaseVersions.GroupBy(m => m.Version).Where(c => c.Count() > 1).First(), installationName));
                 }
 
-                var installedVersion = _versionHandler.GetInstalledVersion(installationName, connection, transaction);
+                var installedVersion = await _versionHandler.GetInstalledVersion(installationName, connection, transaction);
 
                 if (versions.Where(m => m.Version > installedVersion.InstalledVersion).Any())
                 {
@@ -39,11 +40,11 @@ namespace Rinsen.DatabaseInstaller
             }
         }
 
-        internal void InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
+        internal async Task InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
             _databaseScriptRunner.Run(installerBaseVersion.UpCommands, connection, transaction);
 
-            _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
+            await _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
         }
 
         private void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)

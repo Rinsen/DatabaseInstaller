@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Database
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             if (args.Length < 1)
             {
@@ -26,16 +27,16 @@ namespace Database
             {
                 case "install":
                     Console.WriteLine("Installing...");
-                    Install(installer);
+                    await Install(installer);
                     break;
                 case "preview":
-                    PreviewDbChanges(installer);
+                    await PreviewDbChanges(installer);
                     break;
                 case "complete":
                     AllDbChanges();
                     break;
                 case "current":
-                    ShowCurrentInstallationState(installer);
+                    await ShowCurrentInstallationState(installer);
                     break;
                 default:
                     Console.WriteLine("Some arguments is needed");
@@ -47,22 +48,21 @@ namespace Database
             Console.ReadKey();
         }
 
-        private static void ShowCurrentInstallationState(Installer installer)
+        private static async Task ShowCurrentInstallationState(Installer installer)
         {
             Console.WriteLine("Installed versions");
             Console.WriteLine("Id InstallationName InstalledVersion PreviousVersion StartedInstallatingVersion");
-            foreach (var installationNameAndVersion in installer.GetVersionInformation())
+            foreach (var installationNameAndVersion in await installer.GetVersionInformation())
             {
                 Console.WriteLine($"{installationNameAndVersion.Id} {installationNameAndVersion.InstallationName} {installationNameAndVersion.InstalledVersion} {installationNameAndVersion.PreviousVersion} {installationNameAndVersion.StartedInstallingVersion}");
             }
         }
 
-        private static void PreviewDbChanges(Installer installer)
+        private static async Task PreviewDbChanges(Installer installer)
         {
             var dbChanges = GetAllDbChanges();
 
-            var installationNamesAndVersion = installer.GetVersionInformation();
-            //var installationNamesAndVersion = new List<InstallationNameAndVersion>();
+            var installationNamesAndVersion = await installer.GetVersionInformation();
 
             foreach (var installationName in dbChanges.Select(m => m.InstallationName).Distinct())
             {
@@ -125,11 +125,11 @@ namespace Database
             }
         }
 
-        private static void Install(Installer installer)
+        private static async Task Install(Installer installer)
         {
             var dbChangesToInstall = GetAllDbChanges();
 
-            installer.Run(dbChangesToInstall);
+            await installer.RunAsync(dbChangesToInstall);
         }
 
         private static Installer CreateInstaller()

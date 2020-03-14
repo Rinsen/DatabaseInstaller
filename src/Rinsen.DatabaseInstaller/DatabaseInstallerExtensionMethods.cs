@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -31,9 +32,9 @@ namespace Rinsen.DatabaseInstaller
             services.AddTransient<IVersionStorage, AdoNetVersionStorage>();
         }
 
-        public static void RunDatabaseInstaller(this IApplicationBuilder app, IEnumerable<DatabaseVersion> databaseVersions)
+        public static async Task RunDatabaseInstaller(this IApplicationBuilder app, IEnumerable<DatabaseVersion> databaseVersions)
         {
-            app.ApplicationServices.GetRequiredService<Installer>().Run(databaseVersions);
+            await app.ApplicationServices.GetRequiredService<Installer>().RunAsync(databaseVersions);
         }
 
         public static Table AddNewTable(this List<IDbChange> dbChangeList, string tableName)

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Rinsen.DatabaseInstaller</id>
-    <version>0.4.9</version>
+    <version>0.4.10</version>
     <title>Rinsen Database Installer</title>
     <authors>Fredrik Rinsén</authors>
     <owners>Fredrik Rinsén</owners>
@@ -11,17 +11,17 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database installer and version handler for dotnet core projects</description>
     <releaseNotes>
-      Added column value for chagning uniqueidentifier columns from null columns to not null columns
+      Moved base installation out of main transaction and converted most code to async/await
     </releaseNotes>
-    <copyright>Copyright 2019</copyright>
+    <copyright>Copyright 2019-2020</copyright>
     <tags>aspnetcore database installer</tags>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="2.2.0" />
-        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="3.1.0" />
-        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.1.0" />
-        <dependency id="Microsoft.Extensions.Options" version="3.1.0" />
-        <dependency id="System.Data.SqlClient" version="4.8.0" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="3.1.2" />
+        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.1.2" />
+        <dependency id="Microsoft.Extensions.Options" version="3.1.2" />
+        <dependency id="System.Data.SqlClient" version="4.8.1" />
       </group>
     </dependencies>
   </metadata>
