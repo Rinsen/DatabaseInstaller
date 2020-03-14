@@ -287,5 +287,6 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             Assert.Equal("CREATE TABLE [EnumTestTables]\r\n(\r\n[MySetting] tinyint NOT NULL\r\n)", createScript);
         }
 
+
     }
 }

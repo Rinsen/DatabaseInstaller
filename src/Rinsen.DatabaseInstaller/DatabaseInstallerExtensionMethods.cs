@@ -32,7 +32,7 @@ namespace Rinsen.DatabaseInstaller
             services.AddTransient<IVersionStorage, AdoNetVersionStorage>();
         }
 
-        public static async Task RunDatabaseInstaller(this IApplicationBuilder app, IEnumerable<DatabaseVersion> databaseVersions)
+        public static async Task RunDatabaseInstaller(this IApplicationBuilder app, List<DatabaseVersion> databaseVersions)
         {
             await app.ApplicationServices.GetRequiredService<Installer>().RunAsync(databaseVersions);
         }

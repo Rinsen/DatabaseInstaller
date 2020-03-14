@@ -24,7 +24,7 @@ namespace Rinsen.DatabaseInstaller
             _log = log;
         }
         
-        public async Task RunAsync(IEnumerable<DatabaseVersion> databaseVersions)
+        public async Task RunAsync(List<DatabaseVersion> databaseVersions)
         {
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
@@ -37,11 +37,13 @@ namespace Rinsen.DatabaseInstaller
                         _log.LogDebug("First installation, installing base version");
                         var installerBaseVersion = new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName);
                         await _databaseVersionInstaller.InstallBaseVersion(installerBaseVersion, connection, transaction);
+                        transaction.Commit();
+                        _log.LogDebug("Commit completed");
                     }
                 }
                 using (var transaction = connection.BeginTransaction())
                 {
-                    await _databaseVersionInstaller.Install(databaseVersions.ToList(), connection, transaction);
+                    await _databaseVersionInstaller.Install(databaseVersions, connection, transaction);
                     _log.LogDebug("DatabaseInstaller finished, commit changes");
                     transaction.Commit();
                     _log.LogDebug("Commit completed");
