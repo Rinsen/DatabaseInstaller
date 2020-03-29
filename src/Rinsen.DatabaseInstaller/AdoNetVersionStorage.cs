@@ -143,6 +143,35 @@ namespace Rinsen.DatabaseInstaller
             return result;
         }
 
+        public async Task<bool> IsInstalled(SqlConnection connection, SqlTransaction sqlTransaction)
+        {
+            bool result = false;
+
+            using (var command = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @tableName", connection, sqlTransaction))
+            {
+                command.Parameters.Add(new SqlParameter("@tableName", _installerOptions.InstalledVersionsDatabaseTableName));
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        int count = 0;
+                        while (await reader.ReadAsync())
+                        {
+                            count++;
+                        }
+
+                        if (count >= 5)
+                        {
+                            result = true;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public Task<int> StartInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction)
         {
             var updateSql = string.Format("UPDATE {0} SET StartedInstallingVersion = @StartedInstallingVersion + 1 WHERE Id = @Id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", _installerOptions.InstalledVersionsDatabaseTableName);

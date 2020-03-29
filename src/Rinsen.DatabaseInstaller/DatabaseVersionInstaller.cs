@@ -35,27 +35,27 @@ namespace Rinsen.DatabaseInstaller
 
                 if (versions.Where(m => m.Version > installedVersion.InstalledVersion).Any())
                 {
-                    InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version), connection, transaction);
+                    await InstallVersionsForSingleInstallationName(versions.Where(m => m.Version > installedVersion.InstalledVersion).OrderBy(m => m.Version), connection, transaction);
                 }
             }
         }
 
         internal async Task InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            _databaseScriptRunner.Run(installerBaseVersion.UpCommands, connection, transaction);
+            await _databaseScriptRunner.RunAsync(installerBaseVersion.UpCommands, connection, transaction);
 
             await _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
         }
 
-        private void InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
+        private async Task InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var version in orderedVersionsForInstallationName)
             {
-                using (var scope = _versionHandler.BeginInstallVersionScope(version, connection, transaction))
+                using (var scope = await _versionHandler.BeginInstallVersionScope(version, connection, transaction))
                 {
                     try
                     {
-                        _databaseScriptRunner.Run(version.UpCommands, connection, transaction);
+                        await _databaseScriptRunner.RunAsync(version.UpCommands, connection, transaction);
                     }
                     catch (Exception e)
                     {

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 
 namespace Database
@@ -52,7 +53,7 @@ namespace Database
         {
             Console.WriteLine("Installed versions");
             Console.WriteLine("Id InstallationName InstalledVersion PreviousVersion StartedInstallatingVersion");
-            foreach (var installationNameAndVersion in await installer.GetVersionInformation())
+            foreach (var installationNameAndVersion in await installer.GetVersionInformationAsync())
             {
                 Console.WriteLine($"{installationNameAndVersion.Id} {installationNameAndVersion.InstallationName} {installationNameAndVersion.InstalledVersion} {installationNameAndVersion.PreviousVersion} {installationNameAndVersion.StartedInstallingVersion}");
             }
@@ -62,7 +63,7 @@ namespace Database
         {
             var dbChanges = GetAllDbChanges();
 
-            var installationNamesAndVersion = await installer.GetVersionInformation();
+            var installationNamesAndVersion = await installer.GetVersionInformationAsync();
 
             foreach (var installationName in dbChanges.Select(m => m.InstallationName).Distinct())
             {
@@ -153,8 +154,11 @@ namespace Database
 
         private static List<DatabaseVersion> GetAllDbChanges()
         {
-            var assembly = Assembly.LoadFile("C:\\Users\\fredr\\Source\\Repos\\DatabaseInstaller\\sample\\DatabaseInstallerSampleApp\\bin\\Debug\\netcoreapp2.0\\DatabaseInstallerSampleApp.dll"); // This is...
-
+            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.InnovationBoost.Installation.dll"); // This is...
+            AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.IdentityProvider.dll"); // This is...
+            AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.Logger.dll"); // This is...
+            AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.Logger.Service.dll"); // This is...
+            
             var dbChanges = new List<DatabaseVersion>();
 
             foreach (var dbChange in assembly.ExportedTypes.Where(t => t.IsSubclassOf(typeof(DatabaseVersion))))

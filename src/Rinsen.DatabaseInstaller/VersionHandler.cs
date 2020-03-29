@@ -17,7 +17,7 @@ namespace Rinsen.DatabaseInstaller
 
         internal async virtual Task<InstallationNameAndVersion> GetInstalledVersion(string name, SqlConnection connection, SqlTransaction transaction)
         {
-            if (!await _versionStorage.IsInstalled(connection))
+            if (!await _versionStorage.IsInstalled(connection, transaction))
             {
                 throw new InvalidOperationException("Installer is not installed");
             }
@@ -42,7 +42,7 @@ namespace Rinsen.DatabaseInstaller
 
         internal async virtual Task<IEnumerable<InstallationNameAndVersion>> GetInstalledVersionsInformation(SqlConnection connection, SqlTransaction transaction)
         {
-            if (await _versionStorage.IsInstalled(connection))
+            if (await _versionStorage.IsInstalled(connection, transaction))
             {
                 return await _versionStorage.GetAll(connection, transaction);
             }

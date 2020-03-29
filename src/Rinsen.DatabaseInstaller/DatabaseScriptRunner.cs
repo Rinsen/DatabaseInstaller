@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseScriptRunner
     {
-        internal void Run(IEnumerable<string> commands, SqlConnection connection, SqlTransaction transaction)
+        internal async Task RunAsync(IEnumerable<string> commands, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var command in commands)
             {
@@ -14,7 +15,7 @@ namespace Rinsen.DatabaseInstaller
                 {
                     try
                     {
-                        sqlCommand.ExecuteNonQuery();
+                        await sqlCommand.ExecuteNonQueryAsync();
                     }
                     catch (Exception ex)
                     {

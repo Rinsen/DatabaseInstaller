@@ -2,10 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>0.4.11</Version>
+    <Version>0.4.13</Version>
+    <Title>Rinsen Database Installer</Title>
+    <Authors>Fredrik Rinsén</Authors>
+    <Description>Database installer and version handler for dotnet core projects</Description>
+    <Copyright>© Fredrik Rinsén</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>Rinsen</PackageTags>
+    <RepositoryUrl>https://github.com/Rinsen/DatabaseInstaller</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +19,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

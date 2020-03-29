@@ -8,6 +8,8 @@ namespace Rinsen.DatabaseInstaller
     {
         Task<bool> IsInstalled(SqlConnection connection);
 
+        Task<bool> IsInstalled(SqlConnection connection, SqlTransaction transaction);
+
         InstallationNameAndVersion Get(string name, SqlConnection connection, SqlTransaction transaction);
 
         Task<InstallationNameAndVersion> GetAsync(string name, SqlConnection connection, SqlTransaction transaction);

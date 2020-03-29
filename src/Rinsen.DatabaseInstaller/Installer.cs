@@ -56,7 +56,7 @@ namespace Rinsen.DatabaseInstaller
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<InstallationNameAndVersion>> GetVersionInformation()
+        public async Task<IEnumerable<InstallationNameAndVersion>> GetVersionInformationAsync()
         {
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {

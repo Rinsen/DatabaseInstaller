@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 		README.md = README.md
-		Rinsen.DatabaseInstaller.nuspec = Rinsen.DatabaseInstaller.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2C550C2B-2F63-4496-8E4F-1FBE468A98B4}"
@@ -19,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseInstallerSampleApp", "sample\DatabaseInstallerSampleApp\DatabaseInstallerSampleApp.csproj", "{C62EA232-48FB-4A5D-BD86-66D87D41C576}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rinsen.DatabaseInstaller", "src\Rinsen.DatabaseInstaller\Rinsen.DatabaseInstaller.csproj", "{64426E73-421D-46D5-A4CA-2F47EAE56A7D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rinsen.DatabaseInstallerWeb", "src\Rinsen.DatabaseInstallerWeb\Rinsen.DatabaseInstallerWeb.csproj", "{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rinsen.DatabaseInstaller.Tests", "test\Rinsen.DatabaseInstaller.Tests\Rinsen.DatabaseInstaller.Tests.csproj", "{90931FDE-A798-4F0D-96E2-0A821C65BF43}"
 EndProject
@@ -60,18 +57,6 @@ Global
 		{64426E73-421D-46D5-A4CA-2F47EAE56A7D}.Release|x64.Build.0 = Release|Any CPU
 		{64426E73-421D-46D5-A4CA-2F47EAE56A7D}.Release|x86.ActiveCfg = Release|Any CPU
 		{64426E73-421D-46D5-A4CA-2F47EAE56A7D}.Release|x86.Build.0 = Release|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Debug|x64.Build.0 = Debug|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Debug|x86.Build.0 = Debug|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Release|x64.ActiveCfg = Release|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Release|x64.Build.0 = Release|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Release|x86.ActiveCfg = Release|Any CPU
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127}.Release|x86.Build.0 = Release|Any CPU
 		{90931FDE-A798-4F0D-96E2-0A821C65BF43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{90931FDE-A798-4F0D-96E2-0A821C65BF43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90931FDE-A798-4F0D-96E2-0A821C65BF43}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -103,7 +88,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C62EA232-48FB-4A5D-BD86-66D87D41C576} = {85B2137B-348B-44D7-AB81-C5CD716B2BB7}
 		{64426E73-421D-46D5-A4CA-2F47EAE56A7D} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
-		{2E6B2584-C79A-42F5-BCB7-E6BBE8AD6127} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
 		{90931FDE-A798-4F0D-96E2-0A821C65BF43} = {9105A91F-E92D-476A-AD09-242AFBD59872}
 		{25E57C36-883B-4353-B2BA-1CD97989493D} = {2C550C2B-2F63-4496-8E4F-1FBE468A98B4}
 	EndGlobalSection

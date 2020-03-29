@@ -43,7 +43,7 @@ namespace DatabaseInstallerSampleApp
 
             var installer = serviceProvider.GetRequiredService<Installer>();
 
-            var info = installer.GetVersionInformation();
+            var info = await installer.GetVersionInformationAsync();
 
             // Install installer and first version
             var versionList = new List<DatabaseVersion>
@@ -59,12 +59,12 @@ namespace DatabaseInstallerSampleApp
             try
             {
                 versionList.Add(secondTable);
-                await installer.RunAsync(versionList);
+                await installer.RunAsync(versionList); 
             }
             catch (CommandFailedToExecuteException)
             {
                 exceptionFound = true;
-                var installedVersion = (await installer.GetVersionInformation()).Single(m => m.InstallationName == secondTable.InstallationName);
+                var installedVersion = (await installer.GetVersionInformationAsync()).Single(m => m.InstallationName == secondTable.InstallationName);
 
                 if (installedVersion.InstalledVersion != 1 || installedVersion.InstalledVersion != installedVersion.StartedInstallingVersion)
                 {
