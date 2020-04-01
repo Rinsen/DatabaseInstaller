@@ -91,7 +91,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             var script = columnAlteration.GetUpScript().Single();
 
-            Assert.Equal("ALTER TABLE Items ALTER\r\nCOLUMN [Id] uniqueidentifier NOT NULL\r\nALTER TABLE Items ADD\r\nCONSTRAINT UX_Items_Id UNIQUE (Id)\r\n", script);
+            Assert.Equal("ALTER TABLE Items ALTER\r\nCOLUMN [Id] uniqueidentifier NOT NULL\r\nADD CONSTRAINT UX_Items_Id UNIQUE (Id)\r\n", script);
         }
         // 
     }

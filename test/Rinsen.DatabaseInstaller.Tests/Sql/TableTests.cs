@@ -141,6 +141,17 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1),\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
         }
 
+        [Fact]
+        public void WhenNamedUniqueColumn_GetCorrespondingTableScript()
+        {
+            var table = new Table("TestTables");
+            table.AddColumn("MyColumn", new Guid()).Unique("UX_TestTables_MyColumn");
+             
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] uniqueidentifier NOT NULL,\r\nCONSTRAINT UX_TestTables_MyColumn UNIQUE (MyColumn)\r\n)", createScript);
+        }
+
 
     }
 }

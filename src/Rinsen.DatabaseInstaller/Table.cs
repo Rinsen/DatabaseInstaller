@@ -399,13 +399,18 @@ namespace Rinsen.DatabaseInstaller
         {
             if (NamedUniques.Any())
             {
-                sb.AppendLine($"ALTER TABLE {Name} ADD");
-
                 var lastNamedUnique = NamedUniques.Last();
 
                 foreach (var namedUnique in NamedUniques)
                 {
-                    sb.AppendFormat("CONSTRAINT {0} UNIQUE ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
+                    if (ColumnsToAdd.SingleOrDefault(m => m.Name == namedUnique.Value.First()).Clustered)
+                    {
+                        sb.AppendFormat("CONSTRAINT {0} UNIQUE CLUSTERED ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
+                    }
+                    else
+                    {
+                        sb.AppendFormat("CONSTRAINT {0} UNIQUE ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
+                    }
 
                     if (!lastNamedUnique.Equals(namedUnique) || NamedPrimaryKeys.Any())
                     {
@@ -525,7 +530,7 @@ namespace Rinsen.DatabaseInstaller
             {
                 sb.Append(" UNIQUE");
             }
-            if (column.Clustered)
+            if (column.Clustered && !NamedUniques.Where(n => n.Value.Contains(column.Name)).Any())
             {
                 sb.Append(" CLUSTERED");
             }

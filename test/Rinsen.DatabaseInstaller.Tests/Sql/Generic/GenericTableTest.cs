@@ -252,6 +252,19 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
         }
 
         [Fact]
+        public void WhenClusteredColumnHavAUniqueIndexName_AndIsOtherThanPrimaryKey__GetCorrespondingTableScript()
+        {
+            var table = new List<IDbChange>().AddNewTable<NonClusteredPrimaryKey>().SetPrimaryKeyNonClustered();
+
+            table.AddAutoIncrementColumn(m => m.Id, primaryKey: false).Unique("UQ_NonClusteredPrimaryKeys_Id").Clustered();
+            table.AddColumn(m => m.KeyId).PrimaryKey();
+
+            var createScript = table.GetUpScript().Single();
+
+            Assert.Equal("CREATE TABLE [NonClusteredPrimaryKeys]\r\n(\r\n[Id] int IDENTITY(1,1),\r\n[KeyId] uniqueidentifier NOT NULL PRIMARY KEY NONCLUSTERED,\r\nCONSTRAINT UQ_NonClusteredPrimaryKeys_Id UNIQUE CLUSTERED (Id)\r\n)", createScript);
+        }
+
+        [Fact]
         public void WhenNullableTypes_IsMapped_GetNullableColumnsTableScript()
         {
             var table = new List<IDbChange>().AddNewTable<NullableData>().SetPrimaryKeyNonClustered();

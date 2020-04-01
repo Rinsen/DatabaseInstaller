@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Rinsen.DatabaseInstaller;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -21,6 +22,8 @@ namespace Database
                 Console.WriteLine("Some arguments is needed");
                 Console.ReadKey();
             }
+            var path = @"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\publish";
+            var installationAssemblyName = "Rinsen.InnovationBoost.Installation.dll";
 
             var installer = CreateInstaller();
 
@@ -28,13 +31,13 @@ namespace Database
             {
                 case "install":
                     Console.WriteLine("Installing...");
-                    await Install(installer);
+                    await Install(installer, path, installationAssemblyName);
                     break;
                 case "preview":
-                    await PreviewDbChanges(installer);
+                    await PreviewDbChanges(installer, path, installationAssemblyName);
                     break;
                 case "complete":
-                    AllDbChanges();
+                    AllDbChanges(path, installationAssemblyName);
                     break;
                 case "current":
                     await ShowCurrentInstallationState(installer);
@@ -59,9 +62,9 @@ namespace Database
             }
         }
 
-        private static async Task PreviewDbChanges(Installer installer)
+        private static async Task PreviewDbChanges(Installer installer, string path, string installationAssemblyName)
         {
-            var dbChanges = GetAllDbChanges();
+            var dbChanges = GetAllDbChanges(path, installationAssemblyName);
 
             var installationNamesAndVersion = await installer.GetVersionInformationAsync();
 
@@ -107,9 +110,9 @@ namespace Database
             Console.WriteLine();
         }
 
-        private static void AllDbChanges()
+        private static void AllDbChanges(string path, string installationAssemblyName)
         {
-            var dbChanges = GetAllDbChanges();
+            var dbChanges = GetAllDbChanges(path, installationAssemblyName);
 
             foreach (var installationName in dbChanges.Select(m => m.InstallationName).Distinct())
             {
@@ -126,9 +129,9 @@ namespace Database
             }
         }
 
-        private static async Task Install(Installer installer)
+        private static async Task Install(Installer installer, string path, string installationAssemblyName)
         {
-            var dbChangesToInstall = GetAllDbChanges();
+            var dbChangesToInstall = GetAllDbChanges(path, installationAssemblyName);
 
             await installer.RunAsync(dbChangesToInstall);
         }
@@ -152,15 +155,25 @@ namespace Database
             return serviceProvider.GetRequiredService<Installer>();
         }
 
-        private static List<DatabaseVersion> GetAllDbChanges()
+        private static List<DatabaseVersion> GetAllDbChanges(string path, string installationAssemblyName)
         {
-            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.InnovationBoost.Installation.dll"); // This is...
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.IdentityProvider.dll"); // This is...
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.Logger.dll"); // This is...
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\Rinsen.Logger.Service.dll"); // This is...
-            
-            var dbChanges = new List<DatabaseVersion>();
+            Assembly assembly = null;
+            foreach (var file in Directory.EnumerateFiles(path).Where(f => f.EndsWith(".dll") && !f.EndsWith("Rinsen.DatabaseInstaller.dll")))
+            {
+                if (file.EndsWith(installationAssemblyName))
+                {
+                    assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
+                }
+                else
+                {
+                    AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
+                }
+            }
 
+            if (!(assembly is object))
+                throw new Exception($"Installation assembly {installationAssemblyName} not found at path {path}");
+
+            var dbChanges = new List<DatabaseVersion>();
             foreach (var dbChange in assembly.ExportedTypes.Where(t => t.IsSubclassOf(typeof(DatabaseVersion))))
             {
                 dbChanges.Add((DatabaseVersion)Activator.CreateInstance(dbChange));
