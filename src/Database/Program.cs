@@ -22,25 +22,26 @@ namespace Database
                 Console.WriteLine("Some arguments is needed");
                 Console.ReadKey();
             }
-            var path = @"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\publish";
-            var installationAssemblyName = "Rinsen.InnovationBoost.Installation.dll";
-
-            var installer = CreateInstaller();
+            var path = @"C:\Users\fredr\Source\Repos\WebSite\src\Rinsen.HomeControl.Installation\bin\Debug\netcoreapp3.1\publish";
+            //var path = @"C:\Users\fredr\Source\Repos\InnovationBoost\src\Rinsen.InnovationBoost.Installation\bin\Debug\netcoreapp3.1\publish";
+            var installationAssemblyName = "Rinsen.HomeControl.Installation.dll";
+            var installHandler = new InstallHandler();
+            var installer = installHandler.CreateInstaller();
 
             switch (args[0].ToLower())
             {
                 case "install":
                     Console.WriteLine("Installing...");
-                    await Install(installer, path, installationAssemblyName);
+                    await installHandler.Install(installer, path, installationAssemblyName);
                     break;
                 case "preview":
-                    await PreviewDbChanges(installer, path, installationAssemblyName);
+                    await installHandler.PreviewDbChanges(installer, path, installationAssemblyName);
                     break;
                 case "complete":
-                    AllDbChanges(path, installationAssemblyName);
+                    installHandler.AllDbChanges(path, installationAssemblyName);
                     break;
                 case "current":
-                    await ShowCurrentInstallationState(installer);
+                    await installHandler.ShowCurrentInstallationState(installer);
                     break;
                 default:
                     Console.WriteLine("Some arguments is needed");
@@ -52,7 +53,12 @@ namespace Database
             Console.ReadKey();
         }
 
-        private static async Task ShowCurrentInstallationState(Installer installer)
+    }
+
+    public class InstallHandler 
+    { 
+
+        public async Task ShowCurrentInstallationState(Installer installer)
         {
             Console.WriteLine("Installed versions");
             Console.WriteLine("Id InstallationName InstalledVersion PreviousVersion StartedInstallatingVersion");
@@ -62,7 +68,7 @@ namespace Database
             }
         }
 
-        private static async Task PreviewDbChanges(Installer installer, string path, string installationAssemblyName)
+        public async Task PreviewDbChanges(Installer installer, string path, string installationAssemblyName)
         {
             var dbChanges = GetAllDbChanges(path, installationAssemblyName);
 
@@ -110,7 +116,7 @@ namespace Database
             Console.WriteLine();
         }
 
-        private static void AllDbChanges(string path, string installationAssemblyName)
+        public void AllDbChanges(string path, string installationAssemblyName)
         {
             var dbChanges = GetAllDbChanges(path, installationAssemblyName);
 
@@ -129,14 +135,14 @@ namespace Database
             }
         }
 
-        private static async Task Install(Installer installer, string path, string installationAssemblyName)
+        public async Task Install(Installer installer, string path, string installationAssemblyName)
         {
             var dbChangesToInstall = GetAllDbChanges(path, installationAssemblyName);
 
             await installer.RunAsync(dbChangesToInstall);
         }
 
-        private static Installer CreateInstaller()
+        public Installer CreateInstaller()
         {
             var configBuilder = new ConfigurationBuilder();
 
@@ -155,8 +161,9 @@ namespace Database
             return serviceProvider.GetRequiredService<Installer>();
         }
 
-        private static List<DatabaseVersion> GetAllDbChanges(string path, string installationAssemblyName)
+        private List<DatabaseVersion> GetAllDbChanges(string path, string installationAssemblyName)
         {
+            var loadedAssemblies =  GetType().Assembly.GetReferencedAssemblies();
             Assembly assembly = null;
             foreach (var file in Directory.EnumerateFiles(path).Where(f => f.EndsWith(".dll") && !f.EndsWith("Rinsen.DatabaseInstaller.dll")))
             {
@@ -166,7 +173,20 @@ namespace Database
                 }
                 else
                 {
-                    AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
+                    var assemblyFile = Assembly.LoadFile(file);
+                    
+                    if (!loadedAssemblies.Any(la => la.FullName == assemblyFile.FullName))
+                    {
+                        try
+                        {
+                            AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        
+                    }
                 }
             }
 
