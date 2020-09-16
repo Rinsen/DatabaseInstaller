@@ -40,7 +40,7 @@ namespace Database
                 case "complete":
                     installHandler.AllDbChanges(path, installationAssemblyName);
                     break;
-                case "current":
+                case "current": 
                     await installHandler.ShowCurrentInstallationState(installer);
                     break;
                 default:
@@ -230,7 +230,7 @@ namespace Database
             public void Dispose()
             {
                 
-            }
+            } 
         }
     }
 }
