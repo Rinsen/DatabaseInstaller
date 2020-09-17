@@ -2,7 +2,7 @@
   "profiles": {
     "InstallationSampleConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "-s \"Server=tcp:rinsen.database.windows.net,1433;Initial Catalog=RinsenWeb;Persist Security Info=False;User ID=DebugWeb;Password=Vct9vqtjrNpbPrc556j149038LbCef;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;\""
+      "commandLineArgs": "-c \"Server=tcp:127.0.0.1,1433;User ID=sa;Password=;\""
     }
   }
 }

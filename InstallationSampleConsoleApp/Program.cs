@@ -17,6 +17,13 @@ namespace InstallationSampleConsoleApp
         {
             var databaseVersions = new List<DatabaseVersion>();
 
+            var initialDbVersion = new DatabaseVersion(1);
+
+
+
+            databaseVersions.Add(new Database("TestDb123"));
+
+
             return StartDatabaseInstaller(args, databaseVersions);
         }
     }
