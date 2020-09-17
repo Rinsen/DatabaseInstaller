@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Database": {
-      "commandName": "Project",
-      "commandLineArgs": "install --ConnectionString:\"Server=tcp:tietorinsen.database.windows.net,1433;Initial Catalog=TietoFredrikInnovationBoostDb;Persist Security Info=False;User ID=DebugUser;Password=dklh{wrguitkk{mnCpji7{hamsFT7_&#$!~<hscurRmedwjb;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;\" --AssemblyName:Rinsen.InnovationBoost.Installation.dll --Path:C:\\Users\\holmqfre.EU\\Source\\Repos\\Rinsen\\InnovationBoost\\src\\Rinsen.InnovationBoost.Installation\\bin\\Debug\\netcoreapp3.1\\publish"
-    }
-  }
-}
