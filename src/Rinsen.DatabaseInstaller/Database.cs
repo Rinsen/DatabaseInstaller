@@ -6,11 +6,11 @@ namespace Rinsen.DatabaseInstaller
     public class Database : IDbChange
     {
         private readonly List<LoginAndUserBuilder> _loginBuilders = new List<LoginAndUserBuilder>();
-        private readonly string _databaseName;
-        
+        public string DatabaseName { get; }
+
         public Database(string name)
         {
-            _databaseName = name;
+            DatabaseName = name;
         }
 
         public List<string> GetDownScript()
@@ -22,8 +22,8 @@ namespace Rinsen.DatabaseInstaller
         {
             var result = new List<string>
             {
-                $"IF '{_databaseName}' NOT IN (SELECT [name] FROM [master].[sys].[databases] WHERE [name] NOT IN ('master', 'tempdb', 'model', 'msdb'))\r\nCREATE DATABASE {_databaseName}",
-                $"USE {_databaseName}"
+                $"IF '{DatabaseName}' NOT IN (SELECT [name] FROM [master].[sys].[databases] WHERE [name] NOT IN ('master', 'tempdb', 'model', 'msdb'))\r\nCREATE DATABASE {DatabaseName}",
+                $"USE {DatabaseName}"
             };
 
             foreach (var loginBuilder in _loginBuilders)
@@ -35,7 +35,7 @@ namespace Rinsen.DatabaseInstaller
 
                 if (loginBuilder.CreateNewUser)
                 {
-                    result.Add($"IF '{loginBuilder.UserName}' NOT IN (SELECT [name] FROM [{_databaseName}].[sys].[sysusers])\r\nCRATE USER {loginBuilder.UserName} FOR LOGIN {loginBuilder.LoginName}");
+                    result.Add($"IF '{loginBuilder.UserName}' NOT IN (SELECT [name] FROM [{DatabaseName}].[sys].[sysusers])\r\nCRATE USER {loginBuilder.UserName} FOR LOGIN {loginBuilder.LoginName}");
                 }
 
                 foreach (var roleMembership in loginBuilder.RoleMemberships)

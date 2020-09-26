@@ -20,7 +20,6 @@ namespace InstallationSampleConsoleApp
             
 
             dbChangeList.Add(database);
-
         }
     }
 }

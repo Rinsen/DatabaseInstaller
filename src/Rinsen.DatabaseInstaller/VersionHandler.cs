@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class VersionHandler
+    internal class VersionHandler
     {
         readonly IVersionStorage _versionStorage;
 
@@ -15,7 +15,7 @@ namespace Rinsen.DatabaseInstaller
             _versionStorage = versionStorage;
         }
 
-        internal async virtual Task<InstallationNameAndVersion> GetInstalledVersion(string name, SqlConnection connection, SqlTransaction transaction)
+        internal async Task<InstallationNameAndVersion> GetInstalledVersion(string name, SqlConnection connection, SqlTransaction transaction)
         {
             if (!await _versionStorage.IsInstalled(connection, transaction))
             {
@@ -40,7 +40,7 @@ namespace Rinsen.DatabaseInstaller
             return installedNameAndVersion;
         }
 
-        internal async virtual Task<IEnumerable<InstallationNameAndVersion>> GetInstalledVersionsInformation(SqlConnection connection, SqlTransaction transaction)
+        internal async Task<IEnumerable<InstallationNameAndVersion>> GetInstalledVersionsInformation(SqlConnection connection, SqlTransaction transaction)
         {
             if (await _versionStorage.IsInstalled(connection, transaction))
             {

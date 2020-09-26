@@ -5,17 +5,14 @@ namespace Rinsen.DatabaseInstaller
 {
     public class InstallerBaseVersion : DatabaseVersion
     {
-        private readonly string _tableName;
-
-        public InstallerBaseVersion(string tableName)
+        public InstallerBaseVersion()
             :base (1, "InstallerInstallation")
         {
-            _tableName = tableName;
         }
 
         public override void AddDbChanges(List<IDbChange> tableCollection)
         {
-            var table = new Table(_tableName);
+            var table = new Table(InstallerConstants.InstalledVersionsDatabaseTableName);
             table.AddColumn("Id", new Int()).PrimaryKey().AutoIncrement();
             table.AddColumn("InstallationName", new NVarChar(1024)).Unique().NotNull();
             table.AddColumn("PreviousVersion", new Int()).NotNull();

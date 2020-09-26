@@ -1,30 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
     public static class DatabaseInstallerExtensionMethods
     {
-        public static void AddDatabaseInstaller(this IServiceCollection services, string connectionString)
+
+        public static void AddDatabaseInstaller(this IServiceCollection services)
         {
-            var identityOptions = new InstallerOptions { ConnectionString = connectionString };
-            services.AddDatabaseInstaller(identityOptions);
-        }
-
-        public static void AddDatabaseInstaller(this IServiceCollection services, InstallerOptions installerOptions)
-        {
-            if (string.IsNullOrEmpty(installerOptions.ConnectionString))
-            {
-                throw new ArgumentException("No connection string is provided");
-            }
-
-            services.AddSingleton(installerOptions);
-
             services.AddTransient<Installer, Installer>();
             services.AddTransient<DatabaseVersionInstaller, DatabaseVersionInstaller>();
             services.AddTransient<DatabaseScriptRunner, DatabaseScriptRunner>();
@@ -32,9 +18,11 @@ namespace Rinsen.DatabaseInstaller
             services.AddTransient<IVersionStorage, AdoNetVersionStorage>();
         }
 
-        public static async Task RunDatabaseInstaller(this IApplicationBuilder app, List<DatabaseVersion> databaseVersions)
+        public static Database AddNewDatabase(this List<IDbChange> dbChangeList, string databaseName)
         {
-            await app.ApplicationServices.GetRequiredService<Installer>().RunAsync(databaseVersions);
+            var table = new Database(databaseName);
+            dbChangeList.Add(table);
+            return table;
         }
 
         public static Table AddNewTable(this List<IDbChange> dbChangeList, string tableName)

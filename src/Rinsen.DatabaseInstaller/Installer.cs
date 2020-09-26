@@ -3,39 +3,56 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class Installer
+    internal class Installer
     {
         private readonly DatabaseVersionInstaller _databaseVersionInstaller;
+        private readonly DatabaseScriptRunner _databaseScriptRunner;
         private readonly VersionHandler _versionHandler;
-        private readonly InstallerOptions _installerOptions;
         private readonly ILogger<Installer> _log;
         private readonly IVersionStorage _versionStorage;
+        private readonly IConfiguration _configuration;
 
-        public Installer(DatabaseVersionInstaller databaseVersionInstaller, VersionHandler versionHandler, IVersionStorage versionStorage, InstallerOptions installerOptions, ILogger<Installer> log)
+        public Installer(DatabaseVersionInstaller databaseVersionInstaller,
+            DatabaseScriptRunner databaseScriptRunner,
+            VersionHandler versionHandler,
+            IVersionStorage versionStorage,
+            IConfiguration configuration,
+            ILogger<Installer> log)
         {
             _databaseVersionInstaller = databaseVersionInstaller;
+            _databaseScriptRunner = databaseScriptRunner;
             _versionHandler = versionHandler;
             _versionStorage = versionStorage;
-            _installerOptions = installerOptions;
+            _configuration = configuration;
             _log = log;
         }
         
         public async Task RunAsync(List<DatabaseVersion> databaseVersions)
         {
-            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
+            using (var connection = new SqlConnection(_configuration["ConnectionString"]))
             {
-                _log.LogDebug("DatabaseInstaller started");
                 await connection.OpenAsync();
+                _log.LogDebug("DatabaseInstaller started");
+
+                foreach (var database in databaseVersions.Where(m => m.Database is object))
+                {
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        await _databaseScriptRunner.RunAsync(database.UpCommands, connection, transaction);
+                    }
+                }
+
                 if (!await _versionStorage.IsInstalled(connection))
                 {
                     using (var transaction = connection.BeginTransaction())
                     {
                         _log.LogDebug("First installation, installing base version");
-                        var installerBaseVersion = new InstallerBaseVersion(_installerOptions.InstalledVersionsDatabaseTableName);
+                        var installerBaseVersion = new InstallerBaseVersion();
                         await _databaseVersionInstaller.InstallBaseVersion(installerBaseVersion, connection, transaction);
                         transaction.Commit();
                         _log.LogDebug("Commit completed");
@@ -58,7 +75,7 @@ namespace Rinsen.DatabaseInstaller
 
         public async Task<IEnumerable<InstallationNameAndVersion>> GetVersionInformationAsync()
         {
-            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
+            using (var connection = new SqlConnection(_configuration["ConnectionString"]))
             {
                 await connection.OpenAsync();
                 using (var transaction = connection.BeginTransaction())

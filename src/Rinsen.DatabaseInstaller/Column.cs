@@ -4,7 +4,7 @@ namespace Rinsen.DatabaseInstaller
 {
     public class Column
     {
-        public Column(string name, IDbType dbType)
+        internal Column(string name, IDbType dbType)
         {
             Name = name;
             DbType = dbType;
@@ -14,20 +14,20 @@ namespace Rinsen.DatabaseInstaller
 
         public IDbType DbType { get; }
 
-        public bool Null { get; set; } = false;
+        public bool Null { get; internal set; } = false;
 
-        public bool Unique { get; set; } = false;
+        public bool Unique { get; internal set; } = false;
 
-        public bool Clustered { get; set; } = false;
+        public bool Clustered { get; internal set; } = false;
 
-        public bool PrimaryKey { get; set; } = false;
+        public bool PrimaryKey { get; internal set; } = false;
 
-        public ForeignKey ForeignKey { get; set; } = null;
+        public ForeignKey ForeignKey { get; internal set; } = null;
 
-        public Check Check { get; set; } = null;
+        public Check Check { get; internal set; } = null;
 
-        public DefaultValue DefaultValue { get; set; } = null;
+        public DefaultValue DefaultValue { get; internal set; } = null;
 
-        public AutoIncrement AutoIncrement { get; set; } = null;
+        public AutoIncrement AutoIncrement { get; internal set; } = null;
     }
 }

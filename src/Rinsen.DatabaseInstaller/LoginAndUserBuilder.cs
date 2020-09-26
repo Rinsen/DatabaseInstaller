@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Rinsen.DatabaseInstaller.Internal;
-using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -11,12 +10,12 @@ namespace Rinsen.DatabaseInstaller
         private readonly RandomNumberGenerator CryptoRandom = RandomNumberGenerator.Create();
 
 
-        public LoginAndUserBuilder()
+        internal LoginAndUserBuilder()
         {
             CreateNewLogin = false;
         }
 
-        public LoginAndUserBuilder(string loginName)
+        internal LoginAndUserBuilder(string loginName)
         {
             Password = GetRandomString(40);
             _loginName = loginName;

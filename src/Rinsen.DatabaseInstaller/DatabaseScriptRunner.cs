@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class DatabaseScriptRunner
+    internal class DatabaseScriptRunner
     {
         internal async Task RunAsync(IEnumerable<string> commands, SqlConnection connection, SqlTransaction transaction)
         {

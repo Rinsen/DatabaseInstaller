@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class InstallVersionScope : IDisposable
+    internal class InstallVersionScope : IDisposable
     {
         private readonly DatabaseVersion _databaseVersion;
         private readonly SqlConnection _connection;

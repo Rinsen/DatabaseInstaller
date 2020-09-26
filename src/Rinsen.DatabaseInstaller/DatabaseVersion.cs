@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -26,6 +27,18 @@ namespace Rinsen.DatabaseInstaller
         public string InstallationName { get; }
 
         public int Version { get; }
+
+        public Database Database 
+        { 
+            get 
+            {
+                var dbChangeList = new List<IDbChange>();
+
+                AddDbChanges(dbChangeList);
+
+                return (Database)dbChangeList.SingleOrDefault(m => m is Database);
+            } 
+        }
 
         public IEnumerable<string> UpCommands
         {

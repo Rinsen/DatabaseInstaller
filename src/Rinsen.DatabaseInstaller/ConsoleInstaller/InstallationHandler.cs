@@ -1,15 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller.ConsoleInstaller
 {
-    public class InstallationHandler
+    internal class InstallationHandler
     {
         private readonly Installer _installer;
         private readonly ILogger<InstallationHandler> _logger;

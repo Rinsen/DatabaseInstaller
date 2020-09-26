@@ -5,18 +5,12 @@ using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class AdoNetVersionStorage : IVersionStorage
+    internal class AdoNetVersionStorage : IVersionStorage
     {
-        readonly InstallerOptions _installerOptions;
-
-        public AdoNetVersionStorage(InstallerOptions installerOptions)
-        {
-            _installerOptions = installerOptions;
-        }
 
         public async Task Create(InstallationNameAndVersion installedNameAndVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            string insertSql = string.Format(@"INSERT INTO {0} (InstallationName, PreviousVersion, StartedInstallingVersion, InstalledVersion) VALUES (@InstallationName, @PreviousVersion, @StartedInstallingVersion, @InstalledVersion); SELECT CAST(SCOPE_IDENTITY() as int)", _installerOptions.InstalledVersionsDatabaseTableName);
+            string insertSql = string.Format(@"INSERT INTO {0} (InstallationName, PreviousVersion, StartedInstallingVersion, InstalledVersion) VALUES (@InstallationName, @PreviousVersion, @StartedInstallingVersion, @InstalledVersion); SELECT CAST(SCOPE_IDENTITY() as int)", InstallerConstants.InstalledVersionsDatabaseTableName);
             using (var command = new SqlCommand(insertSql, connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@InstallationName", installedNameAndVersion.InstallationName));
@@ -32,7 +26,7 @@ namespace Rinsen.DatabaseInstaller
         {
             var result = default(InstallationNameAndVersion);
 
-            using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", _installerOptions.InstalledVersionsDatabaseTableName), connection, transaction))
+            using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", InstallerConstants.InstalledVersionsDatabaseTableName), connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@InstallationName", name));
                 using (var reader = command.ExecuteReader())
@@ -61,7 +55,7 @@ namespace Rinsen.DatabaseInstaller
         {
             var result = default(InstallationNameAndVersion);
 
-            using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", _installerOptions.InstalledVersionsDatabaseTableName), connection, transaction))
+            using (var command = new SqlCommand(string.Format("SELECT * FROM {0} WHERE InstallationName = @InstallationName", InstallerConstants.InstalledVersionsDatabaseTableName), connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@InstallationName", name));
                 using (var reader = await command.ExecuteReaderAsync())
@@ -90,7 +84,7 @@ namespace Rinsen.DatabaseInstaller
         {
             var results = new List<InstallationNameAndVersion>();
 
-            using (var command = new SqlCommand(string.Format("SELECT * FROM {0}", _installerOptions.InstalledVersionsDatabaseTableName), connection, transaction))
+            using (var command = new SqlCommand(string.Format("SELECT * FROM {0}", InstallerConstants.InstalledVersionsDatabaseTableName), connection, transaction))
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 { 
@@ -120,7 +114,7 @@ namespace Rinsen.DatabaseInstaller
 
             using (var command = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @tableName", connection))
             {
-                command.Parameters.Add(new SqlParameter("@tableName", _installerOptions.InstalledVersionsDatabaseTableName));
+                command.Parameters.Add(new SqlParameter("@tableName", InstallerConstants.InstalledVersionsDatabaseTableName));
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -149,7 +143,7 @@ namespace Rinsen.DatabaseInstaller
 
             using (var command = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @tableName", connection, sqlTransaction))
             {
-                command.Parameters.Add(new SqlParameter("@tableName", _installerOptions.InstalledVersionsDatabaseTableName));
+                command.Parameters.Add(new SqlParameter("@tableName", InstallerConstants.InstalledVersionsDatabaseTableName));
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -174,7 +168,7 @@ namespace Rinsen.DatabaseInstaller
 
         public Task<int> StartInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            var updateSql = string.Format("UPDATE {0} SET StartedInstallingVersion = @StartedInstallingVersion + 1 WHERE Id = @Id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", _installerOptions.InstalledVersionsDatabaseTableName);
+            var updateSql = string.Format("UPDATE {0} SET StartedInstallingVersion = @StartedInstallingVersion + 1 WHERE Id = @Id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", InstallerConstants.InstalledVersionsDatabaseTableName);
             using (var command = new SqlCommand(updateSql, connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@Id", installedVersion.Id));
@@ -188,7 +182,7 @@ namespace Rinsen.DatabaseInstaller
 
         public int EndInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            var updateSql = string.Format("UPDATE {0} SET InstalledVersion = @InstalledVersion + 1 WHERE Id = @id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", _installerOptions.InstalledVersionsDatabaseTableName);
+            var updateSql = string.Format("UPDATE {0} SET InstalledVersion = @InstalledVersion + 1 WHERE Id = @id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", InstallerConstants.InstalledVersionsDatabaseTableName);
             using (var command = new SqlCommand(updateSql, connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@Id", installedVersion.Id));
@@ -202,7 +196,7 @@ namespace Rinsen.DatabaseInstaller
 
         public Task<int> EndInstallationAsync(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            var updateSql = string.Format("UPDATE {0} SET InstalledVersion = @InstalledVersion + 1 WHERE Id = @id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", _installerOptions.InstalledVersionsDatabaseTableName);
+            var updateSql = string.Format("UPDATE {0} SET InstalledVersion = @InstalledVersion + 1 WHERE Id = @id AND PreviousVersion = @PreviousVersion AND StartedInstallingVersion = @StartedInstallingVersion AND InstalledVersion = @InstalledVersion", InstallerConstants.InstalledVersionsDatabaseTableName);
             using (var command = new SqlCommand(updateSql, connection, transaction))
             {
                 command.Parameters.Add(new SqlParameter("@Id", installedVersion.Id));
