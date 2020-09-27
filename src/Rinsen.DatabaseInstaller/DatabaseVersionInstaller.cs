@@ -11,12 +11,17 @@ namespace Rinsen.DatabaseInstaller
     {
         private readonly VersionHandler _versionHandler;
         private readonly DatabaseScriptRunner _databaseScriptRunner;
+        private readonly InstallerOptions _installerOptions;
         private readonly ILogger<DatabaseVersionInstaller> _logger;
 
-        internal DatabaseVersionInstaller(VersionHandler versionHandler, DatabaseScriptRunner databaseScriptRunner, ILogger<DatabaseVersionInstaller> logger)
+        internal DatabaseVersionInstaller(VersionHandler versionHandler,
+            DatabaseScriptRunner databaseScriptRunner,
+            InstallerOptions installerOptions,
+            ILogger<DatabaseVersionInstaller> logger)
         {
             _versionHandler = versionHandler;
             _databaseScriptRunner = databaseScriptRunner;
+            _installerOptions = installerOptions;
             _logger = logger;
         }
 
@@ -42,7 +47,7 @@ namespace Rinsen.DatabaseInstaller
 
         internal async Task InstallBaseVersion(InstallerBaseVersion installerBaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
-            await _databaseScriptRunner.RunAsync(installerBaseVersion.UpCommands, connection, transaction);
+            await _databaseScriptRunner.RunAsync(installerBaseVersion.GetUpCommands(_installerOptions), connection, transaction);
 
             await _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
         }
@@ -55,7 +60,7 @@ namespace Rinsen.DatabaseInstaller
                 {
                     try
                     {
-                        await _databaseScriptRunner.RunAsync(version.UpCommands, connection, transaction);
+                        await _databaseScriptRunner.RunAsync(version.GetUpCommands(_installerOptions), connection, transaction);
                     }
                     catch (Exception e)
                     {

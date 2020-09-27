@@ -15,26 +15,26 @@ namespace Rinsen.DatabaseInstaller
         private readonly VersionHandler _versionHandler;
         private readonly ILogger<Installer> _log;
         private readonly IVersionStorage _versionStorage;
-        private readonly IConfiguration _configuration;
+        private readonly InstallerOptions _installerOptions;
 
         public Installer(DatabaseVersionInstaller databaseVersionInstaller,
             DatabaseScriptRunner databaseScriptRunner,
             VersionHandler versionHandler,
             IVersionStorage versionStorage,
-            IConfiguration configuration,
+            InstallerOptions installerOptions,
             ILogger<Installer> log)
         {
             _databaseVersionInstaller = databaseVersionInstaller;
             _databaseScriptRunner = databaseScriptRunner;
             _versionHandler = versionHandler;
             _versionStorage = versionStorage;
-            _configuration = configuration;
+            _installerOptions = installerOptions;
             _log = log;
         }
         
         public async Task RunAsync(List<DatabaseVersion> databaseVersions)
         {
-            using (var connection = new SqlConnection(_configuration["ConnectionString"]))
+            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
                 await connection.OpenAsync();
                 _log.LogDebug("DatabaseInstaller started");
@@ -43,7 +43,8 @@ namespace Rinsen.DatabaseInstaller
                 {
                     using (var transaction = connection.BeginTransaction())
                     {
-                        await _databaseScriptRunner.RunAsync(database.UpCommands, connection, transaction);
+                        await _databaseScriptRunner.RunAsync(database.GetUpCommands(_installerOptions), connection, transaction);
+                        transaction.Commit();
                     }
                 }
 
@@ -75,7 +76,7 @@ namespace Rinsen.DatabaseInstaller
 
         public async Task<IEnumerable<InstallationNameAndVersion>> GetVersionInformationAsync()
         {
-            using (var connection = new SqlConnection(_configuration["ConnectionString"]))
+            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {
                 await connection.OpenAsync();
                 using (var transaction = connection.BeginTransaction())

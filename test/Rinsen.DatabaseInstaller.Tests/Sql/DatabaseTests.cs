@@ -13,7 +13,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
         {
             var database = new Database("TestDatabase");
 
-            var createScript = database.GetUpScript().First();
+            var createScript = database.GetUpScript(TestHelper.GetInstallerOptions()).First();
 
             Assert.Equal("IF 'TestDatabase' NOT IN (SELECT [name] FROM [master].[sys].[databases] WHERE [name] NOT IN ('master', 'tempdb', 'model', 'msdb'))\r\nCREATE DATABASE TestDatabase", createScript);
         }
@@ -25,7 +25,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             database.CreateLogin("LoginName").WithUser().AddRoleMembershipDataReader().AddRoleMembershipDataWriter();
             database.CreateUser("UserName").ForLogin("UsersLoginName");
 
-            var createScript = database.GetUpScript();
+            var createScript = database.GetUpScript(TestHelper.GetInstallerOptions());
 
             Assert.Equal("IF 'TestDatabase' NOT IN (SELECT [name] FROM [master].[sys].[databases] WHERE [name] NOT IN ('master', 'tempdb', 'model', 'msdb'))\r\nCREATE DATABASE TestDatabase", createScript[0]);
             Assert.Equal("USE TestDatabase", createScript[1]);

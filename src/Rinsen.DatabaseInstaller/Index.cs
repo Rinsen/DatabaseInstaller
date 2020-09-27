@@ -78,7 +78,7 @@ namespace Rinsen.DatabaseInstaller
             return this;
         }
 
-        public List<string> GetUpScript()
+        public IReadOnlyList<string> GetUpScript(InstallerOptions installerOptions)
         {
             var sb = new StringBuilder();
 
@@ -99,12 +99,12 @@ namespace Rinsen.DatabaseInstaller
                 sb.AppendFormat("CREATE INDEX {0} ", IndexName);
             }
             
-            AddTableInformation(sb);
+            AddTableInformation(sb, installerOptions);
 
             return new List<string> { sb.ToString() };
         }
 
-        private void AddTableInformation(StringBuilder sb)
+        private void AddTableInformation(StringBuilder sb, InstallerOptions installerOptions)
         {
             if (!Columns.Any())
             {
@@ -112,7 +112,7 @@ namespace Rinsen.DatabaseInstaller
             }
 
             sb.AppendLine();
-            sb.AppendFormat("ON {0}", TableName);
+            sb.AppendFormat("ON [{0}].[{1}].[{2}] ", installerOptions.DatabaseName, installerOptions.Schema, TableName);
             sb.Append("(");
 
             var last = Columns.Last();
@@ -128,7 +128,7 @@ namespace Rinsen.DatabaseInstaller
             sb.AppendLine(")");
         }
 
-        public List<string> GetDownScript()
+        public IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions)
         {
             throw new NotImplementedException();
         }

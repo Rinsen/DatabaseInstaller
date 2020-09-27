@@ -13,12 +13,12 @@ namespace Rinsen.DatabaseInstaller
             DatabaseName = name;
         }
 
-        public List<string> GetDownScript()
+        public IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions)
         {
             throw new NotImplementedException();
         }
 
-        public List<string> GetUpScript()
+        public IReadOnlyList<string> GetUpScript(InstallerOptions installerOptions)
         {
             var result = new List<string>
             {

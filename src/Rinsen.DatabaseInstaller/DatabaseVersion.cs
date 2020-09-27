@@ -40,44 +40,25 @@ namespace Rinsen.DatabaseInstaller
             } 
         }
 
-        public IEnumerable<string> UpCommands
+        public IReadOnlyList<string> GetUpCommands(InstallerOptions installerOptions)
         {
-            get
+            var dbChangeList = new List<IDbChange>();
+
+            AddDbChanges(dbChangeList);
+
+            var commands = new List<string>();
+
+            foreach (var dbChange in dbChangeList)
             {
-                var dbChangeList = new List<IDbChange>();
-
-                AddDbChanges(dbChangeList);
-
-                var commands = new List<string>();
-
-                foreach (var dbChange in dbChangeList)
-                {
-                    commands.AddRange(dbChange.GetUpScript());
-                }
-
-                return commands;
+                commands.AddRange(dbChange.GetUpScript(installerOptions));
             }
+
+            return commands;
         }
 
-        public IEnumerable<string> DownCommands
+        public IReadOnlyList<string> GetDownCommands(InstallerOptions installerOptions)
         {
-            get
-            {
-                throw new NotImplementedException();
-
-                //var dbChangeList = new List<IDbChange>();
-
-                //AddDbChanges(dbChangeList);
-
-                //var commands = new List<string>();
-
-                //foreach (var dbChange in dbChangeList)
-                //{
-                //    commands.AddRange(dbChange.GetDownScript());
-                //}
-
-                //return commands;
-            }
+            throw new NotImplementedException();
         }
 
         public abstract void AddDbChanges(List<IDbChange> dbChangeList);

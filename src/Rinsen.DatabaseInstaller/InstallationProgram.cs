@@ -23,6 +23,7 @@ namespace Rinsen.DatabaseInstaller
             installerstartup.DatabaseVersionsToInstall(databaseVersionsToInstall);
 
             var installationHandler = serviceProvider.GetRequiredService<InstallationHandler>();
+            var logger = serviceProvider.GetRequiredService<Logger<InstallationProgram>>();
 
             switch (configuration["Command"])
             {
@@ -39,13 +40,11 @@ namespace Rinsen.DatabaseInstaller
                     await installationHandler.ShowCurrentInstallationState();
                     break;
                 default:
-                    Console.WriteLine("Valid command is required");
-                    Console.ReadKey();
+                    logger.LogInformation("Valid command is required");
                     break;
             }
 
-            Console.WriteLine($"Done");
-            Console.ReadKey();
+            logger.LogInformation($"Done");
         }
 
         private ServiceProvider BootstrapApplication<T>() where T : class
@@ -65,6 +64,7 @@ namespace Rinsen.DatabaseInstaller
             .AddSingleton(config);
 
             serviceCollection.AddTransient<InstallationHandler>();
+            serviceCollection.AddSingleton<InstallerOptions>();
             serviceCollection.AddDatabaseInstaller();
 
             return serviceCollection.BuildServiceProvider();

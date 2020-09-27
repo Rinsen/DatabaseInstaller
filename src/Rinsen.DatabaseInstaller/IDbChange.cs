@@ -4,9 +4,9 @@ namespace Rinsen.DatabaseInstaller
 {
     public interface IDbChange
     {
-        List<string> GetUpScript();
+        IReadOnlyList<string> GetUpScript(InstallerOptions installerOptions);
 
-        List<string> GetDownScript();
+        IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions);
 
     }
 }

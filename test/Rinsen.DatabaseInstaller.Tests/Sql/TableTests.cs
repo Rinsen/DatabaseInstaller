@@ -12,9 +12,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var table = new Table("TestTables");
             table.AddColumn("MyColumn", new Int());
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] int NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyColumn] int NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -24,9 +24,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("MyIdColumn", new Int()).AutoIncrement().PrimaryKey();
             table.AddColumn("MyValue", new NVarChar(100));
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1) PRIMARY KEY,\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1) PRIMARY KEY,\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -36,9 +36,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("MyIdColumn", new Int()).PrimaryKey();
             table.AddColumn("MyValue", new NVarChar(100));
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int NOT NULL PRIMARY KEY,\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyIdColumn] int NOT NULL PRIMARY KEY,\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -49,9 +49,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("MyIdColumn2", new Int()).PrimaryKey();
             table.AddColumn("MyValue", new NVarChar(100));
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn1] int NOT NULL,\r\n[MyIdColumn2] int NOT NULL,\r\n[MyValue] nvarchar(100) NOT NULL,\r\nCONSTRAINT PK_TestTables PRIMARY KEY (MyIdColumn2,MyIdColumn1)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyIdColumn1] int NOT NULL,\r\n[MyIdColumn2] int NOT NULL,\r\n[MyValue] nvarchar(100) NOT NULL,\r\nCONSTRAINT PK_TestTables PRIMARY KEY (MyIdColumn2,MyIdColumn1)\r\n)", createScript);
         }
 
         [Fact]
@@ -61,9 +61,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("Key1", new Int()).PrimaryKey("PrimaryKeyForTestTables");
             table.AddColumn("Key2", new Int()).PrimaryKey("PrimaryKeyForTestTables");
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Key1] int NOT NULL,\r\n[Key2] int NOT NULL,\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[Key1] int NOT NULL,\r\n[Key2] int NOT NULL,\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
         }
 
         [Fact]
@@ -74,9 +74,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("Col2", new Int()).Unique("UniqueForTestTables");
             table.AddColumn("Col3", new Int()).Unique();
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int NOT NULL,\r\n[Col2] int NOT NULL,\r\n[Col3] int NOT NULL UNIQUE,\r\nCONSTRAINT UniqueForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[Col1] int NOT NULL,\r\n[Col2] int NOT NULL,\r\n[Col3] int NOT NULL UNIQUE,\r\nCONSTRAINT UniqueForTestTables UNIQUE (Col1,Col2)\r\n)", createScript);
         }
 
         [Fact]
@@ -87,9 +87,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("Col2", new Int()).Unique("UX_TestTables_Col2");
             table.AddColumn("Col3", new Int()).Unique();
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Col1] int NOT NULL,\r\n[Col2] int NOT NULL,\r\n[Col3] int NOT NULL UNIQUE,\r\nCONSTRAINT UX_TestTables_Col1 UNIQUE (Col1),\r\nCONSTRAINT UX_TestTables_Col2 UNIQUE (Col2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[Col1] int NOT NULL,\r\n[Col2] int NOT NULL,\r\n[Col3] int NOT NULL UNIQUE,\r\nCONSTRAINT UX_TestTables_Col1 UNIQUE (Col1),\r\nCONSTRAINT UX_TestTables_Col2 UNIQUE (Col2)\r\n)", createScript);
         }
 
         [Fact]
@@ -102,9 +102,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("Col2", new Int()).Unique("UniqueForTestTables");
             table.AddColumn("Col3", new Int()).Unique();
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[Key1] int NOT NULL,\r\n[Key2] int NOT NULL,\r\n[Col1] int NOT NULL,\r\n[Col2] int NOT NULL,\r\n[Col3] int NOT NULL UNIQUE,\r\nCONSTRAINT UniqueForTestTables UNIQUE (Col1,Col2),\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[Key1] int NOT NULL,\r\n[Key2] int NOT NULL,\r\n[Col1] int NOT NULL,\r\n[Col2] int NOT NULL,\r\n[Col3] int NOT NULL UNIQUE,\r\nCONSTRAINT UniqueForTestTables UNIQUE (Col1,Col2),\r\nCONSTRAINT PrimaryKeyForTestTables PRIMARY KEY (Key1,Key2)\r\n)", createScript);
         }
 
         [Fact]
@@ -113,9 +113,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var table = new Table("TestTables");
             table.AddColumn("MyColumn", new Int()).NotNull();
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] int NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyColumn] int NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -124,9 +124,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var table = new Table("TestTables");
             table.AddColumn("MyColumn", new Guid()).NotNull();
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] uniqueidentifier NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyColumn] uniqueidentifier NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -136,9 +136,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             table.AddColumn("MyIdColumn", new Int()).AutoIncrement(primaryKey: false);
             table.AddColumn("MyValue", new NVarChar(100));
 
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1),\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyIdColumn] int IDENTITY(1,1),\r\n[MyValue] nvarchar(100) NOT NULL\r\n)", createScript);
         }
 
         [Fact]
@@ -147,9 +147,9 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var table = new Table("TestTables");
             table.AddColumn("MyColumn", new Guid()).Unique("UX_TestTables_MyColumn");
              
-            var createScript = table.GetUpScript().Single();
+            var createScript = table.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("CREATE TABLE [TestTables]\r\n(\r\n[MyColumn] uniqueidentifier NOT NULL,\r\nCONSTRAINT UX_TestTables_MyColumn UNIQUE (MyColumn)\r\n)", createScript);
+            Assert.Equal("CREATE TABLE [TestDb].[dbo].[TestTables]\r\n(\r\n[MyColumn] uniqueidentifier NOT NULL,\r\nCONSTRAINT UX_TestTables_MyColumn UNIQUE (MyColumn)\r\n)", createScript);
         }
 
 

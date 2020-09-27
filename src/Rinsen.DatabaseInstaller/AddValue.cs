@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -16,9 +15,9 @@ namespace Rinsen.DatabaseInstaller
             TableName = tableName;
         }
 
-        public List<string> GetUpScript()
+        public IReadOnlyList<string> GetUpScript(InstallerOptions installerOptions)
         {
-            return new List<string> { $"UPDATE {TableName}\r\nSET {ColumnName} = NEWID()\r\nWHERE {ColumnName} is NULL" };
+            return new List<string> { $"UPDATE [{installerOptions.DatabaseName}].[{installerOptions.Schema}].[{TableName}]\r\nSET {ColumnName} = NEWID()\r\nWHERE {ColumnName} is NULL" };
         }
 
         public void GuidColumn(string columnName)
@@ -26,7 +25,7 @@ namespace Rinsen.DatabaseInstaller
             ColumnName = columnName;
         }
 
-        public List<string> GetDownScript()
+        public IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions)
         {
             throw new NotImplementedException();
         }

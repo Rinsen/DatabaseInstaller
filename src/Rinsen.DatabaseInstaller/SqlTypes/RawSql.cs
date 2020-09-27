@@ -8,12 +8,12 @@ namespace Rinsen.DatabaseInstaller.SqlTypes
 
         public List<string> DownScripts { get; set; }
 
-        public List<string> GetDownScript()
+        public IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions)
         {
             return DownScripts;
         }
 
-        public List<string> GetUpScript()
+        public IReadOnlyList<string> GetUpScript(InstallerOptions installerOptions)
         {
             return UpScripts;
         }

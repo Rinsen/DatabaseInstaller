@@ -34,10 +34,11 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             // Act
             index.AddColumn(m => m.MyColumn);
+            var upScripts = index.GetUpScript(TestHelper.GetInstallerOptions());
 
             // Assert
-            Assert.Single(index.GetUpScript());
-            Assert.Equal("CREATE INDEX MyIndexName \r\nON MyTable(MyColumn)\r\n", index.GetUpScript().First());
+            Assert.Single(upScripts);
+            Assert.Equal("CREATE INDEX MyIndexName \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", upScripts.First());
         }
 
         [Fact]
@@ -48,11 +49,11 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             index.AddColumn(m => m.MyColumn);
 
             // Act
-            var createScripts = index.GetUpScript();
+            var createScripts = index.GetUpScript(TestHelper.GetInstallerOptions());
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE UNIQUE CLUSTERED INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
+            Assert.Equal("CREATE UNIQUE CLUSTERED INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
         }
 
         [Fact]
@@ -63,11 +64,11 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             index.AddColumn(m => m.MyColumn);
 
             // Act
-            var createScripts = index.GetUpScript();  
+            var createScripts = index.GetUpScript(TestHelper.GetInstallerOptions());  
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE CLUSTERED INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
+            Assert.Equal("CREATE CLUSTERED INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
         }
 
         [Fact]
@@ -78,11 +79,11 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             index.AddColumn(m => m.MyColumn);
 
             // Act
-            var createScripts = index.GetUpScript();
+            var createScripts = index.GetUpScript(TestHelper.GetInstallerOptions());
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE UNIQUE INDEX MyIndex \r\nON MyTable(MyColumn)\r\n", createScripts.First());
+            Assert.Equal("CREATE UNIQUE INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
         }
     }
 }

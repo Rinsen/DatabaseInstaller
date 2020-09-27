@@ -334,18 +334,18 @@ namespace Rinsen.DatabaseInstaller
             return columnBuilder;
         }
 
-        public List<string> GetUpScript()
+        public IReadOnlyList<string> GetUpScript(InstallerOptions installerOptions)
         {
             if (_alternation)
             {
-                return GetAlterationScripts();
+                return GetAlterationScripts(installerOptions);
             }
 
             if (!ColumnsToAdd.Any())
                 throw new InvalidOperationException("No colums found in table definition");
 
             var sb = new StringBuilder("CREATE TABLE ");
-            sb.AppendFormat("[{0}]", Name);
+            sb.AppendFormat("[{0}].[{1}].[{2}]", installerOptions.DatabaseName, installerOptions.Schema, Name);
             sb.AppendLine();
             sb.AppendLine("(");
             var lastColumn = ColumnsToAdd.Last();
@@ -403,7 +403,8 @@ namespace Rinsen.DatabaseInstaller
 
                 foreach (var namedUnique in NamedUniques)
                 {
-                    if (ColumnsToAdd.SingleOrDefault(m => m.Name == namedUnique.Value.First()).Clustered)
+                    var columnToAdd = ColumnsToAdd.SingleOrDefault(m => m.Name == namedUnique.Value.First());
+                    if (columnToAdd != default && columnToAdd.Clustered)
                     {
                         sb.AppendFormat("CONSTRAINT {0} UNIQUE CLUSTERED ({1})", namedUnique.Key, FormatColumnNames(namedUnique.Value));
                     }
@@ -422,7 +423,7 @@ namespace Rinsen.DatabaseInstaller
             }
         }
 
-        private List<string> GetAlterationScripts()
+        private List<string> GetAlterationScripts(InstallerOptions installerOptions)
         {
             var scripts = new List<string>();
 
@@ -431,7 +432,8 @@ namespace Rinsen.DatabaseInstaller
 
             if (ColumnsToDrop.Any())
             {
-                var sb = new StringBuilder($"ALTER TABLE [{Name}]");
+                var sb = new StringBuilder($"ALTER TABLE ");
+                sb.AppendFormat("[{0}].[{1}].[{2}]", installerOptions.DatabaseName, installerOptions.Schema, Name);
                 sb.AppendLine();
 
                 foreach (var columnToDrop in ColumnsToDrop)
@@ -451,7 +453,8 @@ namespace Rinsen.DatabaseInstaller
 
             if (ColumnsToAdd.Any())
             {
-                var sb = new StringBuilder($"ALTER TABLE {Name} ADD");
+                var sb = new StringBuilder($"ALTER TABLE ");
+                sb.AppendFormat("[{0}].[{1}].[{2}] ADD", installerOptions.DatabaseName, installerOptions.Schema, Name);
                 sb.AppendLine();
 
                 foreach (var columnToAdd in ColumnsToAdd)
@@ -474,18 +477,19 @@ namespace Rinsen.DatabaseInstaller
 
             if (ColumnsToAlter.Any())
             {
-                var sb = new StringBuilder($"ALTER TABLE {Name} ALTER");
+                var sb = new StringBuilder($"ALTER TABLE ");
+                sb.AppendFormat("[{0}].[{1}].[{2}]", installerOptions.DatabaseName, installerOptions.Schema, Name);
                 sb.AppendLine();
                 
                 foreach (var columnToAdd in ColumnsToAlter)
                 {
                     if (ColumnsToAlter.IndexOf(columnToAdd) == ColumnsToAlter.Count - 1)
                     {
-                        sb.AppendLine($"COLUMN [{columnToAdd.Name}] {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
+                        sb.AppendLine($"ALTER COLUMN [{columnToAdd.Name}] {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)}");
                     }
                     else
                     {
-                        sb.AppendLine($"COLUMN [{columnToAdd.Name}] {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
+                        sb.AppendLine($"ALTER COLUMN [{columnToAdd.Name}] {columnToAdd.DbType.GetSqlServerDatabaseTypeString()}{GetConstraintString(columnToAdd)},");
                     }
                 }
 
@@ -499,7 +503,7 @@ namespace Rinsen.DatabaseInstaller
             return scripts;
         }
 
-        public List<string> GetDownScript()
+        public IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions)
         {
             throw new NotImplementedException();
         }
