@@ -61,6 +61,7 @@ namespace Rinsen.DatabaseInstaller
                     try
                     {
                         await _databaseScriptRunner.RunAsync(version.GetUpCommands(_installerOptions), connection, transaction);
+                        scope.Complete();
                     }
                     catch (Exception e)
                     {
