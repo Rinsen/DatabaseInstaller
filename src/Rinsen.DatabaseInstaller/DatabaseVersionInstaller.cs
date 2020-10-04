@@ -14,7 +14,7 @@ namespace Rinsen.DatabaseInstaller
         private readonly InstallerOptions _installerOptions;
         private readonly ILogger<DatabaseVersionInstaller> _logger;
 
-        internal DatabaseVersionInstaller(VersionHandler versionHandler,
+        public DatabaseVersionInstaller(VersionHandler versionHandler,
             DatabaseScriptRunner databaseScriptRunner,
             InstallerOptions installerOptions,
             ILogger<DatabaseVersionInstaller> logger)

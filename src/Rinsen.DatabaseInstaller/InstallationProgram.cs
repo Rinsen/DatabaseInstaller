@@ -18,33 +18,43 @@ namespace Rinsen.DatabaseInstaller
             var serviceProvider = BootstrapApplication<T>();
 
             var installerstartup = serviceProvider.GetRequiredService<T>();
-            var configuration = serviceProvider.GetService<IConfiguration>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             installerstartup.DatabaseVersionsToInstall(databaseVersionsToInstall);
 
-            var installationHandler = serviceProvider.GetRequiredService<InstallationHandler>();
-            var logger = serviceProvider.GetRequiredService<Logger<InstallationProgram>>();
-
-            switch (configuration["Command"])
+            var installationHandler = serviceProvider.GetService<InstallationHandler>();
+            var logger = serviceProvider.GetService<ILogger<InstallationProgram>>();
+            
+            try
             {
-                case "Install":
-                    await installationHandler.Install(databaseVersionsToInstall);
-                    break;
-                case "Preview":
-                    await installationHandler.PreviewDbChanges(databaseVersionsToInstall);
-                    break;
-                case "ShowAll":
-                    installationHandler.AllDbChanges(databaseVersionsToInstall);
-                    break;
-                case "CurrentState":
-                    await installationHandler.ShowCurrentInstallationState();
-                    break;
-                default:
-                    logger.LogInformation("Valid command is required");
-                    break;
+                switch (configuration["Command"])
+                {
+                    case "Install":
+                        await installationHandler.Install(databaseVersionsToInstall);
+                        break;
+                    case "Preview":
+                        await installationHandler.PreviewDbChanges(databaseVersionsToInstall);
+                        break;
+                    case "ShowAll":
+                        installationHandler.AllDbChanges(databaseVersionsToInstall);
+                        break;
+                    case "CurrentState":
+                        await installationHandler.ShowCurrentInstallationState();
+                        break;
+                    default:
+                        logger.LogInformation("Valid command is required");
+                        break;
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to run installer");
             }
 
             logger.LogInformation($"Done");
+            Console.ReadKey();
         }
 
         private ServiceProvider BootstrapApplication<T>() where T : class
@@ -60,11 +70,17 @@ namespace Rinsen.DatabaseInstaller
                         .AddFilter("Microsoft", LogLevel.Warning)
                         .AddFilter("System", LogLevel.Warning)
                         .AddConsole();
-            })
-            .AddSingleton(config);
+            });
 
-            serviceCollection.AddTransient<InstallationHandler>();
-            serviceCollection.AddSingleton<InstallerOptions>();
+            serviceCollection.AddSingleton<IConfiguration>(config);
+            serviceCollection.AddSingleton(new InstallerOptions
+            {
+                ConnectionString = config["ConnectionString"],
+                DatabaseName = config["DatabaseName"],
+                Schema = config["Schema"]
+            });
+
+            serviceCollection.AddTransient<T>();
             serviceCollection.AddDatabaseInstaller();
 
             return serviceCollection.BuildServiceProvider();

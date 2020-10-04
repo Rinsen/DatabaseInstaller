@@ -84,15 +84,15 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
 
         //[Fact]
-        public void AlterColumnAndAddUniqueConstraint_GetCorrectUpScript()
-        {
-            var columnAlteration = new TableAlteration<Item>("Items");
-            columnAlteration.AlterColumn(m => m.Id).NotNull().Unique("UX_Items_Id");
+        //public void AlterColumnAndAddUniqueConstraint_GetCorrectUpScript()
+        //{
+        //    var columnAlteration = new TableAlteration<Item>("Items");
+        //    columnAlteration.AlterColumn(m => m.Id).NotNull().Unique("UX_Items_Id");
 
-            var script = columnAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
+        //    var script = columnAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[Items] ALTER\r\nCOLUMN [Id] uniqueidentifier NOT NULL\r\nADD CONSTRAINT UX_Items_Id UNIQUE (Id)\r\n", script);
-        }
+        //    Assert.Equal("ALTER TABLE [TestDb].[dbo].[Items] ALTER\r\nCOLUMN [Id] uniqueidentifier NOT NULL\r\nADD CONSTRAINT UX_Items_Id UNIQUE (Id)\r\n", script);
+        //}
         // 
     }
 }

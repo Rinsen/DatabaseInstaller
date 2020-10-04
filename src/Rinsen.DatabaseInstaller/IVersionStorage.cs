@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
-    internal interface IVersionStorage
+    public interface IVersionStorage
     {
         Task<bool> IsInstalled(SqlConnection connection);
 

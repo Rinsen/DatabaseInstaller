@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Rinsen.DatabaseInstaller
@@ -11,23 +9,20 @@ namespace Rinsen.DatabaseInstaller
     internal class Installer
     {
         private readonly DatabaseVersionInstaller _databaseVersionInstaller;
-        private readonly DatabaseScriptRunner _databaseScriptRunner;
+        private readonly DatabaseInitializer _databaseInitializer;
         private readonly VersionHandler _versionHandler;
         private readonly ILogger<Installer> _log;
-        private readonly IVersionStorage _versionStorage;
         private readonly InstallerOptions _installerOptions;
 
         public Installer(DatabaseVersionInstaller databaseVersionInstaller,
-            DatabaseScriptRunner databaseScriptRunner,
+            DatabaseInitializer databaseInitializer,
             VersionHandler versionHandler,
-            IVersionStorage versionStorage,
             InstallerOptions installerOptions,
             ILogger<Installer> log)
         {
             _databaseVersionInstaller = databaseVersionInstaller;
-            _databaseScriptRunner = databaseScriptRunner;
+            _databaseInitializer = databaseInitializer;
             _versionHandler = versionHandler;
-            _versionStorage = versionStorage;
             _installerOptions = installerOptions;
             _log = log;
         }
@@ -39,26 +34,8 @@ namespace Rinsen.DatabaseInstaller
                 await connection.OpenAsync();
                 _log.LogDebug("DatabaseInstaller started");
 
-                foreach (var database in databaseVersions.Where(m => m.Database is object))
-                {
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        await _databaseScriptRunner.RunAsync(database.GetUpCommands(_installerOptions), connection, transaction);
-                        transaction.Commit();
-                    }
-                }
-
-                if (!await _versionStorage.IsInstalled(connection))
-                {
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        _log.LogDebug("First installation, installing base version");
-                        var installerBaseVersion = new InstallerBaseVersion();
-                        await _databaseVersionInstaller.InstallBaseVersion(installerBaseVersion, connection, transaction);
-                        transaction.Commit();
-                        _log.LogDebug("Commit completed");
-                    }
-                }
+                await _databaseInitializer.Initialize(connection);
+                
                 using (var transaction = connection.BeginTransaction())
                 {
                     await _databaseVersionInstaller.Install(databaseVersions, connection, transaction);

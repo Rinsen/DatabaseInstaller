@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rinsen.DatabaseInstaller
 {
-    internal class VersionHandler
+    public class VersionHandler
     {
         readonly IVersionStorage _versionStorage;
 

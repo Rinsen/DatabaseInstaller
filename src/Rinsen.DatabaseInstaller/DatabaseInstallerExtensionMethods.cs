@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Rinsen.DatabaseInstaller.ConsoleInstaller;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -11,11 +12,13 @@ namespace Rinsen.DatabaseInstaller
 
         public static void AddDatabaseInstaller(this IServiceCollection services)
         {
-            services.AddTransient<Installer, Installer>();
-            services.AddTransient<DatabaseVersionInstaller, DatabaseVersionInstaller>();
-            services.AddTransient<DatabaseScriptRunner, DatabaseScriptRunner>();
-            services.AddTransient<VersionHandler, VersionHandler>();
+            services.AddTransient<Installer>();
+            services.AddTransient<DatabaseVersionInstaller>();
+            services.AddTransient<DatabaseScriptRunner>();
+            services.AddTransient<VersionHandler>();
             services.AddTransient<IVersionStorage, AdoNetVersionStorage>();
+            services.AddTransient<DatabaseInitializer>();
+            services.AddTransient<InstallationHandler>();
         }
 
         public static Database AddNewDatabase(this List<IDbChange> dbChangeList, string databaseName)

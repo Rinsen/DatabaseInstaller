@@ -1,23 +1,22 @@
 ﻿using Rinsen.DatabaseInstaller;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace InstallationSampleConsoleApp
 {
     public class CreateDatabaseVersion : DatabaseVersion
     {
         public CreateDatabaseVersion()
-            : base(1)
+            : base(0)
         {
         }
 
         public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
             var database = new Database("TestDb1234");
-            database.CreateLogin("MyLogin");
-            database.CreateUser("MyUser");
-            
+            database.CreateLogin("MyLogin")
+                .WithUser("MyUser")
+                .AddRoleMembershipDataReader()
+                .AddRoleMembershipDataWriter();
 
             dbChangeList.Add(database);
         }

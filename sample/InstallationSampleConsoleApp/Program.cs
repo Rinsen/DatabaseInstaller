@@ -17,6 +17,7 @@ namespace InstallationSampleConsoleApp
         public void DatabaseVersionsToInstall(List<DatabaseVersion> databaseVersions)
         {
             databaseVersions.Add(new CreateDatabaseVersion());
+            databaseVersions.Add(new CreateTables());
         }
     }
 }
