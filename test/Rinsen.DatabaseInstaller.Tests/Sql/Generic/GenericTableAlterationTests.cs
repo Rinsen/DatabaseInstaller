@@ -32,7 +32,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NOT NULL\r\n", script);
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NOT NULL{Environment.NewLine}", script);
 
         }
 
@@ -47,7 +47,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NULL\r\n", script);
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NULL{Environment.NewLine}", script);
             
         }
 
@@ -63,7 +63,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NOT NULL,\r\nMyOtherNewColumn int NOT NULL\r\n", script);
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NOT NULL,{Environment.NewLine}MyOtherNewColumn int NOT NULL{Environment.NewLine}", script);
 
         }
 
@@ -78,7 +78,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable]\r\nALTER COLUMN [MyNewColumn] nvarchar(100) NOT NULL\r\n", script);
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable]{Environment.NewLine}ALTER COLUMN [MyNewColumn] nvarchar(100) NOT NULL{Environment.NewLine}", script);
 
         }
 

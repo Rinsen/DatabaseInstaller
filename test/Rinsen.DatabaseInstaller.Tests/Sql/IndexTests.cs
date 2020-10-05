@@ -17,10 +17,10 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             index.AddColumn("MyColumn");
 
             // Assert
-            Assert.Equal("MyIndexName", index.IndexName);
-            Assert.Equal("MyTable", index.TableName);
+            Assert.Equal($"MyIndexName", index.IndexName);
+            Assert.Equal($"MyTable", index.TableName);
             Assert.Single(index.Columns);
-            Assert.Equal("MyColumn", index.Columns.First());
+            Assert.Equal($"MyColumn", index.Columns.First());
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             // Assert
             Assert.Single(index.GetUpScript(TestHelper.GetInstallerOptions()));
-            Assert.Equal("CREATE INDEX MyIndexName \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", index.GetUpScript(TestHelper.GetInstallerOptions()).First());
+            Assert.Equal($"CREATE INDEX MyIndexName {Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){Environment.NewLine}", index.GetUpScript(TestHelper.GetInstallerOptions()).First());
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             // Assert
             Assert.Single(index.GetUpScript(TestHelper.GetInstallerOptions()));
             Assert.Equal(2, index.Columns.Count);
-            Assert.Equal("CREATE INDEX MyIndexName \r\nON [TestDb].[dbo].[MyTable] (MyColumn, MyOtherColumn)\r\n", index.GetUpScript(TestHelper.GetInstallerOptions()).First());
+            Assert.Equal($"CREATE INDEX MyIndexName {Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn, MyOtherColumn){Environment.NewLine}", index.GetUpScript(TestHelper.GetInstallerOptions()).First());
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             // Assert
             var ex = Assert.Throws<ArgumentException>(() => index.AddColumn("MyColumn"));
-            Assert.Equal("The column MyColumn is already added to index MyIndexName on table MyTable", ex.Message);
+            Assert.Equal($"The column MyColumn is already added to index MyIndexName on table MyTable", ex.Message);
             
         }
 
@@ -76,7 +76,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             // Act & Assert
             var ex = Assert.Throws<InvalidOperationException>(() => index.GetUpScript(TestHelper.GetInstallerOptions()));
-            Assert.Equal("No columns is added to index Name for table MyTable", ex.Message);
+            Assert.Equal($"No columns is added to index Name for table MyTable", ex.Message);
 
         }
 
@@ -92,7 +92,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE CLUSTERED INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
+            Assert.Equal($"CREATE CLUSTERED INDEX MyIndex {Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){Environment.NewLine}", createScripts.First());
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE UNIQUE CLUSTERED INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
+            Assert.Equal($"CREATE UNIQUE CLUSTERED INDEX MyIndex {Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){Environment.NewLine}", createScripts.First());
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE UNIQUE INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
+            Assert.Equal($"CREATE UNIQUE INDEX MyIndex {Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){Environment.NewLine}", createScripts.First());
         }
     }
 }

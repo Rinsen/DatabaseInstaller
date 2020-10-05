@@ -1,4 +1,5 @@
 ﻿using Rinsen.DatabaseInstaller.SqlTypes;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NOT NULL\r\n", script);
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NOT NULL{Environment.NewLine}", script);
             
         }
 
@@ -34,7 +35,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NOT NULL,\r\nMyOtherNewColumn int NOT NULL\r\n", script);
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NOT NULL,{Environment.NewLine}MyOtherNewColumn int NOT NULL{Environment.NewLine}", script);
 
         }
 
@@ -49,7 +50,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions());
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NOT NULL\r\nCONSTRAINT UX_MyTable_MyNewColumn UNIQUE (MyNewColumn)\r\n", script.Single());
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NOT NULL{Environment.NewLine}CONSTRAINT UX_MyTable_MyNewColumn UNIQUE (MyNewColumn){Environment.NewLine}", script.Single());
         }
 
         [Fact]
@@ -63,7 +64,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions());
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewColumn nvarchar(100) NOT NULL\r\nCONSTRAINT PK_MyTable_MyNewColumn PRIMARY KEY (MyNewColumn)\r\n", script.Single());
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewColumn nvarchar(100) NOT NULL{Environment.NewLine}CONSTRAINT PK_MyTable_MyNewColumn PRIMARY KEY (MyNewColumn){Environment.NewLine}", script.Single());
         }
 
         [Fact]
@@ -78,7 +79,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
             var script = tableAlteration.GetUpScript(TestHelper.GetInstallerOptions());
 
             // Assert
-            Assert.Equal("ALTER TABLE [TestDb].[dbo].[MyTable] ADD\r\nMyNewKeyColumn nvarchar(100) NOT NULL,\r\nMyNewUniqueColumn nvarchar(100) NOT NULL\r\nCONSTRAINT UX_MyTable_MyNewUniqueColumn UNIQUE (MyNewUniqueColumn),\r\nCONSTRAINT PK_MyTable_MyNewKeyColumn PRIMARY KEY (MyNewKeyColumn)\r\n", script.Single());
+            Assert.Equal($"ALTER TABLE [TestDb].[dbo].[MyTable] ADD{Environment.NewLine}MyNewKeyColumn nvarchar(100) NOT NULL,{Environment.NewLine}MyNewUniqueColumn nvarchar(100) NOT NULL{Environment.NewLine}CONSTRAINT UX_MyTable_MyNewUniqueColumn UNIQUE (MyNewUniqueColumn),{Environment.NewLine}CONSTRAINT PK_MyTable_MyNewKeyColumn PRIMARY KEY (MyNewKeyColumn){Environment.NewLine}", script.Single());
         }
     }
 }

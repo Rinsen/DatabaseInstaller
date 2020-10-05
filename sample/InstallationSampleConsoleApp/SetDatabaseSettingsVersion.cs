@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 namespace InstallationSampleConsoleApp
 {
-    public class CreateDatabaseVersion : DatabaseVersion
+    public class SetDatabaseSettingsVersion : DatabaseSettingsVersion
     {
-        public CreateDatabaseVersion()
-            : base(0)
+        public SetDatabaseSettingsVersion()
+            : base(1)
         {
         }
 
         public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            var database = new Database("TestDb1234");
-            database.CreateLogin("MyLogin")
-                .WithUser("MyUser")
+            var databaseSettings = new DatabaseSettings();
+            databaseSettings.CreateLogin("MyLogin2")
+                .WithUser("MyUser2")
                 .AddRoleMembershipDataReader()
                 .AddRoleMembershipDataWriter();
 
-            dbChangeList.Add(database);
+            dbChangeList.Add(databaseSettings);
         }
     }
 }

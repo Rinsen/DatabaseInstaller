@@ -4,6 +4,6 @@ namespace Rinsen.DatabaseInstaller
 {
     public interface IInstallerStartup
     {
-        void DatabaseVersionsToInstall(List<DatabaseVersion> databaseVersions);
+        void DatabaseVersionsToInstall(List<DatabaseSettingsVersion> databaseVersions);
     }
 }

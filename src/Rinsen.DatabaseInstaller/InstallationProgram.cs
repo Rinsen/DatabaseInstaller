@@ -13,7 +13,7 @@ namespace Rinsen.DatabaseInstaller
 
         public async Task StartDatabaseInstaller<T>() where T : class, IInstallerStartup, new()
         {
-            var databaseVersionsToInstall = new List<DatabaseVersion>();
+            var databaseVersionsToInstall = new List<DatabaseSettingsVersion>();
 
             var serviceProvider = BootstrapApplication<T>();
 

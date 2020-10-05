@@ -27,7 +27,7 @@ namespace Rinsen.DatabaseInstaller
             _log = log;
         }
         
-        public async Task RunAsync(List<DatabaseVersion> databaseVersions)
+        public async Task RunAsync(List<DatabaseSettingsVersion> databaseVersions)
         {
             using (var connection = new SqlConnection(_installerOptions.ConnectionString))
             {

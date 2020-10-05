@@ -17,7 +17,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Sql
 
             var script = addValue.GetUpScript(TestHelper.GetInstallerOptions()).Single();
 
-            Assert.Equal("UPDATE [TestDb].[dbo].[MyTable]\r\nSET ColumnName = NEWID()\r\nWHERE ColumnName is NULL", script);
+            Assert.Equal($"UPDATE [TestDb].[dbo].[MyTable]{Environment.NewLine}SET ColumnName = NEWID(){Environment.NewLine}WHERE ColumnName is NULL", script);
         }
     }
 }

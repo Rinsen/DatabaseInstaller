@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseScriptRunner
     {
+        private readonly ILogger<DatabaseScriptRunner> _logger;
+
+        public DatabaseScriptRunner(ILogger<DatabaseScriptRunner> logger)
+        {
+            _logger = logger;
+        }
+
         internal async Task RunAsync(IEnumerable<string> commands, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var command in commands)
             {
+                _logger.LogInformation($"Executing command '{command}'");
+
                 using (var sqlCommand = new SqlCommand(command, connection, transaction))
                 {
                     try
@@ -28,6 +38,7 @@ namespace Rinsen.DatabaseInstaller
 
         internal async Task<int> RunAsync(string command, SqlConnection connection, string parameterName, string parameterValue)
         {
+            _logger.LogInformation($"Executing command '{command}' with parameter name {parameterName} and parameter value {parameterValue}");
             using (var sqlCommand = new SqlCommand(command, connection))
             {
                 sqlCommand.Parameters.AddWithValue(parameterName, parameterValue);

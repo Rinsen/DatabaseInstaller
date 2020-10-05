@@ -5,13 +5,14 @@ namespace Rinsen.DatabaseInstaller
 {
     internal class InstallVersionScope : IDisposable
     {
-        private readonly DatabaseVersion _databaseVersion;
+        private readonly DatabaseSettingsVersion _databaseVersion;
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
         private readonly IVersionStorage _versionStorage;
         private bool _failed = true;
+        private Exception _e;
 
-        public InstallVersionScope(IVersionStorage versionStorage, DatabaseVersion databaseVersion, SqlConnection connection, SqlTransaction transaction)
+        public InstallVersionScope(IVersionStorage versionStorage, DatabaseSettingsVersion databaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
             _databaseVersion = databaseVersion;
             _connection = connection;
@@ -23,7 +24,7 @@ namespace Rinsen.DatabaseInstaller
         {
             if (_failed)
             {
-                throw new InvalidOperationException($"Starting installation for version { _databaseVersion.Version} for {_databaseVersion.InstallationName}");
+                throw new InvalidOperationException($"Starting installation for version { _databaseVersion.Version} for {_databaseVersion.InstallationName}", _e);
             }
 
             var installedVersion = GetCurrentInstalledVersionAndValidatePostInstallationState();
@@ -64,6 +65,11 @@ namespace Rinsen.DatabaseInstaller
         internal void Complete()
         {
             _failed = false;
+        }
+
+        internal void Fail(Exception e)
+        {
+            _e = e;
         }
     }
 }

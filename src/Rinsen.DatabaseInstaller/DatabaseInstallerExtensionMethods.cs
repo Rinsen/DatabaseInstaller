@@ -21,9 +21,9 @@ namespace Rinsen.DatabaseInstaller
             services.AddTransient<InstallationHandler>();
         }
 
-        public static Database AddNewDatabase(this List<IDbChange> dbChangeList, string databaseName)
+        public static DatabaseSettings AddNewDatabaseSettings(this List<IDbChange> dbChangeList)
         {
-            var table = new Database(databaseName);
+            var table = new DatabaseSettings();
             dbChangeList.Add(table);
             return table;
         }

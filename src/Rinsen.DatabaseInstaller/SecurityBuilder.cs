@@ -5,17 +5,17 @@ using System.Security.Cryptography;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class LoginAndUserBuilder
+    public class SecurityBuilder
     {
-        private readonly RandomNumberGenerator CryptoRandom = RandomNumberGenerator.Create();
+        private readonly RandomNumberGenerator _cryptoRandom = RandomNumberGenerator.Create();
 
 
-        internal LoginAndUserBuilder()
+        internal SecurityBuilder()
         {
             CreateNewLogin = false;
         }
 
-        internal LoginAndUserBuilder(string loginName)
+        internal SecurityBuilder(string loginName)
         {
             Password = GetRandomString(40);
             _loginName = loginName;
@@ -49,26 +49,26 @@ namespace Rinsen.DatabaseInstaller
         {
             var bytes = new byte[length];
 
-            CryptoRandom.GetBytes(bytes);
+            _cryptoRandom.GetBytes(bytes);
 
             return WebEncoders.Base64UrlEncode(bytes);
         }
 
-        public LoginAndUserBuilder AddRoleMembershipDataWriter()
+        public SecurityBuilder AddRoleMembershipDataWriter()
         {
             _roleMembershipsToAdd.Add(new RoleMembership("db_datawriter", UserName));
 
             return this;
         }
 
-        public LoginAndUserBuilder AddRoleMembershipDataReader()
+        public SecurityBuilder AddRoleMembershipDataReader()
         {
             _roleMembershipsToAdd.Add(new RoleMembership("db_datareader", UserName));
 
             return this;
         }
 
-        public LoginAndUserBuilder WithUser(string userName)
+        public SecurityBuilder WithUser(string userName)
         {
             CreateNewUser = true;
             UserName = userName;
@@ -76,7 +76,7 @@ namespace Rinsen.DatabaseInstaller
             return this;
         }
 
-        public LoginAndUserBuilder WithUser()
+        public SecurityBuilder WithUser()
         {
             WithUser(LoginName);
 

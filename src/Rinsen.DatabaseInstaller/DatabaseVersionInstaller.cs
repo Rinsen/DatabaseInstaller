@@ -25,7 +25,7 @@ namespace Rinsen.DatabaseInstaller
             _logger = logger;
         }
 
-        internal async Task Install(List<DatabaseVersion> databaseVersions, SqlConnection connection, SqlTransaction transaction)
+        internal async Task Install(List<DatabaseSettingsVersion> databaseVersions, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var installationName in databaseVersions.Select(v => v.InstallationName).Distinct())
             {
@@ -52,7 +52,7 @@ namespace Rinsen.DatabaseInstaller
             await _versionHandler.InstallBaseVersion(installerBaseVersion, connection, transaction);
         }
 
-        private async Task InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
+        private async Task InstallVersionsForSingleInstallationName(IOrderedEnumerable<DatabaseSettingsVersion> orderedVersionsForInstallationName, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var version in orderedVersionsForInstallationName)
             {
@@ -66,6 +66,7 @@ namespace Rinsen.DatabaseInstaller
                     catch (Exception e)
                     {
                         _logger.LogError(e, "Failed to run script in {installationName} for version {version}", version.InstallationName, version.Version);
+                        scope.Fail(e);
                     }
                 }
             }

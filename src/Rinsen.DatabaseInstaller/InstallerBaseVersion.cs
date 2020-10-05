@@ -3,7 +3,7 @@ using Rinsen.DatabaseInstaller.SqlTypes;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public class InstallerBaseVersion : DatabaseVersion
+    public class InstallerBaseVersion : DatabaseSettingsVersion
     {
         public InstallerBaseVersion()
             :base (1, "InstallerInstallation")

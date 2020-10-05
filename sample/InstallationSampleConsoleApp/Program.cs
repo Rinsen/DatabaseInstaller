@@ -14,9 +14,9 @@ namespace InstallationSampleConsoleApp
 
     public class InstallerStartup : IInstallerStartup
     {
-        public void DatabaseVersionsToInstall(List<DatabaseVersion> databaseVersions)
+        public void DatabaseVersionsToInstall(List<DatabaseSettingsVersion> databaseVersions)
         {
-            databaseVersions.Add(new CreateDatabaseVersion());
+            databaseVersions.Add(new SetDatabaseSettingsVersion());
             databaseVersions.Add(new CreateTables());
         }
     }

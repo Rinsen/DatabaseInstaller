@@ -38,7 +38,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             // Assert
             Assert.Single(upScripts);
-            Assert.Equal("CREATE INDEX MyIndexName \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", upScripts.First());
+            Assert.Equal($"CREATE INDEX MyIndexName {System.Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){System.Environment.NewLine}", upScripts.First());
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE UNIQUE CLUSTERED INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
+            Assert.Equal($"CREATE UNIQUE CLUSTERED INDEX MyIndex {System.Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){System.Environment.NewLine}", createScripts.First());
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE CLUSTERED INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
+            Assert.Equal($"CREATE CLUSTERED INDEX MyIndex {System.Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){System.Environment.NewLine}", createScripts.First());
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Rinsen.DatabaseInstaller.Tests.Generic.Sql
 
             // Assert
             Assert.Single(createScripts);
-            Assert.Equal("CREATE UNIQUE INDEX MyIndex \r\nON [TestDb].[dbo].[MyTable] (MyColumn)\r\n", createScripts.First());
+            Assert.Equal($"CREATE UNIQUE INDEX MyIndex {System.Environment.NewLine}ON [TestDb].[dbo].[MyTable] (MyColumn){System.Environment.NewLine}", createScripts.First());
         }
     }
 }
