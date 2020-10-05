@@ -23,12 +23,12 @@ namespace Rinsen.DatabaseInstaller
             {
                 if (securityBuilder.CreateNewLogin)
                 {
-                    result.Add($"IF '{securityBuilder.LoginName}' NOT IN (SELECT [name] FROM [master].[sys].[sql_logins])\r\nCREATE LOGIN {securityBuilder.LoginName} WITH PASSWORD = '{securityBuilder.Password}'");
+                    result.Add($"IF '{securityBuilder.LoginName}' NOT IN (SELECT [name] FROM [master].[sys].[sql_logins]){Environment.NewLine}CREATE LOGIN {securityBuilder.LoginName} WITH PASSWORD = '{securityBuilder.Password}'");
                 }
 
                 if (securityBuilder.CreateNewUser)
                 {
-                    result.Add($"IF '{securityBuilder.UserName}' NOT IN (SELECT [name] FROM [{installerOptions.DatabaseName}].[sys].[sysusers])\r\nCREATE USER {securityBuilder.UserName} FOR LOGIN {securityBuilder.LoginName}");
+                    result.Add($"IF '{securityBuilder.UserName}' NOT IN (SELECT [name] FROM [{installerOptions.DatabaseName}].[sys].[sysusers]){Environment.NewLine}CREATE USER {securityBuilder.UserName} FOR LOGIN {securityBuilder.LoginName}");
                 }
 
                 foreach (var roleMembership in securityBuilder.RoleMemberships)
