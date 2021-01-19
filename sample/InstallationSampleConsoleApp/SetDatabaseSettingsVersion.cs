@@ -12,13 +12,12 @@ namespace InstallationSampleConsoleApp
 
         public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            var databaseSettings = new DatabaseSettings();
+            
+            var databaseSettings = dbChangeList.AddNewDatabaseSettings(); ;
             databaseSettings.CreateLogin("MyLogin2")
                 .WithUser("MyUser2")
                 .AddRoleMembershipDataReader()
                 .AddRoleMembershipDataWriter();
-
-            dbChangeList.Add(databaseSettings);
         }
     }
 }

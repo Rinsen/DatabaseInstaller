@@ -23,9 +23,9 @@ namespace Rinsen.DatabaseInstaller
 
         public static DatabaseSettings AddNewDatabaseSettings(this List<IDbChange> dbChangeList)
         {
-            var table = new DatabaseSettings();
-            dbChangeList.Add(table);
-            return table;
+            var databaseSettings = new DatabaseSettings();
+            dbChangeList.Add(databaseSettings);
+            return databaseSettings;
         }
 
         public static Table AddNewTable(this List<IDbChange> dbChangeList, string tableName)

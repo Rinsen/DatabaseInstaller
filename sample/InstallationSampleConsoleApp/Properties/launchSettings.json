@@ -1,8 +1,7 @@
 {
   "profiles": {
     "InstallationSampleConsoleApp": {
-      "commandName": "Project",
-      "commandLineArgs": "-c \"Server=tcp:127.0.0.1,1433;User ID=sa;Password=;\""
+      "commandName": "Project"
     }
   }
 }

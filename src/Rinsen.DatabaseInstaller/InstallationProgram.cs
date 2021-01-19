@@ -59,8 +59,16 @@ namespace Rinsen.DatabaseInstaller
 
         private ServiceProvider BootstrapApplication<T>() where T : class
         {
+            var environmentName = "Production";
+#if DEBUG
+            environmentName = "Development";
+#endif
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddUserSecrets<T>();
+            configBuilder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                      .AddJsonFile($"appsettings.{environmentName}.json",
+                                     optional: false, reloadOnChange: true);
+
             var config = configBuilder.Build();
 
             var serviceCollection = new ServiceCollection();
@@ -73,10 +81,11 @@ namespace Rinsen.DatabaseInstaller
             });
 
             serviceCollection.AddSingleton<IConfiguration>(config);
+            var databaseName = config["DatabaseName"];
             serviceCollection.AddSingleton(new InstallerOptions
             {
-                ConnectionString = config["ConnectionString"],
-                DatabaseName = config["DatabaseName"],
+                ConnectionString = config.GetConnectionString(databaseName),
+                DatabaseName = databaseName,
                 Schema = config["Schema"]
             });
 
