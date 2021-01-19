@@ -65,7 +65,7 @@ namespace Rinsen.DatabaseInstaller
             await _versionStorage.Create(installedNameAndVersion, connection, transaction);
         }
 
-        internal async Task<InstallVersionScope> BeginInstallVersionScope(DatabaseSettingsVersion version, SqlConnection connection, SqlTransaction transaction)
+        internal async Task<InstallVersionScope> BeginInstallVersionScope(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)
         {
             // Verify that this version really should be installed
             var installedVersion = await GetCurrentInstalledVersionAndValidatePreInstallationState(version, connection, transaction);
@@ -81,7 +81,7 @@ namespace Rinsen.DatabaseInstaller
             return new InstallVersionScope(_versionStorage, version, connection, transaction);
         }
 
-        private async Task<InstallationNameAndVersion> GetCurrentInstalledVersionAndValidatePreInstallationState(DatabaseSettingsVersion version, SqlConnection connection, SqlTransaction transaction)
+        private async Task<InstallationNameAndVersion> GetCurrentInstalledVersionAndValidatePreInstallationState(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)
         {
             // Get installation row from database
             var installedVersion = await GetInstalledVersion(version.InstallationName, connection, transaction);

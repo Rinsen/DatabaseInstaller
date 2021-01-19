@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public abstract class DatabaseSettingsVersion
+    public abstract class DatabaseVersion
     {
         /// <summary>
         /// Database version description
         /// </summary>
         /// <param name="version">Version number</param>
         /// <param name="installationName">Installation name, if none specified the default will be this class namespace</param>
-        public DatabaseSettingsVersion(int version, string installationName = null)
+        public DatabaseVersion(int version, string installationName = null)
         {
             if (string.IsNullOrEmpty(installationName))
             {

@@ -4,7 +4,7 @@ using Rinsen.DatabaseInstaller;
 
 namespace InstallationSampleConsoleApp
 {
-    public class CreateTables : DatabaseSettingsVersion
+    public class CreateTables : DatabaseVersion
     {
         public CreateTables() 
             : base(2)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace InstallationSampleConsoleApp
 {
-    public class SetDatabaseSettingsVersion : DatabaseSettingsVersion
+    public class SetDatabaseSettingsVersion : DatabaseVersion
     {
         public SetDatabaseSettingsVersion()
             : base(1)

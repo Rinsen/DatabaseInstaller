@@ -5,14 +5,14 @@ namespace Rinsen.DatabaseInstaller
 {
     internal class InstallVersionScope : IDisposable
     {
-        private readonly DatabaseSettingsVersion _databaseVersion;
+        private readonly DatabaseVersion _databaseVersion;
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
         private readonly IVersionStorage _versionStorage;
         private bool _failed = true;
         private Exception _e;
 
-        public InstallVersionScope(IVersionStorage versionStorage, DatabaseSettingsVersion databaseVersion, SqlConnection connection, SqlTransaction transaction)
+        public InstallVersionScope(IVersionStorage versionStorage, DatabaseVersion databaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
             _databaseVersion = databaseVersion;
             _connection = connection;

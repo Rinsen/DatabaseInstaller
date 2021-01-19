@@ -31,7 +31,7 @@ namespace Rinsen.DatabaseInstaller.ConsoleInstaller
             }
         }
 
-        public async Task PreviewDbChanges(List<DatabaseSettingsVersion> databaseVersions)
+        public async Task PreviewDbChanges(List<DatabaseVersion> databaseVersions)
         {
             var installationNamesAndVersion = await _installer.GetVersionInformationAsync();
 
@@ -65,7 +65,7 @@ namespace Rinsen.DatabaseInstaller.ConsoleInstaller
             }
         }
 
-        private void PrintDbChange(DatabaseSettingsVersion dbChange)
+        private void PrintDbChange(DatabaseVersion dbChange)
         {
             _logger.LogInformation($"Database change {dbChange.GetType().Name} version {dbChange.Version} ");
             foreach (var command in dbChange.GetUpCommands(_installerOptions))
@@ -74,7 +74,7 @@ namespace Rinsen.DatabaseInstaller.ConsoleInstaller
             }
         }
 
-        public void AllDbChanges(List<DatabaseSettingsVersion> databaseVersions)
+        public void AllDbChanges(List<DatabaseVersion> databaseVersions)
         {
             foreach (var installationName in databaseVersions.Select(m => m.InstallationName).Distinct())
             {
@@ -90,7 +90,7 @@ namespace Rinsen.DatabaseInstaller.ConsoleInstaller
             }
         }
 
-        public async Task Install(List<DatabaseSettingsVersion> databaseVersions)
+        public async Task Install(List<DatabaseVersion> databaseVersions)
         {
             await _installer.RunAsync(databaseVersions);
         }

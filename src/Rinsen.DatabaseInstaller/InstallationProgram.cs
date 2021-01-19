@@ -13,7 +13,7 @@ namespace Rinsen.DatabaseInstaller
 
         public async Task StartDatabaseInstaller<T>() where T : class, IInstallerStartup, new()
         {
-            var databaseVersionsToInstall = new List<DatabaseSettingsVersion>();
+            var databaseVersionsToInstall = new List<DatabaseVersion>();
 
             var serviceProvider = BootstrapApplication<T>();
 
@@ -64,7 +64,6 @@ namespace Rinsen.DatabaseInstaller
             environmentName = "Development";
 #endif
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddUserSecrets<T>();
             configBuilder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                       .AddJsonFile($"appsettings.{environmentName}.json",
                                      optional: false, reloadOnChange: true);
