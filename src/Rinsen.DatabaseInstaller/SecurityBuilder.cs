@@ -15,9 +15,17 @@ namespace Rinsen.DatabaseInstaller
             CreateNewLogin = false;
         }
 
-        internal SecurityBuilder(string loginName)
+        internal SecurityBuilder(string loginName, string password = "")
         {
-            Password = GetRandomString(40);
+            if (string.IsNullOrEmpty(password))
+            {
+                Password = GetRandomString(40);
+            }
+            else
+            {
+                Password = password;
+            }
+            
             _loginName = loginName;
             CreateNewLogin = true;
         }
@@ -36,14 +44,14 @@ namespace Rinsen.DatabaseInstaller
 
         public bool CreateNewLogin { get; }
         public string UserName { get; private set; }
-        public string Password { get; }
+        public string Password { get; private set; }
         public bool CreateNewUser { get; private set; } = false;
         
         private string _loginName;
 
         public IReadOnlyList<RoleMembership> RoleMemberships { get { return _roleMembershipsToAdd; } }
 
-        private readonly List<RoleMembership> _roleMembershipsToAdd = new List<RoleMembership>();
+        private readonly List<RoleMembership> _roleMembershipsToAdd = new();
 
         private string GetRandomString(int length)
         {
@@ -86,6 +94,12 @@ namespace Rinsen.DatabaseInstaller
         public void ForLogin(string loginName)
         {
             _loginName = loginName;
+        }
+
+        public void ForLogin(string loginName, string password)
+        {
+            _loginName = loginName;
+            Password = password;
         }
     }
 }

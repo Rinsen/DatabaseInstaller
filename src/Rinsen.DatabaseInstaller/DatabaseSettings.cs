@@ -5,7 +5,7 @@ namespace Rinsen.DatabaseInstaller
 {
     public class DatabaseSettings : IDbChange
     {
-        private readonly List<SecurityBuilder> _securityBuilders = new List<SecurityBuilder>();
+        private readonly List<SecurityBuilder> _securityBuilders = new();
 
         public IReadOnlyList<string> GetDownScript(InstallerOptions installerOptions)
         {
@@ -40,6 +40,11 @@ namespace Rinsen.DatabaseInstaller
             return result;
         }
 
+        /// <summary>
+        /// Create a new database user
+        /// </summary>
+        /// <param name="userName">UserName for created database user.</param>
+        /// <returns>New SecurityBuilder.</returns>
         public SecurityBuilder CreateUser(string userName)
         {
             var securityBuilder = new SecurityBuilder();
@@ -49,9 +54,28 @@ namespace Rinsen.DatabaseInstaller
             return securityBuilder.WithUser(userName);
         }
 
+        /// <summary>
+        /// Create login with a random password generated at install time.
+        /// </summary>
+        /// <param name="loginName">Login name.</param>
+        /// <returns>New instance of SecurityBuilder.</returns>
         public SecurityBuilder CreateLogin(string loginName)
         {
             var securityBuilder = new SecurityBuilder(loginName);
+            _securityBuilders.Add(securityBuilder);
+
+            return securityBuilder;
+        }
+
+        /// <summary>
+        /// Create login with a specified password.
+        /// </summary>
+        /// <param name="loginName">Login name.</param>
+        /// <param name="password">Login password.</param>
+        /// <returns>New instance of SecurityBuilder.</returns>
+        public SecurityBuilder CreateLogin(string loginName, string password)
+        {
+            var securityBuilder = new SecurityBuilder(loginName, password);
             _securityBuilders.Add(securityBuilder);
 
             return securityBuilder;
