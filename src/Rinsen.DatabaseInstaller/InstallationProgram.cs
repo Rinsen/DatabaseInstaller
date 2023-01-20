@@ -10,7 +10,12 @@ namespace Rinsen.DatabaseInstaller
 {
     internal class InstallationProgram
     {
-
+        /// <summary>
+        /// Configuration
+        /// Command, DatabaseName, Schema, Connection string for database name.
+        /// </summary>
+        /// <typeparam name="T">Installation assembly type</typeparam>
+        /// <returns>Task.</returns>
         public async Task StartDatabaseInstaller<T>() where T : class, IInstallerStartup, new()
         {
             var databaseVersionsToInstall = new List<DatabaseVersion>();
@@ -57,16 +62,16 @@ namespace Rinsen.DatabaseInstaller
             Console.ReadKey();
         }
 
-        private ServiceProvider BootstrapApplication<T>() where T : class
+        private static ServiceProvider BootstrapApplication<T>() where T : class
         {
             var environmentName = "Production";
 #if DEBUG
             environmentName = "Development";
 #endif
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                      .AddJsonFile($"appsettings.{environmentName}.json",
-                                     optional: false, reloadOnChange: true);
+            configBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                      .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
+                      .AddEnvironmentVariables();
 
             var config = configBuilder.Build();
 
