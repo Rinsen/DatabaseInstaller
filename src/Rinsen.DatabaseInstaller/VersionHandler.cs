@@ -15,9 +15,9 @@ namespace Rinsen.DatabaseInstaller
             _versionStorage = versionStorage;
         }
 
-        internal async Task<InstallationNameAndVersion> GetInstalledVersion(string name, SqlConnection connection, SqlTransaction transaction)
+        internal async Task<InstallationNameAndVersion> GetInstalledVersionAsync(string name, SqlConnection connection, SqlTransaction transaction)
         {
-            if (!await _versionStorage.IsInstalled(connection, transaction))
+            if (!await _versionStorage.IsInstalledAsync(connection, transaction))
             {
                 throw new InvalidOperationException("Installer is not installed");
             }
@@ -34,7 +34,7 @@ namespace Rinsen.DatabaseInstaller
                     StartedInstallingVersion = 0
                 };
 
-                await _versionStorage.Create(installedNameAndVersion, connection, transaction);
+                await _versionStorage.CreateAsync(installedNameAndVersion, connection, transaction);
             }
 
             return installedNameAndVersion;
@@ -42,9 +42,9 @@ namespace Rinsen.DatabaseInstaller
 
         internal async Task<IEnumerable<InstallationNameAndVersion>> GetInstalledVersionsInformation(SqlConnection connection, SqlTransaction transaction)
         {
-            if (await _versionStorage.IsInstalled(connection, transaction))
+            if (await _versionStorage.IsInstalledAsync(connection, transaction))
             {
-                return await _versionStorage.GetAll(connection, transaction);
+                return await _versionStorage.GetAllAsync(connection, transaction);
             }
             else
             {
@@ -62,16 +62,16 @@ namespace Rinsen.DatabaseInstaller
                 StartedInstallingVersion = installerBaseVersion.Version
             };
 
-            await _versionStorage.Create(installedNameAndVersion, connection, transaction);
+            await _versionStorage.CreateAsync(installedNameAndVersion, connection, transaction);
         }
 
-        internal async Task<InstallVersionScope> BeginInstallVersionScope(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)
+        internal async Task<InstallVersionScope> BeginInstallVersionScopeAsync(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)
         {
             // Verify that this version really should be installed
-            var installedVersion = await GetCurrentInstalledVersionAndValidatePreInstallationState(version, connection, transaction);
+            var installedVersion = await GetCurrentInstalledVersionAndValidatePreInstallationStateAsync(version, connection, transaction);
 
             // Update information that this installation is beginning to install now, make sure that no one is in between, throw is someone is
-            int result = await _versionStorage.StartInstallation(installedVersion, connection, transaction);
+            int result = await _versionStorage.StartInstallationAsync(installedVersion, connection, transaction);
 
             if (result != 1)
             {
@@ -81,10 +81,10 @@ namespace Rinsen.DatabaseInstaller
             return new InstallVersionScope(_versionStorage, version, connection, transaction);
         }
 
-        private async Task<InstallationNameAndVersion> GetCurrentInstalledVersionAndValidatePreInstallationState(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)
+        private async Task<InstallationNameAndVersion> GetCurrentInstalledVersionAndValidatePreInstallationStateAsync(DatabaseVersion version, SqlConnection connection, SqlTransaction transaction)
         {
             // Get installation row from database
-            var installedVersion = await GetInstalledVersion(version.InstallationName, connection, transaction);
+            var installedVersion = await GetInstalledVersionAsync(version.InstallationName, connection, transaction);
 
             if (installedVersion.InstalledVersion >= version.Version)
             {

@@ -29,21 +29,22 @@ namespace Rinsen.DatabaseInstaller
         
         public async Task RunAsync(List<DatabaseVersion> databaseVersions)
         {
-            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
-            {
-                await connection.OpenAsync();
-                _log.LogDebug("DatabaseInstaller started");
+            using var connection = new SqlConnection(_installerOptions.ConnectionString);
+            
+            await connection.OpenAsync();
+            
+            _log.LogDebug("DatabaseInstaller started");
 
-                await _databaseInitializer.Initialize(connection);
-                
-                using (var transaction = connection.BeginTransaction())
-                {
-                    await _databaseVersionInstaller.Install(databaseVersions, connection, transaction);
-                    _log.LogDebug("DatabaseInstaller finished, commit changes");
-                    transaction.Commit();
-                    _log.LogDebug("Commit completed");
-                }
-            }
+            await _databaseInitializer.InitializeAsync(connection);
+
+            using var transaction = connection.BeginTransaction();
+
+            await _databaseVersionInstaller.InstallAsync(databaseVersions, connection, transaction);
+            
+            _log.LogDebug("DatabaseInstaller finished, commit changes");
+
+            transaction.Commit();
+            _log.LogDebug("Commit completed");
         }
 
         public void RollbackVersions(string name, int toVersion)
@@ -53,14 +54,13 @@ namespace Rinsen.DatabaseInstaller
 
         public async Task<IEnumerable<InstallationNameAndVersion>> GetVersionInformationAsync()
         {
-            using (var connection = new SqlConnection(_installerOptions.ConnectionString))
-            {
-                await connection.OpenAsync();
-                using (var transaction = connection.BeginTransaction())
-                {
-                    return await _versionHandler.GetInstalledVersionsInformation(connection, transaction);
-                }
-            }
+            using var connection = new SqlConnection(_installerOptions.ConnectionString);
+            
+            await connection.OpenAsync();
+            
+            using var transaction = connection.BeginTransaction();
+            
+            return await _versionHandler.GetInstalledVersionsInformation(connection, transaction);
         } 
     }
 }

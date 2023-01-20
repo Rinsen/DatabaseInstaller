@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -29,7 +27,7 @@ namespace Rinsen.DatabaseInstaller
             _installerOptions = installerOptions;
         }
 
-        internal async Task Initialize(SqlConnection connection)
+        internal async Task InitializeAsync(SqlConnection connection)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"IF '{_installerOptions.DatabaseName}' NOT IN (SELECT [name] FROM [master].[sys].[databases] WHERE [name] NOT IN ('master', 'tempdb', 'model', 'msdb'))");
@@ -53,16 +51,16 @@ namespace Rinsen.DatabaseInstaller
                 _logger.LogInformation($"Database exists {_installerOptions.DatabaseName}");
             }
 
-            if (!await _versionStorage.IsInstalled(connection))
+            if (!await _versionStorage.IsInstalledAsync(connection))
             {
-                using (var transaction = connection.BeginTransaction())
-                {
-                    _logger.LogDebug("First installation, installing base version");
-                    var installerBaseVersion = new InstallerBaseVersion();
-                    await _databaseVersionInstaller.InstallBaseVersion(installerBaseVersion, connection, transaction);
-                    transaction.Commit();
-                    _logger.LogDebug("Commit completed");
-                }
+                using var transaction = connection.BeginTransaction();
+                
+                _logger.LogDebug("First installation, installing base version");
+                
+                var installerBaseVersion = new InstallerBaseVersion();
+                await _databaseVersionInstaller.InstallBaseVersionAsync(installerBaseVersion, connection, transaction);
+                transaction.Commit();
+                _logger.LogDebug("Commit completed");
             }
             else
             {

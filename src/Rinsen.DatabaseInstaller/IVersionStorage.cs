@@ -6,23 +6,19 @@ namespace Rinsen.DatabaseInstaller
 {
     public interface IVersionStorage
     {
-        Task<bool> IsInstalled(SqlConnection connection);
+        Task<bool> IsInstalledAsync(SqlConnection connection);
 
-        Task<bool> IsInstalled(SqlConnection connection, SqlTransaction transaction);
-
-        InstallationNameAndVersion Get(string name, SqlConnection connection, SqlTransaction transaction);
+        Task<bool> IsInstalledAsync(SqlConnection connection, SqlTransaction transaction);
 
         Task<InstallationNameAndVersion> GetAsync(string name, SqlConnection connection, SqlTransaction transaction);
 
-        Task<IEnumerable<InstallationNameAndVersion>> GetAll(SqlConnection connection, SqlTransaction transaction);
+        Task<IEnumerable<InstallationNameAndVersion>> GetAllAsync(SqlConnection connection, SqlTransaction transaction);
 
-        Task Create(InstallationNameAndVersion installedNameAndVersion, SqlConnection connection, SqlTransaction transaction);
+        Task CreateAsync(InstallationNameAndVersion installedNameAndVersion, SqlConnection connection, SqlTransaction transaction);
 
-        Task<int> StartInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction);
+        Task<int> StartInstallationAsync(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction);
 
         Task<int> EndInstallationAsync(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction);
 
-        int EndInstallation(InstallationNameAndVersion installedVersion, SqlConnection connection, SqlTransaction transaction);
-
-    }
+    }   
 }

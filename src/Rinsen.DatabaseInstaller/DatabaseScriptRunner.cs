@@ -21,17 +21,17 @@ namespace Rinsen.DatabaseInstaller
             {
                 _logger.LogInformation($"Executing command '{command}'");
 
-                using (var sqlCommand = new SqlCommand(command, connection, transaction))
+                using var sqlCommand = new SqlCommand(command, connection, transaction);
+                
+                try
                 {
-                    try
-                    {
-                        await sqlCommand.ExecuteNonQueryAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        var exception = new CommandFailedToExecuteException(string.Format("Installation error for command {0}", command), ex);
-                        throw exception;
-                    }
+                    await sqlCommand.ExecuteNonQueryAsync();
+                }
+                catch (Exception ex)
+                {
+                    var exception = new CommandFailedToExecuteException(string.Format("Installation error for command {0}", command), ex);
+
+                    throw exception;
                 }
             }
         }
@@ -39,30 +39,28 @@ namespace Rinsen.DatabaseInstaller
         internal async Task<int> RunAsync(string command, SqlConnection connection, string parameterName, string parameterValue)
         {
             _logger.LogInformation($"Executing command '{command}' with parameter name {parameterName} and parameter value {parameterValue}");
-            using (var sqlCommand = new SqlCommand(command, connection))
+            using var sqlCommand = new SqlCommand(command, connection);
+            
+            sqlCommand.Parameters.AddWithValue(parameterName, parameterValue);
+
+            try
             {
-                sqlCommand.Parameters.AddWithValue(parameterName, parameterValue);
+                using var reader = await sqlCommand.ExecuteReaderAsync();
 
-                try
+                if (reader.HasRows)
                 {
-                    using (var reader = await sqlCommand.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows)
-                        {
-                            await reader.ReadAsync();
+                    await reader.ReadAsync();
 
-                            return (int)reader[0];
-                        }
-
-                        throw new Exception("Unknown fail when executing command");
-                    }
+                    return (int)reader[0];
                 }
-                catch (Exception ex)
-                {
-                    var exception = new CommandFailedToExecuteException(string.Format("Installation error for command {0} with parameter name {1} with value {2}", command, parameterName, parameterValue), ex);
 
-                    throw exception;
-                }
+                throw new Exception("Unknown fail when executing command");
+            }
+            catch (Exception ex)
+            {
+                var exception = new CommandFailedToExecuteException(string.Format("Installation error for command {0} with parameter name {1} with value {2}", command, parameterName, parameterValue), ex);
+
+                throw exception;
             }
         }
     }

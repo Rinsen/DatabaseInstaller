@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
 namespace Rinsen.DatabaseInstaller
 {
-    internal class InstallVersionScope : IDisposable
+    internal class InstallVersionScope : IAsyncDisposable
     {
         private readonly DatabaseVersion _databaseVersion;
         private readonly SqlConnection _connection;
@@ -20,20 +21,20 @@ namespace Rinsen.DatabaseInstaller
             _versionStorage = versionStorage;
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             if (_failed)
             {
                 throw new InvalidOperationException($"Starting installation for version { _databaseVersion.Version} for {_databaseVersion.InstallationName}", _e);
             }
 
-            var installedVersion = GetCurrentInstalledVersionAndValidatePostInstallationState();
+            var installedVersion = await GetCurrentInstalledVersionAndValidatePostInstallationState();
 
             if (installedVersion == null)
                 return;
 
             // Update information that this installation is ended now, make sure that no one is in between, throw is someone is
-            int result = _versionStorage.EndInstallation(installedVersion, _connection, _transaction);
+            int result = await _versionStorage.EndInstallationAsync(installedVersion, _connection, _transaction);
 
             if (result != 1)
             {
@@ -41,10 +42,10 @@ namespace Rinsen.DatabaseInstaller
             }
         }
 
-        private InstallationNameAndVersion GetCurrentInstalledVersionAndValidatePostInstallationState()
+        private async Task<InstallationNameAndVersion> GetCurrentInstalledVersionAndValidatePostInstallationState()
         {
             // Get installation row from database
-            var installedVersion = _versionStorage.Get(_databaseVersion.InstallationName, _connection, _transaction);
+            var installedVersion = await _versionStorage.GetAsync(_databaseVersion.InstallationName, _connection, _transaction);
 
             if (installedVersion == null)
                 return null;
@@ -54,6 +55,7 @@ namespace Rinsen.DatabaseInstaller
             {
                 throw new InvalidOperationException(string.Format("Version ({0}) is already installed for {1}", _databaseVersion.Version, _databaseVersion.InstallationName));
             }
+
             if (installedVersion.StartedInstallingVersion != _databaseVersion.Version)
             {
                 throw new InvalidOperationException(string.Format("Version ({0}) is not in progress for {1} as it should be", _databaseVersion.Version, _databaseVersion.InstallationName));
