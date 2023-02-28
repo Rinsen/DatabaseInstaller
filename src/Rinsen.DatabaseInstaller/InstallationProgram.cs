@@ -25,7 +25,7 @@ namespace Rinsen.DatabaseInstaller
             var installerstartup = serviceProvider.GetRequiredService<T>();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            installerstartup.DatabaseVersionsToInstall(databaseVersionsToInstall);
+            installerstartup.DatabaseVersionsToInstall(databaseVersionsToInstall, configuration);
 
             var installationHandler = serviceProvider.GetService<InstallationHandler>();
             var logger = serviceProvider.GetService<ILogger<InstallationProgram>>();

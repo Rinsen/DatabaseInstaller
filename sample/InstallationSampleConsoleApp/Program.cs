@@ -1,4 +1,5 @@
-﻿using Rinsen.DatabaseInstaller;
+﻿using Microsoft.Extensions.Configuration;
+using Rinsen.DatabaseInstaller;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,9 +15,9 @@ namespace InstallationSampleConsoleApp
 
     public class InstallerStartup : IInstallerStartup
     {
-        public void DatabaseVersionsToInstall(List<DatabaseVersion> databaseVersions)
+        public void DatabaseVersionsToInstall(List<DatabaseVersion> databaseVersions, IConfiguration configuration)
         {
-            databaseVersions.Add(new SetDatabaseSettingsVersion());
+            databaseVersions.Add(new SetDatabaseSettingsVersion(configuration));
             databaseVersions.Add(new CreateTables());
         }
     }

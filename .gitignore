@@ -199,3 +199,4 @@ FakesAssemblies/
 *.opt
 *.development.json
 launchSettings.json
+/sample/InstallationSampleConsoleApp/appsettings.Development.json
