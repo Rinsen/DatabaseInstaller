@@ -59,7 +59,6 @@ namespace Rinsen.DatabaseInstaller
             }
 
             logger.LogInformation($"Done");
-            Console.ReadKey();
         }
 
         private static ServiceProvider BootstrapApplication<T>() where T : class
