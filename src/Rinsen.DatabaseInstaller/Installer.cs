@@ -30,10 +30,29 @@ namespace Rinsen.DatabaseInstaller
         public async Task RunAsync(List<DatabaseVersion> databaseVersions)
         {
             using var connection = new SqlConnection(_installerOptions.ConnectionString);
+
+            var fail = 1;
+            while (fail < 51)
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                }
+                catch (Exception e)
+                {
+                    _log.LogInformation("Failed to connect to database");
+                    fail++;
+
+                    if (fail == 50)
+                    {
+                        throw new Exception("Failed to connect to SQL Server", e);
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                }
+            }
             
-            await connection.OpenAsync();
-            
-            _log.LogDebug("DatabaseInstaller started");
+            _log.LogInformation("DatabaseInstaller started");
 
             await _databaseInitializer.InitializeAsync(connection);
 

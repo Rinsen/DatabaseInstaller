@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace Rinsen.DatabaseInstaller.ConsoleInstaller
         public async Task ShowCurrentInstallationState()
         {
             _logger.LogInformation("Installed versions");
-            _logger.LogInformation("Id InstallationName InstalledVersion PreviousVersion StartedInstallatingVersion");
+            _logger.LogInformation("Id InstallationName InstalledVersion PreviousVersion StartedInstallingVersion");
             foreach (var installationNameAndVersion in await _installer.GetVersionInformationAsync())
             {
                 _logger.LogInformation($"{installationNameAndVersion.Id} {installationNameAndVersion.InstallationName} {installationNameAndVersion.InstalledVersion} {installationNameAndVersion.PreviousVersion} {installationNameAndVersion.StartedInstallingVersion}");
@@ -78,10 +77,10 @@ namespace Rinsen.DatabaseInstaller.ConsoleInstaller
         {
             foreach (var installationName in databaseVersions.Select(m => m.InstallationName).Distinct())
             {
-                _logger.LogInformation($"Installations for {installationName}");
+                _logger.LogInformation("Installations for {InstallationName}", installationName);
                 foreach (var dbChange in databaseVersions.Where(dbc => dbc.InstallationName == installationName).OrderBy(m => m.Version))
                 {
-                    _logger.LogInformation($"Version {dbChange.Version}");
+                    _logger.LogInformation("Version {Version}", dbChange.Version);
                     foreach (var command in dbChange.GetUpCommands(_installerOptions))
                     {
                         _logger.LogInformation(command);
