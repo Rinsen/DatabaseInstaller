@@ -40,7 +40,7 @@ namespace Rinsen.DatabaseInstaller
                 }
                 catch (Exception e)
                 {
-                    _log.LogInformation("Failed to connect to database");
+                    _log.LogInformation(e, "Failed to connect to database");
                     fail++;
 
                     if (fail == 50)

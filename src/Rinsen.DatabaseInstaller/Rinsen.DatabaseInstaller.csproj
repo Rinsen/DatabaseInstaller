@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Version>0.6.4</Version>
+    <Version>0.6.5</Version>
     <Title>Rinsen Database Installer</Title>
     <Authors>Fredrik Rinsén</Authors>
     <Description>Database installer and version handler for dotnet core projects</Description>
