@@ -35,6 +35,8 @@ namespace Rinsen.DatabaseInstaller
 
             using var connection = new SqlConnection(_installerOptions.ConnectionString);
 
+            await connection.OpenAsync();
+
             await _databaseInitializer.InitializeAsync(connection);
 
             using var transaction = connection.BeginTransaction();
