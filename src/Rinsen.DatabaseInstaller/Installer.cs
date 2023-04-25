@@ -29,30 +29,11 @@ namespace Rinsen.DatabaseInstaller
         
         public async Task RunAsync(List<DatabaseVersion> databaseVersions)
         {
-            using var connection = new SqlConnection(_installerOptions.ConnectionString);
+            await WaitForDatabaseConnection();
 
-            var fail = 1;
-            while (fail < 51)
-            {
-                try
-                {
-                    await connection.OpenAsync();
-                }
-                catch (Exception e)
-                {
-                    _log.LogInformation(e, "Failed to connect to database");
-                    fail++;
-
-                    if (fail == 50)
-                    {
-                        throw new Exception("Failed to connect to SQL Server", e);
-                    }
-
-                    await Task.Delay(TimeSpan.FromSeconds(5));
-                }
-            }
-            
             _log.LogInformation("DatabaseInstaller started");
+
+            using var connection = new SqlConnection(_installerOptions.ConnectionString);
 
             await _databaseInitializer.InitializeAsync(connection);
 
@@ -64,6 +45,43 @@ namespace Rinsen.DatabaseInstaller
 
             transaction.Commit();
             _log.LogDebug("Commit completed");
+        }
+
+        private async Task WaitForDatabaseConnection()
+        {
+            var fail = 1;
+            while (true)
+            {
+                try
+                {
+                    using var connection = new SqlConnection(_installerOptions.ConnectionString);
+                    
+                    await connection.OpenAsync();
+
+                    return;
+                }
+                catch (Exception e)
+                {
+                    _log.LogInformation(e, "Failed to connect to database {count} times", fail);
+                    if (e.InnerException is not null)
+                    {
+                        _log.LogInformation(e.InnerException, "Failed to connect to database inner");
+
+                        if (e.InnerException.InnerException is not null)
+                        {
+                            _log.LogInformation(e.InnerException.InnerException, "Failed to connect to database inner inner");
+                        }
+                    }
+                    
+                    fail++;
+                    if (fail == 1000)
+                    {
+                        throw new Exception("Failed to connect to SQL Server", e);
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                }
+            }
         }
 
         public void RollbackVersions(string name, int toVersion)
