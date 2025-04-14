@@ -16,9 +16,9 @@ namespace InstallationSampleConsoleApp
 
         public override void AddDbChanges(List<IDbChange> dbChangeList)
         {
-            var databaseSettings = dbChangeList.AddNewDatabaseSettings(); ;
-            databaseSettings.CreateLogin("MyLogin2", _configuration["LoginPassword"])
-                .WithUser("MyUser2")
+            var databaseSettings = dbChangeList.AddNewDatabaseSettings();
+            databaseSettings.CreateLogin("MyLogin", _configuration["LoginPassword"])
+                .WithUser("MyUser")
                 .AddRoleMembershipDataReader()
                 .AddRoleMembershipDataWriter();
         }

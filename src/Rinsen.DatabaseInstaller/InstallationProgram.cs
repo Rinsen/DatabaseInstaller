@@ -11,8 +11,16 @@ namespace Rinsen.DatabaseInstaller
     internal class InstallationProgram
     {
         /// <summary>
-        /// Configuration
-        /// Command, DatabaseName, Schema, Connection string for database name.
+        /// Database installer host.
+        /// 
+        /// This can be used to create databases, db users and schemas from c# fluent code definitions.
+        /// <para>
+        /// Requires configuration for the following settings to work:
+        /// * Command: Install, Preview, ShowAll, CurrentState
+        /// * DatabaseName: Name of the database to install.
+        /// * Schema: Name of the schema to install.
+        /// * ConnectionString: Connection string to the database server.
+        /// </para>
         /// </summary>
         /// <typeparam name="T">Installation assembly type</typeparam>
         /// <returns>Task.</returns>
@@ -32,6 +40,11 @@ namespace Rinsen.DatabaseInstaller
             
             try
             {
+                if (!IsConfigurationValid(logger, configuration))
+                {
+                    return;
+                }
+
                 switch (configuration["Command"])
                 {
                     case "Install":
@@ -47,11 +60,9 @@ namespace Rinsen.DatabaseInstaller
                         await installationHandler.ShowCurrentInstallationState();
                         break;
                     default:
-                        logger.LogInformation("Valid command is required");
+                        logger.LogInformation("Command is not supported {command}", configuration["Command"]);
                         break;
                 }
-
-
             }
             catch (Exception e)
             {
@@ -59,6 +70,41 @@ namespace Rinsen.DatabaseInstaller
             }
 
             logger.LogInformation($"Done");
+        }
+
+        private static bool IsConfigurationValid(ILogger<InstallationProgram> logger, IConfiguration configuration)
+        {
+            if (string.IsNullOrEmpty(configuration["Command"]))
+            {
+                logger.LogError("Command is required");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(configuration["DatabaseName"]))
+            {
+                logger.LogError("DatabaseName is required");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(configuration["Schema"]))
+            {
+                logger.LogError("Schema is required");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(configuration["ConnectionStringName"]))
+            {
+                logger.LogError("ConnectionStringName is required");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(configuration.GetConnectionString(configuration["ConnectionStringName"])))
+            {
+                logger.LogError("ConnectionString is required");
+                return false;
+            }
+
+            return true;
         }
 
         private static ServiceProvider BootstrapApplication<T>() where T : class
@@ -84,11 +130,13 @@ namespace Rinsen.DatabaseInstaller
             });
 
             serviceCollection.AddSingleton<IConfiguration>(config);
-            var databaseName = config["DatabaseName"];
+            
+            var connectionStringName = config["ConnectionStringName"];
             serviceCollection.AddSingleton(new InstallerOptions
             {
-                ConnectionString = config.GetConnectionString(databaseName),
-                DatabaseName = databaseName,
+                ConnectionStringName = connectionStringName,
+                ConnectionString = config.GetConnectionString(connectionStringName),
+                DatabaseName = config["DatabaseName"],
                 Schema = config["Schema"]
             });
 
