@@ -20,7 +20,7 @@ namespace Rinsen.DatabaseInstaller
         /// <returns>Task.</returns>
         public static Task Start<T>() where T : class, IInstallerStartup, new()
         {
-            return new InstallationProgram().StartDatabaseInstaller<T>();
+            return InstallationProgram.StartDatabaseInstaller<T>();
         }
     }
 }

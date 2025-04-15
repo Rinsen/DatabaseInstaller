@@ -24,7 +24,7 @@ namespace Rinsen.DatabaseInstaller
         /// </summary>
         /// <typeparam name="T">Installation assembly type</typeparam>
         /// <returns>Task.</returns>
-        public async Task StartDatabaseInstaller<T>() where T : class, IInstallerStartup, new()
+        public static async Task StartDatabaseInstaller<T>() where T : class, IInstallerStartup, new()
         {
             var databaseVersionsToInstall = new List<DatabaseVersion>();
 
