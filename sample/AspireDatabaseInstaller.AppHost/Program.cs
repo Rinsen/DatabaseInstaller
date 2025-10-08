@@ -2,7 +2,6 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-
 var sqlServer = builder.AddSqlServer("TestDb")
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
