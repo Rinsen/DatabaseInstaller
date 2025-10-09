@@ -11,7 +11,7 @@ namespace Rinsen.DatabaseInstaller
         private readonly SqlTransaction _transaction;
         private readonly IVersionStorage _versionStorage;
         private bool _failed = true;
-        private Exception _e;
+        private Exception? _e;
 
         public InstallVersionScope(IVersionStorage versionStorage, DatabaseVersion databaseVersion, SqlConnection connection, SqlTransaction transaction)
         {
@@ -42,7 +42,7 @@ namespace Rinsen.DatabaseInstaller
             }
         }
 
-        private async Task<InstallationNameAndVersion> GetCurrentInstalledVersionAndValidatePostInstallationState()
+        private async Task<InstallationNameAndVersion?> GetCurrentInstalledVersionAndValidatePostInstallationState()
         {
             // Get installation row from database
             var installedVersion = await _versionStorage.GetAsync(_databaseVersion.InstallationName, _connection, _transaction);

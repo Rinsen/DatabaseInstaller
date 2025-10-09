@@ -329,6 +329,11 @@ namespace Rinsen.DatabaseInstaller
 
             var columnBuilder = new ColumnBuilder(this, name, columnType);
 
+            if (columnBuilder.Column == null)
+            {
+                throw new InvalidOperationException("Failed to create column. ColumnBuilder did not initialize the column properly.");
+            }
+
             ColumnsToAdd.Add(columnBuilder.Column);
 
             return columnBuilder;

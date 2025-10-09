@@ -22,12 +22,12 @@ namespace Rinsen.DatabaseInstaller
 
         public bool PrimaryKey { get; internal set; } = false;
 
-        public ForeignKey ForeignKey { get; internal set; } = null;
+        public ForeignKey? ForeignKey { get; internal set; } = null;
 
-        public Check Check { get; internal set; } = null;
+        public Check? Check { get; internal set; } = null;
 
-        public DefaultValue DefaultValue { get; internal set; } = null;
+        public DefaultValue? DefaultValue { get; internal set; } = null;
 
-        public AutoIncrement AutoIncrement { get; internal set; } = null;
+        public AutoIncrement? AutoIncrement { get; internal set; } = null;
     }
 }

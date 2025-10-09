@@ -8,12 +8,7 @@ namespace Rinsen.DatabaseInstaller.Tests
     {
         public static InstallerOptions GetInstallerOptions()
         {
-            return new InstallerOptions
-            {
-                ConnectionString = string.Empty,
-                DatabaseName = "TestDb",
-                Schema = "dbo"
-            };
+            return new InstallerOptions("TestDb", "dbo", string.Empty, string.Empty);
         }
     }
 }

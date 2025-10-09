@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Rinsen.DatabaseInstaller
 {
@@ -25,10 +24,11 @@ namespace Rinsen.DatabaseInstaller
             command.Parameters.Add(new SqlParameter("@PreviousVersion", installedNameAndVersion.PreviousVersion));
             command.Parameters.Add(new SqlParameter("@StartedInstallingVersion", installedNameAndVersion.StartedInstallingVersion));
 
-            installedNameAndVersion.Id = (int)await command.ExecuteScalarAsync();
+            var result = await command.ExecuteScalarAsync();
+            installedNameAndVersion.Id = result is int id ? id : throw new InvalidOperationException("Failed to insert and retrieve identity value.");
         }
 
-        public async Task<InstallationNameAndVersion> GetAsync(string name, SqlConnection connection, SqlTransaction transaction)
+        public async Task<InstallationNameAndVersion?> GetAsync(string name, SqlConnection connection, SqlTransaction transaction)
         {
             var result = default(InstallationNameAndVersion);
 

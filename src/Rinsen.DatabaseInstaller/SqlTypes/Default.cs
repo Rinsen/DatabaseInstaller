@@ -2,6 +2,6 @@
 {
     public class DefaultValue
     {
-        public string DefaultString { get; set; }
+        public string DefaultString { get; set; } = string.Empty;
     }
 }

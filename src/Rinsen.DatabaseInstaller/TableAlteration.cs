@@ -66,6 +66,11 @@ namespace Rinsen.DatabaseInstaller
 
             var columnBuilder = new ColumnBuilder(this, name, dbType);
 
+            if (columnBuilder.Column == null)
+            {
+                throw new InvalidOperationException("Failed to create column. ColumnBuilder did not initialize the column properly.");
+            }
+
             ColumnsToAlter.Add(columnBuilder.Column);
 
             return columnBuilder;
@@ -93,6 +98,11 @@ namespace Rinsen.DatabaseInstaller
             }
 
             var columnBuilder = new ColumnBuilder(this, name, dbType);
+
+            if (columnBuilder.Column == null)
+            {
+                throw new InvalidOperationException("Failed to create column. ColumnBuilder did not initialize the column properly.");
+            }
 
             ColumnsToAlter.Add(columnBuilder.Column);
 
