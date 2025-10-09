@@ -10,7 +10,7 @@ namespace Rinsen.DatabaseInstaller
 
         Task<bool> IsInstalledAsync(SqlConnection connection, SqlTransaction transaction);
 
-        Task<InstallationNameAndVersion> GetAsync(string name, SqlConnection connection, SqlTransaction transaction);
+        Task<InstallationNameAndVersion?> GetAsync(string name, SqlConnection connection, SqlTransaction transaction);
 
         Task<IEnumerable<InstallationNameAndVersion>> GetAllAsync(SqlConnection connection, SqlTransaction transaction);
 

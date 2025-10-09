@@ -5,21 +5,34 @@ namespace Rinsen.DatabaseInstaller
 {
     public abstract class DatabaseVersion
     {
+
+        /// <summary>
+        /// Initializes a new instance of the DatabaseVersion class with the specified version number. This will user the class namespace as installation name.
+        /// </summary>
+        /// <param name="version">The version number to assign to the database version. Must be a non-negative integer.</param>
+        protected DatabaseVersion(int version)
+            : this(version, null)
+        {
+                
+        }
+
+
         /// <summary>
         /// Database version description
         /// </summary>
         /// <param name="version">Version number</param>
         /// <param name="installationName">Installation name, if none specified the default will be this class namespace</param>
-        public DatabaseVersion(int version, string installationName = null)
+        public DatabaseVersion(int version, string? installationName)
         {
             if (string.IsNullOrEmpty(installationName))
             {
-                InstallationName = GetType().Namespace;
+                InstallationName = GetType().Namespace ?? throw new ArgumentException("Installation name cannot be null or empty");
             }
             else
-            {
+            {   
                 InstallationName = installationName;
             }
+
             Version = version;
         }
 

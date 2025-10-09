@@ -186,13 +186,7 @@ namespace Rinsen.DatabaseInstaller
                 throw new InvalidOperationException("Schema is required in configuration");
             }
 
-            serviceCollection.AddSingleton(new InstallerOptions
-            {
-                ConnectionStringName = connectionStringName,
-                ConnectionString = connectionString,
-                DatabaseName = databaseName,
-                Schema = schema
-            });
+            serviceCollection.AddSingleton(new InstallerOptions(databaseName, schema, connectionString, connectionStringName));
 
             if (_databaseSetupType != null)
             {

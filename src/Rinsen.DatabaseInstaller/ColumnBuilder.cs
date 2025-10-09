@@ -7,7 +7,7 @@ namespace Rinsen.DatabaseInstaller
 {
     public class ColumnBuilder
     {
-        public Column Column { get; }
+        public Column? Column { get; }
 
         private readonly Table _table;
 
@@ -32,18 +32,27 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder NotNull()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             Column.Null = false;
             return this;
         }
 
         public ColumnBuilder Null()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             Column.Null = true;
             return this;
         }
 
         public ColumnBuilder Unique()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             if (Column.PrimaryKey)
             {
                 throw new InvalidOperationException("A unique constraint can not be combined with primary key");
@@ -55,6 +64,9 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder Clustered()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             if (_table.PrimaryKeyClustered)
             {
                 throw new InvalidOperationException("A clustered column can only be added if the primary key is not clustered");
@@ -66,6 +78,9 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder Unique(string name)
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             if (Column.PrimaryKey || _table.NamedPrimaryKeys.Any(m => m.Key == Column.Name))
             {
                 throw new InvalidOperationException("A unique constraint can not be combined with a primary key on the same column");
@@ -77,6 +92,9 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder PrimaryKey()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             if (Column.Unique || _table.NamedUniques.Any(m => m.Key == Column.Name))
             {
                 throw new InvalidOperationException("A primary key can not be combined with a unique constraint on the same column");
@@ -109,8 +127,11 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder PrimaryKey(string name)
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             if (_table.NamedPrimaryKeys.Count > 0 &&
-                !_table.NamedPrimaryKeys.Keys.Contains(name))
+                !_table.NamedPrimaryKeys.ContainsKey(name))
             {
                 throw new ArgumentException("Ony one named primary key can exist");
             }
@@ -125,29 +146,44 @@ namespace Rinsen.DatabaseInstaller
 
         public ColumnBuilder ForeignKey(string tableName)
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             return ForeignKey(tableName, Column.Name);
         }
 
         public ColumnBuilder ForeignKey(string tableName, string columnName)
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             Column.ForeignKey = new ForeignKey(tableName, columnName);
             return this;
         }
 
         public ColumnBuilder Check()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             Column.Check = new Check();
             return this;
         }
 
         public ColumnBuilder DefaultValue()
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             Column.DefaultValue = new DefaultValue();
             return this;
         }
 
         public ColumnBuilder AutoIncrement(int startValue = 1, int increment = 1, bool primaryKey = true)
         {
+            if (Column == null)
+                throw new InvalidOperationException("Column is not initialized. Use a constructor that creates a column or add a column first.");
+            
             if (primaryKey)
             {
                 PrimaryKey();

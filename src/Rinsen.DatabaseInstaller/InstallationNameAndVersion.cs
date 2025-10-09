@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public string InstallationName { get; set; }
+        public string InstallationName { get; set; } = string.Empty;
 
         public int PreviousVersion { get; set; }
 

@@ -22,9 +22,9 @@ namespace Rinsen.DatabaseInstaller
                 throw new InvalidOperationException("Installer is not installed");
             }
             
-            InstallationNameAndVersion installedNameAndVersion = await _versionStorage.GetAsync(name, connection, transaction);
+            var installedNameAndVersion = await _versionStorage.GetAsync(name, connection, transaction);
 
-            if (installedNameAndVersion == default(InstallationNameAndVersion))
+            if (installedNameAndVersion == default)
             {
                 installedNameAndVersion = new InstallationNameAndVersion
                 {
@@ -48,7 +48,7 @@ namespace Rinsen.DatabaseInstaller
             }
             else
             {
-                return Enumerable.Empty<InstallationNameAndVersion>();
+                return [];
             }
         }
 
