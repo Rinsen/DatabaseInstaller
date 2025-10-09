@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Rinsen.DatabaseInstaller
 {
-    public interface IInstallerStartup
+    public interface IDatabaseSetup
     {
         void DatabaseVersionsToInstall(List<DatabaseVersion> databaseVersions, IConfiguration configuration);
     }

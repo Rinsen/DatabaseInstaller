@@ -10,39 +10,45 @@ namespace Rinsen.DatabaseInstaller
 {
     internal class InstallationProgram
     {
-        /// <summary>
-        /// Database installer host.
-        /// 
-        /// This can be used to create databases, db users and schemas from c# fluent code definitions.
-        /// <para>
-        /// Requires configuration for the following settings to work:
-        /// * Command: Install, Preview, ShowAll, CurrentState
-        /// * DatabaseName: Name of the database to install.
-        /// * Schema: Name of the schema to install.
-        /// * ConnectionString: Connection string to the database server.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="T">Installation assembly type</typeparam>
-        /// <returns>Task.</returns>
-        public static async Task StartDatabaseInstaller<T>() where T : class, IInstallerStartup, new()
+        private static Action<IServiceCollection>? _addServices;
+        private static Type? _databaseSetupType;
+        private static Type? _dataSeedType;
+
+        internal static async Task StartDatabaseInstaller()
         {
             var databaseVersionsToInstall = new List<DatabaseVersion>();
 
-            var serviceProvider = BootstrapApplication<T>();
+            var serviceProvider = BootstrapApplication();
 
-            var installerstartup = serviceProvider.GetRequiredService<T>();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var logger = serviceProvider.GetRequiredService<ILogger<InstallationProgram>>();
+            
+            var completed = await InstallDatabase(databaseVersionsToInstall, serviceProvider, configuration, logger);
 
+            if (completed && _dataSeedType is not null)
+            {
+                await SeedData(serviceProvider, configuration, logger);
+            }
+
+            logger.LogInformation($"Done");
+        }
+
+        private static async Task<bool> InstallDatabase(List<DatabaseVersion> databaseVersionsToInstall, ServiceProvider serviceProvider, IConfiguration configuration, ILogger<InstallationProgram> logger)
+        {
+            if (_databaseSetupType == null)
+            {
+                throw new InvalidOperationException("Database setup type not configured. Call AddDatabaseSetup() first.");
+            }
+
+            var installerstartup = (IDatabaseSetup)serviceProvider.GetRequiredService(_databaseSetupType);
             installerstartup.DatabaseVersionsToInstall(databaseVersionsToInstall, configuration);
 
-            var installationHandler = serviceProvider.GetService<InstallationHandler>();
-            var logger = serviceProvider.GetService<ILogger<InstallationProgram>>();
-            
+            var installationHandler = serviceProvider.GetRequiredService<InstallationHandler>();
             try
             {
                 if (!IsConfigurationValid(logger, configuration))
                 {
-                    return;
+                    return false;
                 }
 
                 switch (configuration["Command"])
@@ -67,9 +73,11 @@ namespace Rinsen.DatabaseInstaller
             catch (Exception e)
             {
                 logger.LogError(e, "Failed to run installer");
+
+                return false;
             }
 
-            logger.LogInformation($"Done");
+            return true;
         }
 
         private static bool IsConfigurationValid(ILogger<InstallationProgram> logger, IConfiguration configuration)
@@ -92,13 +100,14 @@ namespace Rinsen.DatabaseInstaller
                 return false;
             }
 
-            if (string.IsNullOrEmpty(configuration["ConnectionStringName"]))
+            var connectionStringName = configuration["ConnectionStringName"];
+            if (string.IsNullOrEmpty(connectionStringName))
             {
                 logger.LogError("ConnectionStringName is required");
                 return false;
             }
 
-            if (string.IsNullOrEmpty(configuration.GetConnectionString(configuration["ConnectionStringName"])))
+            if (string.IsNullOrEmpty(configuration.GetConnectionString(connectionStringName)))
             {
                 logger.LogError("ConnectionString is required");
                 return false;
@@ -107,7 +116,29 @@ namespace Rinsen.DatabaseInstaller
             return true;
         }
 
-        private static ServiceProvider BootstrapApplication<T>() where T : class
+        private static async Task SeedData(ServiceProvider serviceProvider, IConfiguration configuration, ILogger<InstallationProgram> logger)
+        {
+            if (_dataSeedType == null)
+            {
+                logger.LogWarning("Data seed type is not configured");
+                return;
+            }
+
+            try
+            {
+                var dataSeed = (IDataSeed)serviceProvider.GetRequiredService(_dataSeedType);
+                logger.LogInformation("Starting data seeding");
+                await dataSeed.SeedData();
+                logger.LogInformation("Data seeding completed successfully");
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to seed data");
+                throw;
+            }
+        }
+
+        private static ServiceProvider BootstrapApplication()
         {
             var environmentName = "Production";
 #if DEBUG
@@ -132,18 +163,68 @@ namespace Rinsen.DatabaseInstaller
             serviceCollection.AddSingleton<IConfiguration>(config);
             
             var connectionStringName = config["ConnectionStringName"];
+            if (string.IsNullOrEmpty(connectionStringName))
+            {
+                throw new InvalidOperationException("ConnectionStringName is required in configuration");
+            }
+
+            var connectionString = config.GetConnectionString(connectionStringName);
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException($"Connection string '{connectionStringName}' not found in configuration");
+            }
+
+            var databaseName = config["DatabaseName"];
+            if (string.IsNullOrEmpty(databaseName))
+            {
+                throw new InvalidOperationException("DatabaseName is required in configuration");
+            }
+
+            var schema = config["Schema"];
+            if (string.IsNullOrEmpty(schema))
+            {
+                throw new InvalidOperationException("Schema is required in configuration");
+            }
+
             serviceCollection.AddSingleton(new InstallerOptions
             {
                 ConnectionStringName = connectionStringName,
-                ConnectionString = config.GetConnectionString(connectionStringName),
-                DatabaseName = config["DatabaseName"],
-                Schema = config["Schema"]
+                ConnectionString = connectionString,
+                DatabaseName = databaseName,
+                Schema = schema
             });
 
-            serviceCollection.AddTransient<T>();
+            if (_databaseSetupType != null)
+            {
+                serviceCollection.AddTransient(_databaseSetupType);
+            }
+
+            if (_dataSeedType != null)
+            {
+                serviceCollection.AddTransient(_dataSeedType);
+            }
+            
             serviceCollection.AddDatabaseInstaller();
 
+            // Add custom services if configured
+            _addServices?.Invoke(serviceCollection);
+
             return serviceCollection.BuildServiceProvider();
+        }
+        
+        internal static void AddServices(Action<IServiceCollection> value)
+        {
+            _addServices = value;
+        }
+
+        internal static void AddDatabaseSetup<T>() where T : class, IDatabaseSetup, new()
+        {
+            _databaseSetupType = typeof(T);
+        }
+
+        internal static void AddDataSeed<T>() where T : class, IDataSeed
+        {
+            _dataSeedType = typeof(T);
         }
     }
 }
