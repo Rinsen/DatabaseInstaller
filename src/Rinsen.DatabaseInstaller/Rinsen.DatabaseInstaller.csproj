@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>0.7.2</Version>
+    <Version>0.8.0</Version>
     <Title>Rinsen Database Installer</Title>
     <Authors>Fredrik Rinsén</Authors>
     <Description>Database installer and version handler for dotnet core projects</Description>

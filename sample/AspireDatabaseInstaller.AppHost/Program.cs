@@ -3,6 +3,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var sqlServer = builder.AddSqlServer("TestDb")
+    .WithImageTag("2025-latest")
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
